@@ -50,7 +50,10 @@ bool "True"|"False"
 
 " "|\n 
 
-. { yyerror(); }
+. { printf("%s%d\n", "-> Lexical ERROR on line: ", yylineno);
+    printf("%s%s\n", "unexpected character: ", yytext);
+    exit(0);
+  }
 
 %%
 

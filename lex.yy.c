@@ -884,14 +884,17 @@ YY_RULE_SETUP
 case 17:
 YY_RULE_SETUP
 #line 53 "calc-lexico.l"
-{ yyerror(); }
+{ printf("%s%d\n", "-> Lexical ERROR on line: ", yylineno);
+    printf("%s%s\n", "unexpected character: ", yytext);
+    exit(0);
+  }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 55 "calc-lexico.l"
+#line 58 "calc-lexico.l"
 ECHO;
 	YY_BREAK
-#line 895 "lex.yy.c"
+#line 898 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_COMMENT):
 	yyterminate();
@@ -1909,7 +1912,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 55 "calc-lexico.l"
+#line 58 "calc-lexico.l"
 
 
 void yyerror(){
