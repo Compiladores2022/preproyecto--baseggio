@@ -1,0 +1,7 @@
+Int  2aux = 88446;
+Bool b1 = (False || True);
+
+b1 = (False);
+return b1;
+
+

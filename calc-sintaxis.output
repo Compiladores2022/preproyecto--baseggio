@@ -1,0 +1,546 @@
+State 33 conflicts: 1 shift/reduce
+State 34 conflicts: 1 shift/reduce
+State 35 conflicts: 1 shift/reduce
+State 36 conflicts: 4 shift/reduce
+
+
+Grammar
+
+    0 $accept: prog $end
+
+    1 prog: lSentences
+    2     | lDeclarations lSentences
+
+    3 lDeclarations: Declaration
+    4              | lDeclarations Declaration
+
+    5 Declaration: Type ID '=' expr ';'
+
+    6 lSentences: Sentence
+    7           | lSentences Sentence
+
+    8 Sentence: expr ';'
+    9         | ID '=' expr ';'
+   10         | RETURN expr ';'
+
+   11 expr: Value
+   12     | expr '+' expr
+   13     | expr '*' expr
+   14     | expr OR expr
+   15     | expr AND expr
+   16     | '(' expr ')'
+
+   17 Value: vINT
+   18      | vBOOL
+   19      | ID
+
+   20 Type: tINT
+   21     | tBOOL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 16
+')' (41) 16
+'*' (42) 13
+'+' (43) 12
+';' (59) 5 8 9 10
+'=' (61) 5 9
+error (256)
+vINT (258) 17
+vBOOL (259) 18
+tINT (260) 20
+tBOOL (261) 21
+ID (262) 5 9 19
+OR (263) 14
+AND (264) 15
+RETURN (265) 10
+
+
+Nonterminals, with rules where they appear
+
+$accept (17)
+    on left: 0
+prog (18)
+    on left: 1 2, on right: 0
+lDeclarations (19)
+    on left: 3 4, on right: 2 4
+Declaration (20)
+    on left: 5, on right: 3 4
+lSentences (21)
+    on left: 6 7, on right: 1 2 7
+Sentence (22)
+    on left: 8 9 10, on right: 6 7
+expr (23)
+    on left: 11 12 13 14 15 16, on right: 5 8 9 10 12 13 14 15 16
+Value (24)
+    on left: 17 18 19, on right: 11
+Type (25)
+    on left: 20 21, on right: 5
+
+
+State 0
+
+    0 $accept: . prog $end
+
+    vINT    shift, and go to state 1
+    vBOOL   shift, and go to state 2
+    tINT    shift, and go to state 3
+    tBOOL   shift, and go to state 4
+    ID      shift, and go to state 5
+    RETURN  shift, and go to state 6
+    '('     shift, and go to state 7
+
+    prog           go to state 8
+    lDeclarations  go to state 9
+    Declaration    go to state 10
+    lSentences     go to state 11
+    Sentence       go to state 12
+    expr           go to state 13
+    Value          go to state 14
+    Type           go to state 15
+
+
+State 1
+
+   17 Value: vINT .
+
+    $default  reduce using rule 17 (Value)
+
+
+State 2
+
+   18 Value: vBOOL .
+
+    $default  reduce using rule 18 (Value)
+
+
+State 3
+
+   20 Type: tINT .
+
+    $default  reduce using rule 20 (Type)
+
+
+State 4
+
+   21 Type: tBOOL .
+
+    $default  reduce using rule 21 (Type)
+
+
+State 5
+
+    9 Sentence: ID . '=' expr ';'
+   19 Value: ID .
+
+    '='  shift, and go to state 16
+
+    $default  reduce using rule 19 (Value)
+
+
+State 6
+
+   10 Sentence: RETURN . expr ';'
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 18
+    Value  go to state 14
+
+
+State 7
+
+   16 expr: '(' . expr ')'
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 19
+    Value  go to state 14
+
+
+State 8
+
+    0 $accept: prog . $end
+
+    $end  shift, and go to state 20
+
+
+State 9
+
+    2 prog: lDeclarations . lSentences
+    4 lDeclarations: lDeclarations . Declaration
+
+    vINT    shift, and go to state 1
+    vBOOL   shift, and go to state 2
+    tINT    shift, and go to state 3
+    tBOOL   shift, and go to state 4
+    ID      shift, and go to state 5
+    RETURN  shift, and go to state 6
+    '('     shift, and go to state 7
+
+    Declaration  go to state 21
+    lSentences   go to state 22
+    Sentence     go to state 12
+    expr         go to state 13
+    Value        go to state 14
+    Type         go to state 15
+
+
+State 10
+
+    3 lDeclarations: Declaration .
+
+    $default  reduce using rule 3 (lDeclarations)
+
+
+State 11
+
+    1 prog: lSentences .
+    7 lSentences: lSentences . Sentence
+
+    vINT    shift, and go to state 1
+    vBOOL   shift, and go to state 2
+    ID      shift, and go to state 5
+    RETURN  shift, and go to state 6
+    '('     shift, and go to state 7
+
+    $default  reduce using rule 1 (prog)
+
+    Sentence  go to state 23
+    expr      go to state 13
+    Value     go to state 14
+
+
+State 12
+
+    6 lSentences: Sentence .
+
+    $default  reduce using rule 6 (lSentences)
+
+
+State 13
+
+    8 Sentence: expr . ';'
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   15     | expr . AND expr
+
+    OR   shift, and go to state 24
+    AND  shift, and go to state 25
+    '*'  shift, and go to state 26
+    ';'  shift, and go to state 27
+    '+'  shift, and go to state 28
+
+
+State 14
+
+   11 expr: Value .
+
+    $default  reduce using rule 11 (expr)
+
+
+State 15
+
+    5 Declaration: Type . ID '=' expr ';'
+
+    ID  shift, and go to state 29
+
+
+State 16
+
+    9 Sentence: ID '=' . expr ';'
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 30
+    Value  go to state 14
+
+
+State 17
+
+   19 Value: ID .
+
+    $default  reduce using rule 19 (Value)
+
+
+State 18
+
+   10 Sentence: RETURN expr . ';'
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   15     | expr . AND expr
+
+    OR   shift, and go to state 24
+    AND  shift, and go to state 25
+    '*'  shift, and go to state 26
+    ';'  shift, and go to state 31
+    '+'  shift, and go to state 28
+
+
+State 19
+
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   15     | expr . AND expr
+   16     | '(' expr . ')'
+
+    OR   shift, and go to state 24
+    AND  shift, and go to state 25
+    '*'  shift, and go to state 26
+    '+'  shift, and go to state 28
+    ')'  shift, and go to state 32
+
+
+State 20
+
+    0 $accept: prog $end .
+
+    $default  accept
+
+
+State 21
+
+    4 lDeclarations: lDeclarations Declaration .
+
+    $default  reduce using rule 4 (lDeclarations)
+
+
+State 22
+
+    2 prog: lDeclarations lSentences .
+    7 lSentences: lSentences . Sentence
+
+    vINT    shift, and go to state 1
+    vBOOL   shift, and go to state 2
+    ID      shift, and go to state 5
+    RETURN  shift, and go to state 6
+    '('     shift, and go to state 7
+
+    $default  reduce using rule 2 (prog)
+
+    Sentence  go to state 23
+    expr      go to state 13
+    Value     go to state 14
+
+
+State 23
+
+    7 lSentences: lSentences Sentence .
+
+    $default  reduce using rule 7 (lSentences)
+
+
+State 24
+
+   14 expr: expr OR . expr
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 33
+    Value  go to state 14
+
+
+State 25
+
+   15 expr: expr AND . expr
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 34
+    Value  go to state 14
+
+
+State 26
+
+   13 expr: expr '*' . expr
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 35
+    Value  go to state 14
+
+
+State 27
+
+    8 Sentence: expr ';' .
+
+    $default  reduce using rule 8 (Sentence)
+
+
+State 28
+
+   12 expr: expr '+' . expr
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 36
+    Value  go to state 14
+
+
+State 29
+
+    5 Declaration: Type ID . '=' expr ';'
+
+    '='  shift, and go to state 37
+
+
+State 30
+
+    9 Sentence: ID '=' expr . ';'
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   15     | expr . AND expr
+
+    OR   shift, and go to state 24
+    AND  shift, and go to state 25
+    '*'  shift, and go to state 26
+    ';'  shift, and go to state 38
+    '+'  shift, and go to state 28
+
+
+State 31
+
+   10 Sentence: RETURN expr ';' .
+
+    $default  reduce using rule 10 (Sentence)
+
+
+State 32
+
+   16 expr: '(' expr ')' .
+
+    $default  reduce using rule 16 (expr)
+
+
+State 33
+
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   14     | expr OR expr .
+   15     | expr . AND expr
+
+    AND  shift, and go to state 25
+    '+'  shift, and go to state 28
+
+    '+'       [reduce using rule 14 (expr)]
+    $default  reduce using rule 14 (expr)
+
+
+State 34
+
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   15     | expr . AND expr
+   15     | expr AND expr .
+
+    '+'  shift, and go to state 28
+
+    '+'       [reduce using rule 15 (expr)]
+    $default  reduce using rule 15 (expr)
+
+
+State 35
+
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   13     | expr '*' expr .
+   14     | expr . OR expr
+   15     | expr . AND expr
+
+    OR   shift, and go to state 24
+    AND  shift, and go to state 25
+    '+'  shift, and go to state 28
+
+    '+'       [reduce using rule 13 (expr)]
+    $default  reduce using rule 13 (expr)
+
+
+State 36
+
+   12 expr: expr . '+' expr
+   12     | expr '+' expr .
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   15     | expr . AND expr
+
+    OR   shift, and go to state 24
+    AND  shift, and go to state 25
+    '*'  shift, and go to state 26
+    '+'  shift, and go to state 28
+
+    OR        [reduce using rule 12 (expr)]
+    AND       [reduce using rule 12 (expr)]
+    '*'       [reduce using rule 12 (expr)]
+    '+'       [reduce using rule 12 (expr)]
+    $default  reduce using rule 12 (expr)
+
+
+State 37
+
+    5 Declaration: Type ID '=' . expr ';'
+
+    vINT   shift, and go to state 1
+    vBOOL  shift, and go to state 2
+    ID     shift, and go to state 17
+    '('    shift, and go to state 7
+
+    expr   go to state 39
+    Value  go to state 14
+
+
+State 38
+
+    9 Sentence: ID '=' expr ';' .
+
+    $default  reduce using rule 9 (Sentence)
+
+
+State 39
+
+    5 Declaration: Type ID '=' expr . ';'
+   12 expr: expr . '+' expr
+   13     | expr . '*' expr
+   14     | expr . OR expr
+   15     | expr . AND expr
+
+    OR   shift, and go to state 24
+    AND  shift, and go to state 25
+    '*'  shift, and go to state 26
+    ';'  shift, and go to state 40
+    '+'  shift, and go to state 28
+
+
+State 40
+
+    5 Declaration: Type ID '=' expr ';' .
+
+    $default  reduce using rule 5 (Declaration)

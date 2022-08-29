@@ -1,0 +1,6 @@
+Int _NOMBREvar1 = (False || True);
+
+b1 = (False);
+return b1;
+
+

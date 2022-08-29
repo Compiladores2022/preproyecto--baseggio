@@ -1,0 +1,6 @@
+Int  nombreVar1 = 5;
+
+nombreVar1 = %55;
+return nombreVar1;
+
+

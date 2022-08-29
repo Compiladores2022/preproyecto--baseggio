@@ -1,0 +1,5 @@
+Int  nombreVar1 = 5;
+Bool b1 = True;
+
+nombreVar1 = 55;
+return nombreVar1 <  nombreVar1 + 1;

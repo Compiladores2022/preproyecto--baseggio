@@ -1,0 +1,6 @@
+#!/bin/bash
+path="$1"
+for file in "$path"*.txt; do
+    printf "processing: ${file}\n"	
+    ./a.out "${file}"
+done

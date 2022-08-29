@@ -1,0 +1,5 @@
+Int  nombreVar1;
+Bool b1;
+
+nombreVar1 = 55;
+retornar nombreVar1 + 1;

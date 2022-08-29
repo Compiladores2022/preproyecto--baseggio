@@ -1,0 +1,12 @@
+Int  aux = 32;
+Bool b1 = (False || True);
+Int  x1 =2;
+Bool b2 = 1 && True;
+
+b2 = (False);
+return b2;
+
+x1 = x1 * aux + 1;
+return ((x1));
+
+
