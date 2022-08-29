@@ -73,8 +73,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+int yylex();
+void yyerror(const char *s);
 
-#line 78 "calc-sintaxis.tab.c"
+
+#line 81 "calc-sintaxis.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -514,9 +517,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    25,    25,    26,    29,    30,    33,    37,    38,    41,
-      42,    44,    48,    49,    50,    51,    52,    53,    56,    58,
-      60,    64,    66
+       0,    28,    28,    29,    32,    33,    36,    40,    41,    44,
+      45,    47,    51,    52,    53,    54,    55,    56,    59,    61,
+      63,    67,    69
 };
 #endif
 
@@ -1105,63 +1108,63 @@ yyreduce:
   switch (yyn)
     {
   case 6: /* Declaration: Type ID '=' expr ';'  */
-#line 33 "calc-sintaxis.y"
+#line 36 "calc-sintaxis.y"
                                   { //printf("%s", "Declaration "); 
 	                          }
-#line 1112 "calc-sintaxis.tab.c"
+#line 1115 "calc-sintaxis.tab.c"
     break;
 
   case 10: /* Sentence: ID '=' expr ';'  */
-#line 42 "calc-sintaxis.y"
+#line 45 "calc-sintaxis.y"
                           { //printf("%s","assignment sentence "); 
                           }
-#line 1119 "calc-sintaxis.tab.c"
+#line 1122 "calc-sintaxis.tab.c"
     break;
 
   case 11: /* Sentence: RETURN expr ';'  */
-#line 44 "calc-sintaxis.y"
+#line 47 "calc-sintaxis.y"
                           { //printf("%s","return sentence "); 
                           }
-#line 1126 "calc-sintaxis.tab.c"
+#line 1129 "calc-sintaxis.tab.c"
     break;
 
   case 18: /* Value: vINT  */
-#line 56 "calc-sintaxis.y"
+#line 59 "calc-sintaxis.y"
              { //printf("%s", "vInt "); 
              }
-#line 1133 "calc-sintaxis.tab.c"
+#line 1136 "calc-sintaxis.tab.c"
     break;
 
   case 19: /* Value: vBOOL  */
-#line 58 "calc-sintaxis.y"
+#line 61 "calc-sintaxis.y"
               { //printf("%s", "vBool "); 
               }
-#line 1140 "calc-sintaxis.tab.c"
+#line 1143 "calc-sintaxis.tab.c"
     break;
 
   case 20: /* Value: ID  */
-#line 60 "calc-sintaxis.y"
+#line 63 "calc-sintaxis.y"
            { //printf("%s", "ID "); 
            }
-#line 1147 "calc-sintaxis.tab.c"
+#line 1150 "calc-sintaxis.tab.c"
     break;
 
   case 21: /* Type: tINT  */
-#line 64 "calc-sintaxis.y"
+#line 67 "calc-sintaxis.y"
             { //printf("%s", "tInt ");
             }
-#line 1154 "calc-sintaxis.tab.c"
+#line 1157 "calc-sintaxis.tab.c"
     break;
 
   case 22: /* Type: tBOOL  */
-#line 66 "calc-sintaxis.y"
+#line 69 "calc-sintaxis.y"
              { //printf("%s", "tBool ");
              }
-#line 1161 "calc-sintaxis.tab.c"
+#line 1164 "calc-sintaxis.tab.c"
     break;
 
 
-#line 1165 "calc-sintaxis.tab.c"
+#line 1168 "calc-sintaxis.tab.c"
 
       default: break;
     }
@@ -1354,7 +1357,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 69 "calc-sintaxis.y"
+#line 72 "calc-sintaxis.y"
 
 
 

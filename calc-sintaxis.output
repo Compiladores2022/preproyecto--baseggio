@@ -1,10 +1,4 @@
-State 33 conflicts: 1 shift/reduce
-State 34 conflicts: 1 shift/reduce
-State 35 conflicts: 1 shift/reduce
-State 36 conflicts: 4 shift/reduce
-
-
-Grammar
+Gramática
 
     0 $accept: prog $end
 
@@ -38,509 +32,505 @@ Grammar
    21     | tBOOL
 
 
-Terminals, with rules where they appear
+Terminales con las reglas donde aparecen
 
-$end (0) 0
-'(' (40) 16
-')' (41) 16
-'*' (42) 13
-'+' (43) 12
-';' (59) 5 8 9 10
-'=' (61) 5 9
-error (256)
-vINT (258) 17
-vBOOL (259) 18
-tINT (260) 20
-tBOOL (261) 21
-ID (262) 5 9 19
-OR (263) 14
-AND (264) 15
-RETURN (265) 10
+    $end (0) 0
+    '(' (40) 16
+    ')' (41) 16
+    '*' (42) 13
+    '+' (43) 12
+    ';' (59) 5 8 9 10
+    '=' (61) 5 9
+    error (256)
+    vINT (258) 17
+    vBOOL (259) 18
+    tINT (260) 20
+    tBOOL (261) 21
+    ID (262) 5 9 19
+    OR (263) 14
+    AND (264) 15
+    RETURN (265) 10
 
 
-Nonterminals, with rules where they appear
+No terminales con las reglas donde aparecen
 
-$accept (17)
-    on left: 0
-prog (18)
-    on left: 1 2, on right: 0
-lDeclarations (19)
-    on left: 3 4, on right: 2 4
-Declaration (20)
-    on left: 5, on right: 3 4
-lSentences (21)
-    on left: 6 7, on right: 1 2 7
-Sentence (22)
-    on left: 8 9 10, on right: 6 7
-expr (23)
-    on left: 11 12 13 14 15 16, on right: 5 8 9 10 12 13 14 15 16
-Value (24)
-    on left: 17 18 19, on right: 11
-Type (25)
-    on left: 20 21, on right: 5
+    $accept (17)
+        on left: 0
+    prog (18)
+        on left: 1 2
+        on right: 0
+    lDeclarations (19)
+        on left: 3 4
+        on right: 2 4
+    Declaration (20)
+        on left: 5
+        on right: 3 4
+    lSentences (21)
+        on left: 6 7
+        on right: 1 2 7
+    Sentence (22)
+        on left: 8 9 10
+        on right: 6 7
+    expr (23)
+        on left: 11 12 13 14 15 16
+        on right: 5 8 9 10 12 13 14 15 16
+    Value (24)
+        on left: 17 18 19
+        on right: 11
+    Type (25)
+        on left: 20 21
+        on right: 5
 
 
-State 0
+Estado 0
 
-    0 $accept: . prog $end
+    0 $accept: • prog $end
 
-    vINT    shift, and go to state 1
-    vBOOL   shift, and go to state 2
-    tINT    shift, and go to state 3
-    tBOOL   shift, and go to state 4
-    ID      shift, and go to state 5
-    RETURN  shift, and go to state 6
-    '('     shift, and go to state 7
+    vINT    desplazar e ir al estado 1
+    vBOOL   desplazar e ir al estado 2
+    tINT    desplazar e ir al estado 3
+    tBOOL   desplazar e ir al estado 4
+    ID      desplazar e ir al estado 5
+    RETURN  desplazar e ir al estado 6
+    '('     desplazar e ir al estado 7
 
-    prog           go to state 8
-    lDeclarations  go to state 9
-    Declaration    go to state 10
-    lSentences     go to state 11
-    Sentence       go to state 12
-    expr           go to state 13
-    Value          go to state 14
-    Type           go to state 15
+    prog           ir al estado 8
+    lDeclarations  ir al estado 9
+    Declaration    ir al estado 10
+    lSentences     ir al estado 11
+    Sentence       ir al estado 12
+    expr           ir al estado 13
+    Value          ir al estado 14
+    Type           ir al estado 15
 
 
-State 1
+Estado 1
 
-   17 Value: vINT .
+   17 Value: vINT •
 
-    $default  reduce using rule 17 (Value)
+    $default  reduce usando la regla 17 (Value)
 
 
-State 2
+Estado 2
 
-   18 Value: vBOOL .
+   18 Value: vBOOL •
 
-    $default  reduce using rule 18 (Value)
+    $default  reduce usando la regla 18 (Value)
 
 
-State 3
+Estado 3
 
-   20 Type: tINT .
+   20 Type: tINT •
 
-    $default  reduce using rule 20 (Type)
+    $default  reduce usando la regla 20 (Type)
 
 
-State 4
+Estado 4
 
-   21 Type: tBOOL .
+   21 Type: tBOOL •
 
-    $default  reduce using rule 21 (Type)
+    $default  reduce usando la regla 21 (Type)
 
 
-State 5
+Estado 5
 
-    9 Sentence: ID . '=' expr ';'
-   19 Value: ID .
+    9 Sentence: ID • '=' expr ';'
+   19 Value: ID •
 
-    '='  shift, and go to state 16
+    '='  desplazar e ir al estado 16
 
-    $default  reduce using rule 19 (Value)
+    $default  reduce usando la regla 19 (Value)
 
 
-State 6
+Estado 6
 
-   10 Sentence: RETURN . expr ';'
+   10 Sentence: RETURN • expr ';'
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
-    expr   go to state 18
-    Value  go to state 14
+    expr   ir al estado 18
+    Value  ir al estado 14
 
 
-State 7
+Estado 7
 
-   16 expr: '(' . expr ')'
+   16 expr: '(' • expr ')'
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
-    expr   go to state 19
-    Value  go to state 14
+    expr   ir al estado 19
+    Value  ir al estado 14
 
 
-State 8
+Estado 8
 
-    0 $accept: prog . $end
+    0 $accept: prog • $end
 
-    $end  shift, and go to state 20
+    $end  desplazar e ir al estado 20
 
 
-State 9
+Estado 9
 
-    2 prog: lDeclarations . lSentences
-    4 lDeclarations: lDeclarations . Declaration
+    2 prog: lDeclarations • lSentences
+    4 lDeclarations: lDeclarations • Declaration
 
-    vINT    shift, and go to state 1
-    vBOOL   shift, and go to state 2
-    tINT    shift, and go to state 3
-    tBOOL   shift, and go to state 4
-    ID      shift, and go to state 5
-    RETURN  shift, and go to state 6
-    '('     shift, and go to state 7
+    vINT    desplazar e ir al estado 1
+    vBOOL   desplazar e ir al estado 2
+    tINT    desplazar e ir al estado 3
+    tBOOL   desplazar e ir al estado 4
+    ID      desplazar e ir al estado 5
+    RETURN  desplazar e ir al estado 6
+    '('     desplazar e ir al estado 7
 
-    Declaration  go to state 21
-    lSentences   go to state 22
-    Sentence     go to state 12
-    expr         go to state 13
-    Value        go to state 14
-    Type         go to state 15
+    Declaration  ir al estado 21
+    lSentences   ir al estado 22
+    Sentence     ir al estado 12
+    expr         ir al estado 13
+    Value        ir al estado 14
+    Type         ir al estado 15
 
 
-State 10
+Estado 10
 
-    3 lDeclarations: Declaration .
+    3 lDeclarations: Declaration •
 
-    $default  reduce using rule 3 (lDeclarations)
+    $default  reduce usando la regla 3 (lDeclarations)
 
 
-State 11
+Estado 11
 
-    1 prog: lSentences .
-    7 lSentences: lSentences . Sentence
+    1 prog: lSentences •
+    7 lSentences: lSentences • Sentence
 
-    vINT    shift, and go to state 1
-    vBOOL   shift, and go to state 2
-    ID      shift, and go to state 5
-    RETURN  shift, and go to state 6
-    '('     shift, and go to state 7
+    vINT    desplazar e ir al estado 1
+    vBOOL   desplazar e ir al estado 2
+    ID      desplazar e ir al estado 5
+    RETURN  desplazar e ir al estado 6
+    '('     desplazar e ir al estado 7
 
-    $default  reduce using rule 1 (prog)
+    $default  reduce usando la regla 1 (prog)
 
-    Sentence  go to state 23
-    expr      go to state 13
-    Value     go to state 14
+    Sentence  ir al estado 23
+    expr      ir al estado 13
+    Value     ir al estado 14
 
 
-State 12
+Estado 12
 
-    6 lSentences: Sentence .
+    6 lSentences: Sentence •
 
-    $default  reduce using rule 6 (lSentences)
+    $default  reduce usando la regla 6 (lSentences)
 
 
-State 13
+Estado 13
 
-    8 Sentence: expr . ';'
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   15     | expr . AND expr
+    8 Sentence: expr • ';'
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   15     | expr • AND expr
 
-    OR   shift, and go to state 24
-    AND  shift, and go to state 25
-    '*'  shift, and go to state 26
-    ';'  shift, and go to state 27
-    '+'  shift, and go to state 28
+    OR   desplazar e ir al estado 24
+    AND  desplazar e ir al estado 25
+    '+'  desplazar e ir al estado 26
+    '*'  desplazar e ir al estado 27
+    ';'  desplazar e ir al estado 28
 
 
-State 14
+Estado 14
 
-   11 expr: Value .
+   11 expr: Value •
 
-    $default  reduce using rule 11 (expr)
+    $default  reduce usando la regla 11 (expr)
 
 
-State 15
+Estado 15
 
-    5 Declaration: Type . ID '=' expr ';'
+    5 Declaration: Type • ID '=' expr ';'
 
-    ID  shift, and go to state 29
+    ID  desplazar e ir al estado 29
 
 
-State 16
+Estado 16
 
-    9 Sentence: ID '=' . expr ';'
+    9 Sentence: ID '=' • expr ';'
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
-    expr   go to state 30
-    Value  go to state 14
+    expr   ir al estado 30
+    Value  ir al estado 14
 
 
-State 17
+Estado 17
 
-   19 Value: ID .
+   19 Value: ID •
 
-    $default  reduce using rule 19 (Value)
+    $default  reduce usando la regla 19 (Value)
 
 
-State 18
+Estado 18
 
-   10 Sentence: RETURN expr . ';'
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   15     | expr . AND expr
+   10 Sentence: RETURN expr • ';'
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   15     | expr • AND expr
 
-    OR   shift, and go to state 24
-    AND  shift, and go to state 25
-    '*'  shift, and go to state 26
-    ';'  shift, and go to state 31
-    '+'  shift, and go to state 28
+    OR   desplazar e ir al estado 24
+    AND  desplazar e ir al estado 25
+    '+'  desplazar e ir al estado 26
+    '*'  desplazar e ir al estado 27
+    ';'  desplazar e ir al estado 31
 
 
-State 19
+Estado 19
 
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   15     | expr . AND expr
-   16     | '(' expr . ')'
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   15     | expr • AND expr
+   16     | '(' expr • ')'
 
-    OR   shift, and go to state 24
-    AND  shift, and go to state 25
-    '*'  shift, and go to state 26
-    '+'  shift, and go to state 28
-    ')'  shift, and go to state 32
+    OR   desplazar e ir al estado 24
+    AND  desplazar e ir al estado 25
+    '+'  desplazar e ir al estado 26
+    '*'  desplazar e ir al estado 27
+    ')'  desplazar e ir al estado 32
 
 
-State 20
+Estado 20
 
-    0 $accept: prog $end .
+    0 $accept: prog $end •
 
-    $default  accept
+    $default  aceptar
 
 
-State 21
+Estado 21
 
-    4 lDeclarations: lDeclarations Declaration .
+    4 lDeclarations: lDeclarations Declaration •
 
-    $default  reduce using rule 4 (lDeclarations)
+    $default  reduce usando la regla 4 (lDeclarations)
 
 
-State 22
+Estado 22
 
-    2 prog: lDeclarations lSentences .
-    7 lSentences: lSentences . Sentence
+    2 prog: lDeclarations lSentences •
+    7 lSentences: lSentences • Sentence
 
-    vINT    shift, and go to state 1
-    vBOOL   shift, and go to state 2
-    ID      shift, and go to state 5
-    RETURN  shift, and go to state 6
-    '('     shift, and go to state 7
+    vINT    desplazar e ir al estado 1
+    vBOOL   desplazar e ir al estado 2
+    ID      desplazar e ir al estado 5
+    RETURN  desplazar e ir al estado 6
+    '('     desplazar e ir al estado 7
 
-    $default  reduce using rule 2 (prog)
+    $default  reduce usando la regla 2 (prog)
 
-    Sentence  go to state 23
-    expr      go to state 13
-    Value     go to state 14
+    Sentence  ir al estado 23
+    expr      ir al estado 13
+    Value     ir al estado 14
 
 
-State 23
+Estado 23
 
-    7 lSentences: lSentences Sentence .
+    7 lSentences: lSentences Sentence •
 
-    $default  reduce using rule 7 (lSentences)
+    $default  reduce usando la regla 7 (lSentences)
 
 
-State 24
+Estado 24
 
-   14 expr: expr OR . expr
+   14 expr: expr OR • expr
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
-    expr   go to state 33
-    Value  go to state 14
+    expr   ir al estado 33
+    Value  ir al estado 14
 
 
-State 25
+Estado 25
 
-   15 expr: expr AND . expr
+   15 expr: expr AND • expr
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
-    expr   go to state 34
-    Value  go to state 14
+    expr   ir al estado 34
+    Value  ir al estado 14
 
 
-State 26
+Estado 26
 
-   13 expr: expr '*' . expr
+   12 expr: expr '+' • expr
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
-    expr   go to state 35
-    Value  go to state 14
+    expr   ir al estado 35
+    Value  ir al estado 14
 
 
-State 27
+Estado 27
 
-    8 Sentence: expr ';' .
+   13 expr: expr '*' • expr
 
-    $default  reduce using rule 8 (Sentence)
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
+    expr   ir al estado 36
+    Value  ir al estado 14
 
-State 28
 
-   12 expr: expr '+' . expr
+Estado 28
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    8 Sentence: expr ';' •
 
-    expr   go to state 36
-    Value  go to state 14
+    $default  reduce usando la regla 8 (Sentence)
 
 
-State 29
+Estado 29
 
-    5 Declaration: Type ID . '=' expr ';'
+    5 Declaration: Type ID • '=' expr ';'
 
-    '='  shift, and go to state 37
+    '='  desplazar e ir al estado 37
 
 
-State 30
+Estado 30
 
-    9 Sentence: ID '=' expr . ';'
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   15     | expr . AND expr
+    9 Sentence: ID '=' expr • ';'
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   15     | expr • AND expr
 
-    OR   shift, and go to state 24
-    AND  shift, and go to state 25
-    '*'  shift, and go to state 26
-    ';'  shift, and go to state 38
-    '+'  shift, and go to state 28
+    OR   desplazar e ir al estado 24
+    AND  desplazar e ir al estado 25
+    '+'  desplazar e ir al estado 26
+    '*'  desplazar e ir al estado 27
+    ';'  desplazar e ir al estado 38
 
 
-State 31
+Estado 31
 
-   10 Sentence: RETURN expr ';' .
+   10 Sentence: RETURN expr ';' •
 
-    $default  reduce using rule 10 (Sentence)
+    $default  reduce usando la regla 10 (Sentence)
 
 
-State 32
+Estado 32
 
-   16 expr: '(' expr ')' .
+   16 expr: '(' expr ')' •
 
-    $default  reduce using rule 16 (expr)
+    $default  reduce usando la regla 16 (expr)
 
 
-State 33
+Estado 33
 
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   14     | expr OR expr .
-   15     | expr . AND expr
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   14     | expr OR expr •
+   15     | expr • AND expr
 
-    AND  shift, and go to state 25
-    '+'  shift, and go to state 28
+    AND  desplazar e ir al estado 25
 
-    '+'       [reduce using rule 14 (expr)]
-    $default  reduce using rule 14 (expr)
+    $default  reduce usando la regla 14 (expr)
 
 
-State 34
+Estado 34
 
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   15     | expr . AND expr
-   15     | expr AND expr .
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   15     | expr • AND expr
+   15     | expr AND expr •
 
-    '+'  shift, and go to state 28
+    $default  reduce usando la regla 15 (expr)
 
-    '+'       [reduce using rule 15 (expr)]
-    $default  reduce using rule 15 (expr)
 
+Estado 35
 
-State 35
+   12 expr: expr • '+' expr
+   12     | expr '+' expr •
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   15     | expr • AND expr
 
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   13     | expr '*' expr .
-   14     | expr . OR expr
-   15     | expr . AND expr
+    OR   desplazar e ir al estado 24
+    AND  desplazar e ir al estado 25
+    '*'  desplazar e ir al estado 27
 
-    OR   shift, and go to state 24
-    AND  shift, and go to state 25
-    '+'  shift, and go to state 28
+    $default  reduce usando la regla 12 (expr)
 
-    '+'       [reduce using rule 13 (expr)]
-    $default  reduce using rule 13 (expr)
 
+Estado 36
 
-State 36
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   13     | expr '*' expr •
+   14     | expr • OR expr
+   15     | expr • AND expr
 
-   12 expr: expr . '+' expr
-   12     | expr '+' expr .
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   15     | expr . AND expr
+    OR   desplazar e ir al estado 24
+    AND  desplazar e ir al estado 25
 
-    OR   shift, and go to state 24
-    AND  shift, and go to state 25
-    '*'  shift, and go to state 26
-    '+'  shift, and go to state 28
+    $default  reduce usando la regla 13 (expr)
 
-    OR        [reduce using rule 12 (expr)]
-    AND       [reduce using rule 12 (expr)]
-    '*'       [reduce using rule 12 (expr)]
-    '+'       [reduce using rule 12 (expr)]
-    $default  reduce using rule 12 (expr)
 
+Estado 37
 
-State 37
+    5 Declaration: Type ID '=' • expr ';'
 
-    5 Declaration: Type ID '=' . expr ';'
+    vINT   desplazar e ir al estado 1
+    vBOOL  desplazar e ir al estado 2
+    ID     desplazar e ir al estado 17
+    '('    desplazar e ir al estado 7
 
-    vINT   shift, and go to state 1
-    vBOOL  shift, and go to state 2
-    ID     shift, and go to state 17
-    '('    shift, and go to state 7
+    expr   ir al estado 39
+    Value  ir al estado 14
 
-    expr   go to state 39
-    Value  go to state 14
 
+Estado 38
 
-State 38
+    9 Sentence: ID '=' expr ';' •
 
-    9 Sentence: ID '=' expr ';' .
+    $default  reduce usando la regla 9 (Sentence)
 
-    $default  reduce using rule 9 (Sentence)
 
+Estado 39
 
-State 39
+    5 Declaration: Type ID '=' expr • ';'
+   12 expr: expr • '+' expr
+   13     | expr • '*' expr
+   14     | expr • OR expr
+   15     | expr • AND expr
 
-    5 Declaration: Type ID '=' expr . ';'
-   12 expr: expr . '+' expr
-   13     | expr . '*' expr
-   14     | expr . OR expr
-   15     | expr . AND expr
+    OR   desplazar e ir al estado 24
+    AND  desplazar e ir al estado 25
+    '+'  desplazar e ir al estado 26
+    '*'  desplazar e ir al estado 27
+    ';'  desplazar e ir al estado 40
 
-    OR   shift, and go to state 24
-    AND  shift, and go to state 25
-    '*'  shift, and go to state 26
-    ';'  shift, and go to state 40
-    '+'  shift, and go to state 28
 
+Estado 40
 
-State 40
+    5 Declaration: Type ID '=' expr ';' •
 
-    5 Declaration: Type ID '=' expr ';' .
-
-    $default  reduce using rule 5 (Declaration)
+    $default  reduce usando la regla 5 (Declaration)

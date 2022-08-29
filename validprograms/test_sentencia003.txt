@@ -3,4 +3,4 @@ return  (False && True || True);
           
 
 // && tiene predencia sobre el || - resultado esperado = true
-/* This is a multi line comment */
+/* This is a multi-line comment */

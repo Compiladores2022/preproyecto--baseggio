@@ -57,7 +57,7 @@ bool "True"|"False"
 
 %%
 
-void yyerror(){
+void yyerror(char* s){
 	printf("%s%d\n","-> Syntactic ERROR on line: ",yylineno);
 }
 

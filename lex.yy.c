@@ -1915,7 +1915,7 @@ void yyfree (void * ptr )
 #line 58 "calc-lexico.l"
 
 
-void yyerror(){
+void yyerror(char* s){
 	printf("%s%d\n","-> Syntactic ERROR on line: ",yylineno);
 }
 
