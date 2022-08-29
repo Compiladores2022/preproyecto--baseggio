@@ -14,9 +14,9 @@
 %token AND
 %token RETURN 
      
+%left '+'
 %left '*'
 %right '='
-
 %left OR
 %left AND
  
