@@ -14,6 +14,7 @@ int main() {
     enqueue(&queue, &data1);
     enqueue(&queue, &data2);
     enqueue(&queue, &data3);
+    data1 = data1 + 5;
     while(!isEmpty(queue)) {
 	show(queue);
         dequeue(&queue);

@@ -9,7 +9,11 @@ int isEmpty(Stack stack) {
     return stack.length == 0;
 }
 
-TNode* constructNode(int data) {
+void* peek(Stack stack) {
+    return stack.peek->data;
+}
+
+TNode* constructNode(void* data) {
     TNode* node = (TNode*) malloc(sizeof(TNode));
     if(node == NULL) { exit(EXIT_FAILURE); }
     node->data = data;
@@ -18,7 +22,7 @@ TNode* constructNode(int data) {
 
 void destructNode(TNode* node) { free(node); }
 
-void push(Stack* stack, int data) {
+void push(Stack* stack, void* data) {
     TNode* node = constructNode(data);
     node->next  = stack->peek;
     stack->peek = node;
@@ -35,13 +39,4 @@ void pop(Stack* stack) {
 void construct(Stack* stack) {
     stack->peek   = NULL;
     stack->length = 0;
-}
-
-void show(Stack stack) {
-    TNode* ptr = stack.peek;
-    while(ptr) {
-        printf(" %d ->", ptr->data);
-	ptr = ptr->next;
-    }
-    printf(" NULL\n");
 }
