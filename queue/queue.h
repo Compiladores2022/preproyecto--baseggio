@@ -1,7 +1,7 @@
 #ifndef QUEUE_H
 
 typedef struct node {
-    int data;
+    void* data;
     struct node* next;
 } TNode;
 
@@ -12,9 +12,8 @@ typedef struct {
 
 int length(Queue queue);
 int isEmpty(Queue queue);
-void enqueue(Queue* queue, int data);
+void* head(Queue queue);
+void enqueue(Queue* queue, void* data);
 void dequeue(Queue* queue);
 void construct(Queue* queue);
-void show(Queue queue);
-
 #endif

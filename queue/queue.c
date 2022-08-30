@@ -9,7 +9,11 @@ int isEmpty(Queue queue) {
     return queue.length == 0;
 }
 
-TNode* constructNode(int data) {
+void* head(Queue queue) {
+    return queue.head->data;
+}
+
+TNode* constructNode(void* data) {
     TNode* node = (TNode*) malloc(sizeof(TNode));
     if(node == NULL) { exit(EXIT_FAILURE); }
     node->data = data;
@@ -20,7 +24,7 @@ void destructNode(TNode* node) {
     free(node);
 }
 
-void enqueue(Queue* queue, int data) {
+void enqueue(Queue* queue, void* data) {
     TNode* node = constructNode(data);
     if(queue->head == NULL) {
         queue->head = node;
@@ -31,13 +35,12 @@ void enqueue(Queue* queue, int data) {
 	}
 	ptr->next = node;
     }
-
     queue->length++;
 }
 
 void dequeue(Queue* queue) {
     TNode* node = queue->head;
-    queue->head  = queue->head->next;
+    queue->head = queue->head->next;
     destructNode(node);
     queue->length--;
 }
@@ -45,13 +48,4 @@ void dequeue(Queue* queue) {
 void construct(Queue* queue) {
     queue->head   = NULL;
     queue->length = 0;
-}
-
-void show(Queue queue) {
-    TNode* ptr = queue.head;
-    while(ptr) {
-        printf(" %d ->", ptr->data);
-	ptr = ptr->next;
-    }
-    printf(" NULL\n");
 }
