@@ -1,30 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
+#include "symbolTable.h"
 
 Queue queue;
 
-void show(Queue queue);
-
 int main() {
-    construct(&queue);
-    float data1 = 1.0;
-    float data2 = 0.5;
-    float data3 = 0.25;
-    enqueue(&queue, &data1);
-    enqueue(&queue, &data2);
-    enqueue(&queue, &data3);
-    data1 = data1 + 5;
-    while(!isEmpty(queue)) {
-	show(queue);
-        dequeue(&queue);
-    }
-    show(queue);
-}
+    SymbolTable symbolTable;
+    constructSymbolTable(&symbolTable);
 
-void show(Queue queue) {
-	if(!isEmpty(queue)) {
-	    float data = *(float* ) head(queue);
-	    printf(" %f", data);
-	}
+    Symbol s1, s2;
+    s1.flag = ID;
+    s1.name = "x";
+    s1.value = 0;
+    s2.flag = ID;
+    s2.name = "y";
+    s2.value = 1;
+    addSymbol(&symbolTable, &s1);
+    addSymbol(&symbolTable, &s2);
+    openLevel(&symbolTable);
+    showSymbolTable(symbolTable);
 }
