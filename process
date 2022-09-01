@@ -1,7 +1,7 @@
 #!/bin/bash
-pathToEXE="$1"
+exe="$1"
 pathToTests="$2"
 for file in "$pathToTests"*.txt; do
     printf "processing: ${file}\n"	
-    "$pathToEXE"process "${file}"
+    "$exe" "${file}"
 done
