@@ -20,5 +20,4 @@ void enqueue(Queue* queue, Symbol* symbol);
 void dequeue(Queue* queue);
 void construct(Queue* queue);
 void show(Queue queue);
-void showSymbol(Symbol symbol);
 #endif

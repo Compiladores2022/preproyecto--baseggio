@@ -7,4 +7,6 @@ typedef struct {
     char* name;
     int value;
 } Symbol;
+
+void showSymbol(Symbol symbol);
 #endif

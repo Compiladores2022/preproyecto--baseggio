@@ -1,6 +1,7 @@
 #!/bin/bash
-path="$1"
-for file in "$path"*.txt; do
+pathToEXE="$1"
+pathToTests="$2"
+for file in "$pathToTests"*.txt; do
     printf "processing: ${file}\n"	
-    ./a.out "${file}"
+    "$pathToEXE"process "${file}"
 done

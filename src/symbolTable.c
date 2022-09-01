@@ -1,8 +1,19 @@
 #include "symbolTable.h"
-#include "queue.c"
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+/* #include "queue.c"
+#include "symbol.c" */
 
-void addSymbol(SymbolTable* symbolTable, Symbol* symbol) {
-    enqueue(&symbolTable->peek->queue, symbol);
+#define TRUE  1
+#define FALSE 0
+
+int addSymbol(SymbolTable* symbolTable, Symbol* symbol) {
+    if(lookUp(symbolTable->peek->queue, symbol->name) == NULL) {
+        enqueue(&symbolTable->peek->queue, symbol);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 Level* constructLevel() {
@@ -40,4 +51,16 @@ void showSymbolTable(SymbolTable symbolTable) {
 	level = level->next;
 	i++;
     }
+}
+
+Symbol* lookUpSymbol(SymbolTable symbolTable, char* name) {
+    Level* level = symbolTable.peek;
+    Symbol* symbol;
+    while(level) {
+	if((symbol = lookUp(level->queue, name)))
+	    return symbol;
+	level = level->next;
+    }
+
+    return NULL;
 }

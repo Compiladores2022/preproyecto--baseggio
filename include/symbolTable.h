@@ -16,7 +16,7 @@ typedef struct {
 void constructSymbolTable(SymbolTable* symbolTable);
 void openLevel(SymbolTable* symbolTable);
 void closeLevel(SymbolTable* symbolTable);
-void addSymbol(SymbolTable* symbolTable, Symbol* symbol);
+int addSymbol(SymbolTable* symbolTable, Symbol* symbol);
 void showSymbolTable(SymbolTable symbolTable);
-Symbol* lookUpSymbol(SymbolTable symbolTable);
+Symbol* lookUpSymbol(SymbolTable symbolTable, char* name);
 #endif

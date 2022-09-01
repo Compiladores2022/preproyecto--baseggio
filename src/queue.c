@@ -1,7 +1,7 @@
+#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "queue.h"
 
 int length(Queue queue) {
     return queue.length;
@@ -70,8 +70,3 @@ void show(Queue queue) {
     }
 }
 
-void showSymbol(Symbol symbol) {
-    printf("FLAG:  %d\n", symbol.flag);
-    printf("NAME:  %s\n", symbol.name);
-    printf("VALUE: %d\n", symbol.value);
-}
