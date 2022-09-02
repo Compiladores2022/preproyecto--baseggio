@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "symbol.h"
 
 int yylex();
 void yyerror(const char *s);
@@ -33,7 +34,9 @@ lDeclarations: Declaration
              | lDeclarations Declaration
              ;
 
-Declaration: Type ID '=' expr ';' { //printf("%s", "Declaration "); 
+Declaration: Type ID '=' expr ';' { Symbol symbol;
+	                            symbol.name = "x";
+                                    printf("%s\n", symbol.name); 
 	                          }
            ;
              

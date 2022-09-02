@@ -1,0 +1,7 @@
+#!/bin/bash
+
+flex calc-lexico.l
+bison -d calc-sintaxis.y
+mv *.c src/
+mv *.h include/
+make all

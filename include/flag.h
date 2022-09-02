@@ -1,6 +1,6 @@
 #ifndef FLAG_H
 #define FLAG_H
 typedef enum {
-    ID
+    IDENTIFIER
 } Flag;
 #endif
