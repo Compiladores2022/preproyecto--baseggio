@@ -524,7 +524,7 @@ static const yytype_int8 yyrline[] =
 {
        0,    41,    41,    42,    42,    45,    46,    49,    60,    61,
       64,    65,    70,    73,    74,    75,    76,    77,    78,    81,
-      82,    83,    90,    91
+      88,    95,   107,   108
 };
 #endif
 
@@ -1150,64 +1150,79 @@ yyreduce:
 
   case 13: /* E: V  */
 #line 73 "calc-sintaxis.y"
-     { (yyval.n) = NULL; }
+             { (yyval.n) = (yyvsp[0].n); }
 #line 1155 "calc-sintaxis.tab.c"
     break;
 
   case 14: /* E: E '+' E  */
 #line 74 "calc-sintaxis.y"
-           { (yyval.n) = NULL; }
+             { (yyval.n) = NULL; }
 #line 1161 "calc-sintaxis.tab.c"
     break;
 
   case 15: /* E: E '*' E  */
 #line 75 "calc-sintaxis.y"
-           { (yyval.n) = NULL; }
+             { (yyval.n) = NULL; }
 #line 1167 "calc-sintaxis.tab.c"
     break;
 
   case 16: /* E: E OR E  */
 #line 76 "calc-sintaxis.y"
-           { (yyval.n) = NULL; }
+             { (yyval.n) = NULL; }
 #line 1173 "calc-sintaxis.tab.c"
     break;
 
   case 17: /* E: E AND E  */
 #line 77 "calc-sintaxis.y"
-           { (yyval.n) = NULL; }
+             { (yyval.n) = NULL; }
 #line 1179 "calc-sintaxis.tab.c"
     break;
 
   case 18: /* E: '(' E ')'  */
 #line 78 "calc-sintaxis.y"
-             { (yyval.n) = NULL; }
+             { (yyval.n) = (yyvsp[-1].n); }
 #line 1185 "calc-sintaxis.tab.c"
     break;
 
   case 19: /* V: vINT  */
 #line 81 "calc-sintaxis.y"
-          { (yyval.n) = NULL; }
-#line 1191 "calc-sintaxis.tab.c"
+          { Symbol symbol;
+            symbol.flag  = VALUE_INT;
+            symbol.value = (yyvsp[0].i);
+            ASTNode* node = (ASTNode*) malloc(sizeof(ASTNode));
+            node->symbol = &symbol;
+            (yyval.n) = node; }
+#line 1196 "calc-sintaxis.tab.c"
     break;
 
   case 20: /* V: vBOOL  */
-#line 82 "calc-sintaxis.y"
-          { (yyval.n) = NULL; }
-#line 1197 "calc-sintaxis.tab.c"
-    break;
-
-  case 21: /* V: ID  */
-#line 83 "calc-sintaxis.y"
-          { if(lookUpSymbol(symbolTable, (yyvsp[0].s)) == NULL) {
-	        printf("Identifier undeclared.\n");
-	        exit(EXIT_FAILURE);
-	    }
-	  }
+#line 88 "calc-sintaxis.y"
+          { Symbol symbol;
+            symbol.flag = VALUE_BOOL;
+            symbol.value = (yyvsp[0].i);
+            ASTNode* node = (ASTNode*) malloc(sizeof(ASTNode));
+            node->symbol = &symbol;
+            (yyval.n) = node; }
 #line 1207 "calc-sintaxis.tab.c"
     break;
 
+  case 21: /* V: ID  */
+#line 95 "calc-sintaxis.y"
+          { Symbol* symbol;
+            if((symbol = lookUpSymbol(symbolTable, (yyvsp[0].s)))) {
+	        printf("Identifier undeclared.\n");
+	        exit(EXIT_FAILURE);
+	    } else {
+	        ASTNode* node = (ASTNode*) malloc(sizeof(ASTNode));
+                node->symbol = &symbol;
+                (yyval.n) = node;
+	    }
+	  }
+#line 1222 "calc-sintaxis.tab.c"
+    break;
 
-#line 1211 "calc-sintaxis.tab.c"
+
+#line 1226 "calc-sintaxis.tab.c"
 
       default: break;
     }
@@ -1400,7 +1415,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 93 "calc-sintaxis.y"
+#line 110 "calc-sintaxis.y"
 
 
 

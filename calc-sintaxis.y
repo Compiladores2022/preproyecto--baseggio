@@ -70,19 +70,36 @@ Sentence: E ';'
         | RETURN E ';' { $$ = NULL; }
         ;
   
-E: V { $$ = NULL; }
- | E '+' E { $$ = NULL; }
- | E '*' E { $$ = NULL; }
- | E OR  E { $$ = NULL; }
- | E AND E { $$ = NULL; }
- | '(' E ')' { $$ = NULL; }
+E: V         { $$ = $1; }
+ | E '+' E   { $$ = NULL; }
+ | E '*' E   { $$ = NULL; }
+ | E OR  E   { $$ = NULL; }
+ | E AND E   { $$ = NULL; }
+ | '(' E ')' { $$ = $2; }
  ;
 
-V : vINT  { $$ = NULL; }
-  | vBOOL { $$ = NULL; }
-  | ID    { if(lookUpSymbol(symbolTable, $1) == NULL) {
+V : vINT  { Symbol symbol;
+            symbol.flag  = VALUE_INT;
+            symbol.value = $1;
+            ASTNode* node = (ASTNode*) malloc(sizeof(ASTNode));
+            node->symbol = &symbol;
+            $$ = node; }
+            
+  | vBOOL { Symbol symbol;
+            symbol.flag = VALUE_BOOL;
+            symbol.value = $1;
+            ASTNode* node = (ASTNode*) malloc(sizeof(ASTNode));
+            node->symbol = &symbol;
+            $$ = node; }
+            
+  | ID    { Symbol* symbol;
+            if((symbol = lookUpSymbol(symbolTable, $1))) {
 	        printf("Identifier undeclared.\n");
 	        exit(EXIT_FAILURE);
+	    } else {
+	        ASTNode* node = (ASTNode*) malloc(sizeof(ASTNode));
+                node->symbol = &symbol;
+                $$ = node;
 	    }
 	  }
   ;
