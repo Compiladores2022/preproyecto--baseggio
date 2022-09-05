@@ -13,40 +13,8 @@ ASTNode* node(Symbol* symbol) {
     return leaf;
 }
 
-Ast emptyTree() {
-  Ast ast;
-  ast.root = NULL;
-  return ast;
-}
-
-Ast compose(ASTNode* root, Ast lSide, Ast mSide, Ast rSide) {
-    Ast ast;
-    root->lSide = lSide.root;
-    root->mSide = mSide.root;
-    root->rSide = rSide.root;
-    ast.root = root;
-    return ast;
-}
-
-Ast leaf(Symbol* symbol) {
-    return compose(node(symbol), emptyTree(), emptyTree(), emptyTree());
-}
-
-void showASTNodes(ASTNode* node) {
-    if(node) {
-	printf("root: ");
-        showSymbol(*node->symbol);
-	if (node->lSide) printf("left side: ");
-	showASTNodes(node->lSide);
-	if (node->mSide) printf("mid side: ");
-	showASTNodes(node->mSide);
-	if (node->rSide) printf("right side: ");
-	showASTNodes(node->rSide);
-    }
-}
-
-void showAST(Ast ast)
-{
-    printf("Tree: \n");
-    showASTNodes(ast.root);
+void compose(ASTNode* root, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide) {
+    root->lSide = lSide;
+    root->mSide = mSide;
+    root->rSide = rSide;
 }

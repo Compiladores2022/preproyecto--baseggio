@@ -2,22 +2,34 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "symbol.h"
+#include "symbolTable.h"
+#include "ast.h"
 
+SymbolTable symbolTable;
 int yylex();
 void yyerror(const char *s);
+void contextCheck(char* name);
 
 %}
+
+%union { int i; char* s; struct astNode* n }
  
-%token vINT
-%token vBOOL
+%token <i> vINT
+%token <i> vBOOL
 %token tINT
 %token tBOOL
-%token ID
+%token <s> ID
 %token OR
 %token AND
 %token RETURN 
-     
+
+%type <n> lDeclarations
+%type <n> lSentences
+%type <n> Declaration
+%type <n> Sentence
+%type <n> E
+%type <n> V
+
 %left '+'
 %left '*'
 %right '='
@@ -27,52 +39,57 @@ void yyerror(const char *s);
 %%
  
 prog: lSentences     
-    | lDeclarations lSentences
+    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences
     ;
     
 lDeclarations: Declaration
              | lDeclarations Declaration
              ;
 
-Declaration: Type ID '=' expr ';' { Symbol symbol;
-	                            symbol.name = "x";
-                                    printf("%s\n", symbol.name); 
-	                          }
+Declaration: Type ID '=' E ';' { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
+                               symbol->name = $2;
+                               if(lookUpSymbol(symbolTable, symbol->name)) {
+                                   printf("Identifier redeclared.\n");
+                                   exit(EXIT_FAILURE);
+                               } else {
+                                   addSymbol(&symbolTable, symbol);
+                               }
+                             }
            ;
              
 lSentences: Sentence
           | lSentences Sentence
           ;
           
-Sentence: expr ';'
-	| ID '=' expr ';' { //printf("%s","assignment sentence "); 
-                          }
-        | RETURN expr ';' { //printf("%s","return sentence "); 
-                          }
+Sentence: E ';'
+	| ID '=' E ';' { if(lookUpSymbol(symbolTable, $1) == NULL) {
+	                     printf("Identifier undeclared.\n");
+	                     exit(EXIT_FAILURE);
+	                 }  
+	               }
+        | RETURN E ';' { $$ = NULL; }
         ;
   
-expr: Value
-    | expr '+' expr
-    | expr '*' expr
-    | expr OR  expr
-    | expr AND expr
-    | '(' expr ')'
-    ;
+E: V { $$ = NULL; }
+ | E '+' E { $$ = NULL; }
+ | E '*' E { $$ = NULL; }
+ | E OR  E { $$ = NULL; }
+ | E AND E { $$ = NULL; }
+ | '(' E ')' { $$ = NULL; }
+ ;
 
-Value : vINT { //printf("%s", "vInt "); 
-             }
-      | vBOOL { //printf("%s", "vBool "); 
-              }
-      | ID { //printf("%s", "ID "); 
-           }
-      ;
+V : vINT  { $$ = NULL; }
+  | vBOOL { $$ = NULL; }
+  | ID    { if(lookUpSymbol(symbolTable, $1) == NULL) {
+	        printf("Identifier undeclared.\n");
+	        exit(EXIT_FAILURE);
+	    }
+	  }
+  ;
 
-Type : tINT { //printf("%s", "tInt ");
-            }
-     | tBOOL { //printf("%s", "tBool ");
-             }
+Type : tINT
+     | tBOOL
      ;
 %%
-
 
 

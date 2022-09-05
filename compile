@@ -1,5 +1,6 @@
 #!/bin/bash
 
+make clean
 flex calc-lexico.l
 bison -d calc-sintaxis.y
 mv *.c src/

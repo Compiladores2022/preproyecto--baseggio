@@ -12,29 +12,32 @@
 %option noyywrap
 %option yylineno
 
-letra [a-zA-Z]      
+letra  [a-zA-Z]      
 digito [0-9]
-bool "True"|"False"
+bool   "True"|"False"
 
 %%
 
 {digito}+ { return vINT; }
 
-{bool} { return vBOOL; }
+{bool}    { return vBOOL; }
 
-"return" { return RETURN; }
+"return"  { return RETURN; }
 
-"Int" { return tINT; }
+"Int"     { return tINT; }
 
-"Bool" { return tBOOL; }
+"Bool"    { return tBOOL; }
 
-{letra}({letra}|{digito})* { return ID; }    
+{letra}({letra}|{digito})* { yylval.s = (char*) malloc(sizeof(char));
+                             strcpy(yylval.s, yytext);
+                             return ID; 
+                           }    
 
 [+*=;()] { return *yytext; }
                                   
-"&&" { return AND; }
+"&&"     { return AND; }
        
-"||" { return OR; }
+"||"     { return OR; }
 
 "//".*"\n"
 
