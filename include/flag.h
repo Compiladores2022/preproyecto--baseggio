@@ -3,14 +3,13 @@
 typedef enum {
     IDENTIFIER,
     ADDITION,
-    SUBSTRACTION,
     MULTIPLICATION,
-    DIVISION,
     OP_OR,
     OP_AND,
     ASSIGNMENT,
     SEMICOLON,
     VALUE_INT,
-    VALUE_BOOL
+    VALUE_BOOL,
+    RETURN
 } Flag;
 #endif

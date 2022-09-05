@@ -807,7 +807,7 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 #line 25 "calc-lexico.l"
-{ return RETURN; }
+{ return TOKEN_RETURN; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
@@ -835,12 +835,12 @@ YY_RULE_SETUP
 case 8:
 YY_RULE_SETUP
 #line 38 "calc-lexico.l"
-{ return AND; }
+{ return TOKEN_AND; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 40 "calc-lexico.l"
-{ return OR; }
+{ return TOKEN_OR; }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
