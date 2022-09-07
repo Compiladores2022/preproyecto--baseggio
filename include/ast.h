@@ -11,5 +11,6 @@ typedef struct astNode{
 
 ASTNode* node(Symbol* symbol);
 void compose(ASTNode* root, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide);
+Type typeCheck(ASTNode* node);
 void showAST(ASTNode* root);
 #endif

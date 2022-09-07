@@ -70,3 +70,61 @@ void showAST(ASTNode* root) {
        printf("_");
     }
 }
+
+int isLeave(ASTNode* node) {
+    return !node->lSide && !node->mSide && !node->rSide;
+}
+
+int isBinaryOperator(Symbol* symbol) {
+    return symbol->flag = ADDITION || symbol->flag == MULTIPLICATION || symbol->flag == OP_OR || symbol->flag == OP_AND || symbol->flag == ASSIGNMENT;
+}
+
+Type typeCheck(ASTNode* node) {
+    if(node) {
+        if(isLeave(node)) { return node->symbol->type; }
+        
+        if(isBinaryOperator(node->symbol)) {
+            Flag operator = node->symbol->flag;
+            Type lSideType = typeCheck(node->lSide);
+            Type rSideType = typeCheck(node->rSide);
+            if(operator == ADDITION || operator == MULTIPLICATION) {
+                if( (lSideType == rSideType) == TYPE_INT) {
+                    node->symbol->type = TYPE_INT;
+                    printf("Hi.\n");
+                    return node->symbol->type;
+                } else {
+                    printf("ERROR\n");
+                    exit(EXIT_FAILURE);
+                }
+            }
+            
+            if(operator == OP_OR || operator == OP_AND) {
+                if( (lSideType == rSideType) == TYPE_BOOL) {
+                    node->symbol->type = TYPE_BOOL;
+                    return node->symbol->type;
+                } else {
+                    printf("ERROR");
+                    exit(EXIT_FAILURE);
+                }
+            }
+            
+            if(operator == ASSIGNMENT) {
+                if(!(lSideType == rSideType)) {
+                    printf("ERROR");
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+        
+        if(node->symbol->flag == RETURN) {
+            return typeCheck(node->lSide);
+        }
+        
+        if(node->symbol->flag == SEMICOLON) {
+            typeCheck(node->lSide);
+            typeCheck(node->rSide);
+        }
+    }
+    
+    return 0;
+}
