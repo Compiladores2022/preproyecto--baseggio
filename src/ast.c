@@ -120,7 +120,7 @@ Type typeCheck(ASTNode* node) {
 	    if(flag == ASSIGNMENT) {
 	        Type varType  = typeCheck(node->lSide);
 		Type exprType = typeCheck(node->rSide);
-		reportAssignmentErrorIfExists(varType, exprType, node->symbol->name);
+		reportAssignmentErrorIfExists(varType, exprType, node->lSide->symbol->name);
 	    }
 
 	    if(flag == SEMICOLON) {
