@@ -19,55 +19,41 @@ void compose(ASTNode* root, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide) {
     root->rSide = rSide;
 }
 
-void showFlag(Flag flag){
+char* flagRepresentation(Flag flag){
     switch ( flag ) {
 	    case IDENTIFIER :
-		  printf("ID");
+		  return "ID";
 		  break;
 	    case ADDITION :
-		  printf("+");
+		  return "+";
 		  break;
 	    case MULTIPLICATION :
-		  printf("*");
+		  return "*";
 		  break;
 	    case OP_OR :
-		  printf("||");
+		  return "||";
 		  break;
 	    case OP_AND :
-		  printf("&&");
+		  return "&&";
 		  break;
 	    case ASSIGNMENT: 
-		  printf("=");
+		  return "=";
 		  break;
 	    case SEMICOLON :
-		  printf(";");
+		  return ";";
 		  break;
 	    case VALUE_INT :
-		  printf("vInt");
+		  return "vInt";
 		  break;
 	    case VALUE_BOOL :
-		  printf("vBool");
+		  return "vBool";
 		  break;
 	    case RETURN :
-		  printf("return");
+		  return "return";
 		  break;
 	    default :
+		  return "no representation found";
 		  break;
-    }
-}
-
-void showAST(ASTNode* root) {
-    if(root) {
-        showFlag(root->symbol->flag);
-	printf("\n");
-        printf("left side: ");
-        showAST(root->lSide);
-        printf("mid side: ");
-        showAST(root->mSide);
-        printf("right side: ");
-        showAST(root->rSide);
-    } else {
-       printf("_");
     }
 }
 
@@ -75,56 +61,73 @@ int isLeave(ASTNode* node) {
     return !node->lSide && !node->mSide && !node->rSide;
 }
 
-int isBinaryOperator(Symbol* symbol) {
-    return symbol->flag = ADDITION || symbol->flag == MULTIPLICATION || symbol->flag == OP_OR || symbol->flag == OP_AND || symbol->flag == ASSIGNMENT;
+int isAnArithmeticBinaryOperator(Flag flag) {return flag == ADDITION || flag == MULTIPLICATION; }
+
+int isAnBooleanBinaryOperator(Flag flag) { return flag == OP_OR || flag == OP_AND; }
+
+char* typeRepresentation(Type type) {
+    switch (type) {
+        case TYPE_INT:
+		return "Int" ;
+		break;
+	case TYPE_BOOL:
+		return "Bool";
+		break;
+	default:
+		return "no representation found";
+		break;
+    }
+}
+
+void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Type expectedType, Flag operator) {
+    if(!(typeOfTheFstOperand == typeOfTheSndOperand && typeOfTheSndOperand == expectedType)) {
+	printf("%s arguments are of type: %sx%s but %sx%s was found\n", flagRepresentation(operator), typeRepresentation(expectedType), typeRepresentation(expectedType), typeRepresentation(typeOfTheFstOperand), typeRepresentation(typeOfTheSndOperand));
+	exit(EXIT_FAILURE);
+    }
+}
+
+void reportAssignmentErrorIfExists(Type varType, Type exprType, char* varName) {
+	if(!(varType == exprType)) {
+	    printf("%s is of type %s but the expresion is of type %s\n", varName, typeRepresentation(varType), typeRepresentation(exprType));
+	    exit(EXIT_FAILURE);
+	}
 }
 
 Type typeCheck(ASTNode* node) {
     if(node) {
-        if(isLeave(node)) { return node->symbol->type; }
-        
-        if(isBinaryOperator(node->symbol)) {
-            Flag operator = node->symbol->flag;
-            Type lSideType = typeCheck(node->lSide);
-            Type rSideType = typeCheck(node->rSide);
-            if(operator == ADDITION || operator == MULTIPLICATION) {
-                if( (lSideType == rSideType) == TYPE_INT) {
-                    node->symbol->type = TYPE_INT;
-                    printf("Hi.\n");
-                    return node->symbol->type;
-                } else {
-                    printf("ERROR\n");
-                    exit(EXIT_FAILURE);
-                }
-            }
-            
-            if(operator == OP_OR || operator == OP_AND) {
-                if( (lSideType == rSideType) == TYPE_BOOL) {
-                    node->symbol->type = TYPE_BOOL;
-                    return node->symbol->type;
-                } else {
-                    printf("ERROR");
-                    exit(EXIT_FAILURE);
-                }
-            }
-            
-            if(operator == ASSIGNMENT) {
-                if(!(lSideType == rSideType)) {
-                    printf("ERROR");
-                    exit(EXIT_FAILURE);
-                }
-            }
-        }
-        
-        if(node->symbol->flag == RETURN) {
-            return typeCheck(node->lSide);
-        }
-        
-        if(node->symbol->flag == SEMICOLON) {
-            typeCheck(node->lSide);
-            typeCheck(node->rSide);
-        }
+	    if(isLeave(node)) { return node->symbol->type; }
+	    Flag flag = node->symbol->flag;
+	    if(isAnArithmeticBinaryOperator(flag)) {
+	        Type typeOfTheFstOperand = typeCheck(node->lSide);
+		Type typeOfTheSndOperand = typeCheck(node->rSide);
+		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
+		node->symbol->type = typeOfTheFstOperand;
+		return node->symbol->type;
+	    }
+
+	    if(isAnBooleanBinaryOperator(flag)) {
+	        Type typeOfTheFstOperand = typeCheck(node->lSide);
+		Type typeOfTheSndOperand = typeCheck(node->rSide);
+		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_BOOL, flag);
+		node->symbol->type = typeOfTheFstOperand;
+		return node->symbol->type;
+	    }
+
+	    if(flag == RETURN) {
+	        typeCheck(node->lSide);
+	    }
+
+	    if(flag == ASSIGNMENT) {
+	        Type varType  = typeCheck(node->lSide);
+		Type exprType = typeCheck(node->rSide);
+		reportAssignmentErrorIfExists(varType, exprType, node->symbol->name);
+	    }
+
+	    if(flag == SEMICOLON) {
+	        typeCheck(node->lSide);
+		typeCheck(node->rSide);
+	    }
     }
-    
+
     return 0;
 }

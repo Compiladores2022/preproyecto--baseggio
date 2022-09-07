@@ -71,7 +71,7 @@ extern int yydebug;
 union YYSTYPE
 {
 #line 16 "calc-sintaxis.y"
- int i; char* s; struct astNode* n 
+ int i; char* s; struct astNode* n; enum type t 
 
 #line 77 "calc-sintaxis.tab.h"
 

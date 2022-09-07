@@ -8,17 +8,17 @@
 
 SymbolTable symbolTable;
 int yylex();
-void yyerror(const char *s);
+void yyerror(const char* s);
 ASTNode* tree(Flag, const char*, ASTNode*, ASTNode*, ASTNode*);
 
 %}
 
-%union { int i; char* s; struct astNode* n }
+%union { int i; char* s; struct astNode* n; enum type t }
  
 %token <i> vINT
 %token <i> vBOOL
-%token tINT
-%token tBOOL
+%token <t> tINT
+%token <t> tBOOL
 %token <s> ID
 %token TOKEN_OR
 %token TOKEN_AND
@@ -29,6 +29,7 @@ ASTNode* tree(Flag, const char*, ASTNode*, ASTNode*, ASTNode*);
 %type <n> Sentence
 %type <n> E
 %type <n> V
+%type <t> Type
 
 %left '+'
 %left '*'
@@ -49,6 +50,7 @@ lDeclarations: Declaration               { $$ = $1; }
 Declaration: Type ID '=' E ';' { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
 	                         symbol->name = (char*) malloc(sizeof(char));
                                  strcpy(symbol->name, $2);
+                                 symbol->type = $1;
                                  if(lookUpSymbol(symbolTable, symbol->name)) {
                                      printf("ERROR: Redeclared identifier: %s\n", $2);
                                      exit(EXIT_FAILURE);
@@ -121,8 +123,8 @@ V : vINT  { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
 	  }
   ;
 
-Type : tINT
-     | tBOOL
+Type : tINT  { $$ = $1; }
+     | tBOOL { $$ = $1; }
      ;
 %%
 

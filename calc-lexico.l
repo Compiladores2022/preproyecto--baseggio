@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
+#include "type.h"
 #include "calc-sintaxis.tab.h"
 
 %}
@@ -24,9 +24,11 @@ bool   "True"|"False"
 
 "return"  { return TOKEN_RETURN; }
 
-"Int"     { return tINT; }
+"Int"     { yylval.t = TYPE_INT;
+            return tINT; }
 
-"Bool"    { return tBOOL; }
+"Bool"    { yylval.t = TYPE_BOOL;
+            return tBOOL; }
 
 {letra}({letra}|{digito})* { yylval.s = (char*) malloc(sizeof(char));
                              strcpy(yylval.s, yytext);
