@@ -62,7 +62,7 @@ Symbol* lookUp(Queue queue, char* name) {
     return NULL;
 }
 
-void show(Queue queue) {
+void printQueue(Queue queue) {
     TNode* ptr = queue.head;
     while(ptr) {
         showSymbol(*(ptr->symbol));
