@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
-/* #include "queue.c"
-#include "symbol.c" */
 
 #define TRUE  1
 #define FALSE 0
@@ -42,12 +40,12 @@ void closeLevel(SymbolTable* symbolTable) {
     symbolTable->levels--;
 }
 
-void showSymbolTable(SymbolTable symbolTable) {
+void printSymbolTable(SymbolTable symbolTable) {
     Level* level = symbolTable.peek;
     int i = 0;
     while(level) {
 	printf("Level %d: \n", symbolTable.levels - i);
-        show(level->queue);
+        printQueue(level->queue);
 	level = level->next;
 	i++;
     }
