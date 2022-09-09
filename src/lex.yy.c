@@ -802,28 +802,29 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 23 "calc-lexico.l"
-{ return vBOOL; }
+{ yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
+            return vBOOL; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 25 "calc-lexico.l"
+#line 26 "calc-lexico.l"
 { return RETURN; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 27 "calc-lexico.l"
+#line 28 "calc-lexico.l"
 { yylval.t = TYPE_INT;
             return tINT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 30 "calc-lexico.l"
+#line 31 "calc-lexico.l"
 { yylval.t = TYPE_BOOL;
             return tBOOL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 33 "calc-lexico.l"
+#line 34 "calc-lexico.l"
 { yylval.s = (char*) malloc(sizeof(char));
                              strcpy(yylval.s, yytext);
                              return ID; 
@@ -831,64 +832,64 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 38 "calc-lexico.l"
+#line 39 "calc-lexico.l"
 { return *yytext; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 40 "calc-lexico.l"
+#line 41 "calc-lexico.l"
 { return AND; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 42 "calc-lexico.l"
+#line 43 "calc-lexico.l"
 { return OR; }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 44 "calc-lexico.l"
+#line 45 "calc-lexico.l"
 
 	YY_BREAK
 
 case 11:
 YY_RULE_SETUP
-#line 47 "calc-lexico.l"
+#line 48 "calc-lexico.l"
 BEGIN(IN_COMMENT);
 	YY_BREAK
 
 
 case 12:
 YY_RULE_SETUP
-#line 50 "calc-lexico.l"
+#line 51 "calc-lexico.l"
 BEGIN(INITIAL);
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 51 "calc-lexico.l"
+#line 52 "calc-lexico.l"
 // eat comment in chunks
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 52 "calc-lexico.l"
+#line 53 "calc-lexico.l"
 // eat the lone star
 	YY_BREAK
 case 15:
 /* rule 15 can match eol */
 YY_RULE_SETUP
-#line 53 "calc-lexico.l"
+#line 54 "calc-lexico.l"
 yylineno++;
 	YY_BREAK
 
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 56 "calc-lexico.l"
+#line 57 "calc-lexico.l"
 
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 58 "calc-lexico.l"
+#line 59 "calc-lexico.l"
 { printf("%s%d\n", "-> Lexical ERROR on line: ", yylineno);
     printf("%s%s\n", "unexpected character: ", yytext);
     exit(0);
@@ -896,10 +897,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 63 "calc-lexico.l"
+#line 64 "calc-lexico.l"
 ECHO;
 	YY_BREAK
-#line 903 "lex.yy.c"
+#line 904 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_COMMENT):
 	yyterminate();
@@ -1917,7 +1918,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 63 "calc-lexico.l"
+#line 64 "calc-lexico.l"
 
 
 void yyerror(char* s){

@@ -20,7 +20,8 @@ bool   "True"|"False"
 
 {digito}+ { return vINT; }
 
-{bool}    { return vBOOL; }
+{bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
+            return vBOOL; }
 
 "return"  { return RETURN; }
 
