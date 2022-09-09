@@ -70,7 +70,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 16 "calc-sintaxis.y"
+#line 14 "calc-sintaxis.y"
  int i; char* s; struct astNode* n; enum type t 
 
 #line 77 "calc-sintaxis.tab.h"

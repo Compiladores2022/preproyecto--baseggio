@@ -1,7 +1,8 @@
-#include "ast.h"
-#include "symbol.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "ast.h"
+#include "symbol.h"
 
 ASTNode* node(Symbol* symbol) {
     ASTNode* leaf = (ASTNode*) malloc(sizeof(ASTNode));
@@ -13,10 +14,16 @@ ASTNode* node(Symbol* symbol) {
     return leaf;
 }
 
-void compose(ASTNode* root, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide) {
+ASTNode* composeTree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide) {
+    Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
+    symbol->name = (char*) malloc(sizeof(char));
+    strcpy(symbol->name, name);
+    symbol->flag = flag;
+    ASTNode* root = node(symbol);
     root->lSide = lSide;
     root->mSide = mSide;
     root->rSide = rSide;
+    return root;
 }
 
 int isLeave(ASTNode* node) {
@@ -49,7 +56,7 @@ Type typeCheck(ASTNode* node) {
 		return node->symbol->type;
 	    }
 
-	    if(isAnBooleanBinaryOperator(flag)) {
+	    if(isABooleanBinaryOperator(flag)) {
 	        Type typeOfTheFstOperand = typeCheck(node->lSide);
 		Type typeOfTheSndOperand = typeCheck(node->rSide);
 		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_BOOL, flag);

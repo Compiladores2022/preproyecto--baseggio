@@ -10,7 +10,7 @@ typedef struct astNode{
 } ASTNode;
 
 ASTNode* node(Symbol* symbol);
-void compose(ASTNode* root, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide);
+ASTNode* composeTree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide);
 Type typeCheck(ASTNode* node);
 void showAST(ASTNode* root);
 #endif

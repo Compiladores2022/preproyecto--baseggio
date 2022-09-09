@@ -9,8 +9,6 @@
 SymbolTable symbolTable;
 int yylex();
 void yyerror(const char* s);
-ASTNode* tree(Flag, const char*, ASTNode*, ASTNode*, ASTNode*);
-
 %}
 
 %union { int i; char* s; struct astNode* n; enum type t }
@@ -40,11 +38,11 @@ ASTNode* tree(Flag, const char*, ASTNode*, ASTNode*, ASTNode*);
 %%
  
 prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); }
-    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { typeCheck(tree(SEMICOLON, ";", $2, NULL, $3)); }
+    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { typeCheck(composeTree(SEMICOLON, ";", $2, NULL, $3)); }
     ;
     
 lDeclarations: Declaration               { $$ = $1; }
-             | Declaration lDeclarations { $$ = tree(SEMICOLON, ";", $1, NULL, $2); }
+             | Declaration lDeclarations { $$ = composeTree(SEMICOLON, ";", $1, NULL, $2); }
              ;
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
@@ -57,44 +55,34 @@ Declaration: Type ID '=' E ';' { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol
                                  } else {
                                      addSymbol(&symbolTable, symbol);
                                      ASTNode* lSide = node(symbol);
-                                     $$ = tree(ASSIGNMENT, "=", lSide, NULL, $4);
+                                     $$ = composeTree(ASSIGNMENT, "=", lSide, NULL, $4);
                                  }
                                }
            ;
              
-lSentences: Sentence            { $$ = $1; 
-	  }
-          | Sentence lSentences { $$ = tree(SEMICOLON, ";", $1, NULL, $2); 
-}
+lSentences: Sentence            { $$ = $1; }
+          | Sentence lSentences { $$ = composeTree(SEMICOLON, ";", $1, NULL, $2); }
           ;
           
-Sentence: E ';'        { $$ = $1; 
-	}
+Sentence: E ';'        { $$ = $1; }
 	| ID '=' E ';' { Symbol* symbol;
                          if((symbol = lookUpSymbol(symbolTable, $1)) == NULL) {
 	                     printf("ERROR: Undeclared identifier: %s\n", $1);
 	                     exit(EXIT_FAILURE);
 	                 } else {
                              ASTNode* lSide = node(symbol);
-                             $$ = tree(ASSIGNMENT, "=", lSide, NULL, $3);
+                             $$ = composeTree(ASSIGNMENT, "=", lSide, NULL, $3);
                          }
 	               }
-        | TOKEN_RETURN E ';' { $$ = tree(RETURN, "return", $2, NULL, NULL); 
-}
+        | TOKEN_RETURN E ';' { $$ = composeTree(RETURN, "return", $2, NULL, NULL); }
         ;
   
-E: V         { $$ = $1;                                            
- }
- | E '+' E   { $$ = tree(ADDITION, "+", $1, NULL, $3);       
-}
- | E '*' E   { $$ = tree(MULTIPLICATION, "*", $1, NULL, $3); 
-}
- | E TOKEN_OR  E   { $$ = tree(OP_OR, "||", $1, NULL, $3);          
-}
- | E TOKEN_AND E   { $$ = tree(OP_AND, "&&", $1, NULL, $3);         
-}
- | '(' E ')' { $$ = $2;                                             
-}
+E: V             { $$ = $1; }
+ | E '+' E       { $$ = composeTree(ADDITION, "+", $1, NULL, $3); }
+ | E '*' E       { $$ = composeTree(MULTIPLICATION, "*", $1, NULL, $3); }
+ | E TOKEN_OR  E { $$ = composeTree(OP_OR, "||", $1, NULL, $3); }
+ | E TOKEN_AND E { $$ = composeTree(OP_AND, "&&", $1, NULL, $3); }
+ | '(' E ')'     { $$ = $2; }
  ;
 
 V : vINT  { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
@@ -127,13 +115,3 @@ Type : tINT  { $$ = $1; }
      | tBOOL { $$ = $1; }
      ;
 %%
-
-ASTNode* tree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide) {
-    Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-    symbol->name   = (char*) malloc(sizeof(char));
-    strcpy(symbol->name, name);
-    symbol->flag  = flag;
-    ASTNode* root = node(symbol);
-    compose(root, lSide, mSide, rSide);
-    return root;
-}
