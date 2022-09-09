@@ -27,30 +27,16 @@ int isAnArithmeticBinaryOperator(Flag flag) {return flag == ADDITION || flag == 
 
 int isAnBooleanBinaryOperator(Flag flag) { return flag == OP_OR || flag == OP_AND; }
 
-char* typeRepresentation(Type type) {
-    switch (type) {
-        case TYPE_INT:
-		return "Int" ;
-		break;
-	case TYPE_BOOL:
-		return "Bool";
-		break;
-	default:
-		return "no representation found";
-		break;
-    }
-}
-
 void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Type expectedType, Flag operator) {
     if(!(typeOfTheFstOperand == typeOfTheSndOperand && typeOfTheSndOperand == expectedType)) {
-	printf("%s arguments are of type: %sx%s but %sx%s was found\n", flagToString(operator), typeRepresentation(expectedType), typeRepresentation(expectedType), typeRepresentation(typeOfTheFstOperand), typeRepresentation(typeOfTheSndOperand));
+	printf("%s arguments are of type: %sx%s but %sx%s was found\n", flagToString(operator), typeToString(expectedType), typeToString(expectedType), typeToString(typeOfTheFstOperand), typeToString(typeOfTheSndOperand));
 	exit(EXIT_FAILURE);
     }
 }
 
 void reportAssignmentErrorIfExists(Type varType, Type exprType, char* varName) {
 	if(!(varType == exprType)) {
-	    printf("%s is of type %s but the expresion is of type %s\n", varName, typeRepresentation(varType), typeRepresentation(exprType));
+	    printf("%s is of type %s but the expresion is of type %s\n", varName, typeToString(varType), typeToString(exprType));
 	    exit(EXIT_FAILURE);
 	}
 }

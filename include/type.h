@@ -6,4 +6,5 @@ typedef enum type {
     TYPE_BOOL
 } Type;
 
+char* typeToString(Type type);
 #endif
