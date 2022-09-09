@@ -22,7 +22,7 @@ bool   "True"|"False"
 
 {bool}    { return vBOOL; }
 
-"return"  { return TOKEN_RETURN; }
+"return"  { return RETURN; }
 
 "Int"     { yylval.t = TYPE_INT;
             return tINT; }
@@ -37,9 +37,9 @@ bool   "True"|"False"
 
 [+*=;()] { return *yytext; }
                                   
-"&&"     { return TOKEN_AND; }
+"&&"     { return AND; }
        
-"||"     { return TOKEN_OR; }
+"||"     { return OR; }
 
 "//".*"\n"
 

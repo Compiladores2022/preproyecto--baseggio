@@ -2,25 +2,25 @@
 
 char* flagToString(Flag flag) {
 	switch (flag) {
-	    case IDENTIFIER:
+	    case flag_IDENTIFIER:
 		    return "ID";
-	    case ADDITION:
+	    case flag_ADDITION:
 		    return "+";
-	    case MULTIPLICATION:
+	    case flag_MULTIPLICATION:
 		    return "*";
-	    case OP_OR:
+	    case flag_OR:
 		    return "||";
-	    case OP_AND:
+	    case flag_AND:
 		    return "&&";
-	    case ASSIGNMENT:
+	    case flag_ASSIGNMENT:
 		    return "=";
-	    case SEMICOLON:
+	    case flag_SEMICOLON:
 		    return ";";
-	    case VALUE_INT:
+	    case flag_VALUE_INT:
 		    return "vInt";
-	    case VALUE_BOOL:
+	    case flag_VALUE_BOOL:
 		    return "vBool";
-	    case RETURN:
+	    case flag_RETURN:
 		    return "return";
 	    default:
 		    return "NRF";
@@ -28,9 +28,9 @@ char* flagToString(Flag flag) {
 }
 
 int isAnArithmeticBinaryOperator(Flag flag) {
-    return flag == ADDITION || flag == MULTIPLICATION;
+    return flag == flag_ADDITION || flag == flag_MULTIPLICATION;
 }
 
 int isABooleanBinaryOperator(Flag flag) {
-    return flag == OP_OR || flag == OP_AND;
+    return flag == flag_OR || flag == flag_AND;
 }

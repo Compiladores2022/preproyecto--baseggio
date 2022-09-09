@@ -18,9 +18,9 @@ void yyerror(const char* s);
 %token <t> tINT
 %token <t> tBOOL
 %token <s> ID
-%token TOKEN_OR
-%token TOKEN_AND
-%token TOKEN_RETURN 
+%token OR
+%token AND
+%token RETURN 
 %type <n> lDeclarations
 %type <n> lSentences
 %type <n> Declaration
@@ -32,17 +32,17 @@ void yyerror(const char* s);
 %left '+'
 %left '*'
 %right '='
-%left TOKEN_OR
-%left TOKEN_AND
+%left OR
+%left AND
  
 %%
  
 prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); }
-    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { typeCheck(composeTree(SEMICOLON, ";", $2, NULL, $3)); }
+    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { typeCheck(composeTree(flag_SEMICOLON, ";", $2, NULL, $3)); }
     ;
     
 lDeclarations: Declaration               { $$ = $1; }
-             | Declaration lDeclarations { $$ = composeTree(SEMICOLON, ";", $1, NULL, $2); }
+             | Declaration lDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
              ;
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
@@ -55,13 +55,13 @@ Declaration: Type ID '=' E ';' { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol
                                  } else {
                                      addSymbol(&symbolTable, symbol);
                                      ASTNode* lSide = node(symbol);
-                                     $$ = composeTree(ASSIGNMENT, "=", lSide, NULL, $4);
+                                     $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
                                  }
                                }
            ;
              
 lSentences: Sentence            { $$ = $1; }
-          | Sentence lSentences { $$ = composeTree(SEMICOLON, ";", $1, NULL, $2); }
+          | Sentence lSentences { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
           ;
           
 Sentence: E ';'        { $$ = $1; }
@@ -71,30 +71,30 @@ Sentence: E ';'        { $$ = $1; }
 	                     exit(EXIT_FAILURE);
 	                 } else {
                              ASTNode* lSide = node(symbol);
-                             $$ = composeTree(ASSIGNMENT, "=", lSide, NULL, $3);
+                             $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3);
                          }
 	               }
-        | TOKEN_RETURN E ';' { $$ = composeTree(RETURN, "return", $2, NULL, NULL); }
+        | RETURN E ';' { $$ = composeTree(flag_RETURN, "return", $2, NULL, NULL); }
         ;
   
-E: V             { $$ = $1; }
- | E '+' E       { $$ = composeTree(ADDITION, "+", $1, NULL, $3); }
- | E '*' E       { $$ = composeTree(MULTIPLICATION, "*", $1, NULL, $3); }
- | E TOKEN_OR  E { $$ = composeTree(OP_OR, "||", $1, NULL, $3); }
- | E TOKEN_AND E { $$ = composeTree(OP_AND, "&&", $1, NULL, $3); }
- | '(' E ')'     { $$ = $2; }
+E: V         { $$ = $1; }
+ | E '+' E   { $$ = composeTree(flag_ADDITION, "+", $1, NULL, $3); }
+ | E '*' E   { $$ = composeTree(flag_MULTIPLICATION, "*", $1, NULL, $3); }
+ | E OR  E   { $$ = composeTree(flag_OR, "||", $1, NULL, $3); }
+ | E AND E   { $$ = composeTree(flag_AND, "&&", $1, NULL, $3); }
+ | '(' E ')' { $$ = $2; }
  ;
 
 V : vINT  { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
             symbol->type  = TYPE_INT;
-            symbol->flag  = VALUE_INT;
+            symbol->flag  = flag_VALUE_INT;
             symbol->value = $1;
             ASTNode* n = node(symbol);
             $$ = n; }
             
   | vBOOL { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol)) ;
             symbol->type = TYPE_BOOL;
-            symbol->flag = VALUE_BOOL;
+            symbol->flag = flag_VALUE_BOOL;
             symbol->value = $1;
             ASTNode* n = node(symbol);
             $$ = n; 

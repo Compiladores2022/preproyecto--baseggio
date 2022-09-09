@@ -64,17 +64,17 @@ Type typeCheck(ASTNode* node) {
 		return node->symbol->type;
 	    }
 
-	    if(flag == RETURN) {
+	    if(flag == flag_RETURN) {
 	        typeCheck(node->lSide);
 	    }
 
-	    if(flag == ASSIGNMENT) {
+	    if(flag == flag_ASSIGNMENT) {
 	        Type varType  = typeCheck(node->lSide);
 		Type exprType = typeCheck(node->rSide);
 		reportAssignmentErrorIfExists(varType, exprType, node->lSide->symbol->name);
 	    }
 
-	    if(flag == SEMICOLON) {
+	    if(flag == flag_SEMICOLON) {
 	        typeCheck(node->lSide);
 		typeCheck(node->rSide);
 	    }

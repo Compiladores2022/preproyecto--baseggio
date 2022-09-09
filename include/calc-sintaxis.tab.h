@@ -59,9 +59,9 @@ extern int yydebug;
     tINT = 260,                    /* tINT  */
     tBOOL = 261,                   /* tBOOL  */
     ID = 262,                      /* ID  */
-    TOKEN_OR = 263,                /* TOKEN_OR  */
-    TOKEN_AND = 264,               /* TOKEN_AND  */
-    TOKEN_RETURN = 265             /* TOKEN_RETURN  */
+    OR = 263,                      /* OR  */
+    AND = 264,                     /* AND  */
+    RETURN = 265                   /* RETURN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

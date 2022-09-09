@@ -1,16 +1,16 @@
 #ifndef FLAG_H
 #define FLAG_H
 typedef enum {
-    IDENTIFIER,
-    ADDITION,
-    MULTIPLICATION,
-    OP_OR,
-    OP_AND,
-    ASSIGNMENT,
-    SEMICOLON,
-    VALUE_INT,
-    VALUE_BOOL,
-    RETURN
+    flag_IDENTIFIER,
+    flag_ADDITION,
+    flag_MULTIPLICATION,
+    flag_OR,
+    flag_AND,
+    flag_ASSIGNMENT,
+    flag_SEMICOLON,
+    flag_VALUE_INT,
+    flag_VALUE_BOOL,
+    flag_RETURN
 } Flag;
 
 char* flagToString(Flag flag);
