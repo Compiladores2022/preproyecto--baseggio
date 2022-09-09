@@ -26,3 +26,11 @@ char* flagToString(Flag flag) {
 		    return "NRF";
 	}
 }
+
+int isAnArithmeticBinaryOperator(Flag flag) {
+    return flag == ADDITION || flag == MULTIPLICATION;
+}
+
+int isABooleanBinaryOperator(Flag flag) {
+    return flag == OP_OR || flag == OP_AND;
+}

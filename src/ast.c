@@ -23,10 +23,6 @@ int isLeave(ASTNode* node) {
     return !node->lSide && !node->mSide && !node->rSide;
 }
 
-int isAnArithmeticBinaryOperator(Flag flag) {return flag == ADDITION || flag == MULTIPLICATION; }
-
-int isAnBooleanBinaryOperator(Flag flag) { return flag == OP_OR || flag == OP_AND; }
-
 void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Type expectedType, Flag operator) {
     if(!(typeOfTheFstOperand == typeOfTheSndOperand && typeOfTheSndOperand == expectedType)) {
 	printf("%s arguments are of type: %sx%s but %sx%s was found\n", flagToString(operator), typeToString(expectedType), typeToString(expectedType), typeToString(typeOfTheFstOperand), typeToString(typeOfTheSndOperand));

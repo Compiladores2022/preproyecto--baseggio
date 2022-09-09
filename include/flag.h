@@ -14,4 +14,6 @@ typedef enum {
 } Flag;
 
 char* flagToString(Flag flag);
+int isAnArithmeticBinaryOperator(Flag flag);
+int isABooleanBinaryOperator(Flag flag);
 #endif
