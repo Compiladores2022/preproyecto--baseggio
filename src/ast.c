@@ -19,44 +19,6 @@ void compose(ASTNode* root, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide) {
     root->rSide = rSide;
 }
 
-char* flagRepresentation(Flag flag){
-    switch ( flag ) {
-	    case IDENTIFIER :
-		  return "ID";
-		  break;
-	    case ADDITION :
-		  return "+";
-		  break;
-	    case MULTIPLICATION :
-		  return "*";
-		  break;
-	    case OP_OR :
-		  return "||";
-		  break;
-	    case OP_AND :
-		  return "&&";
-		  break;
-	    case ASSIGNMENT: 
-		  return "=";
-		  break;
-	    case SEMICOLON :
-		  return ";";
-		  break;
-	    case VALUE_INT :
-		  return "vInt";
-		  break;
-	    case VALUE_BOOL :
-		  return "vBool";
-		  break;
-	    case RETURN :
-		  return "return";
-		  break;
-	    default :
-		  return "no representation found";
-		  break;
-    }
-}
-
 int isLeave(ASTNode* node) {
     return !node->lSide && !node->mSide && !node->rSide;
 }
@@ -81,7 +43,7 @@ char* typeRepresentation(Type type) {
 
 void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Type expectedType, Flag operator) {
     if(!(typeOfTheFstOperand == typeOfTheSndOperand && typeOfTheSndOperand == expectedType)) {
-	printf("%s arguments are of type: %sx%s but %sx%s was found\n", flagRepresentation(operator), typeRepresentation(expectedType), typeRepresentation(expectedType), typeRepresentation(typeOfTheFstOperand), typeRepresentation(typeOfTheSndOperand));
+	printf("%s arguments are of type: %sx%s but %sx%s was found\n", flagToString(operator), typeRepresentation(expectedType), typeRepresentation(expectedType), typeRepresentation(typeOfTheFstOperand), typeRepresentation(typeOfTheSndOperand));
 	exit(EXIT_FAILURE);
     }
 }

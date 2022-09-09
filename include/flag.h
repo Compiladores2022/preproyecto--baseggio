@@ -12,4 +12,6 @@ typedef enum {
     VALUE_BOOL,
     RETURN
 } Flag;
+
+char* flagToString(Flag flag);
 #endif
