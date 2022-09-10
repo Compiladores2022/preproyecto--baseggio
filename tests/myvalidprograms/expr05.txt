@@ -1,0 +1,4 @@
+return True && True;
+return True && False;
+return False && True;
+return False && False;
