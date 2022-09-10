@@ -34,3 +34,7 @@ int isAnArithmeticBinaryOperator(Flag flag) {
 int isABooleanBinaryOperator(Flag flag) {
     return flag == flag_OR || flag == flag_AND;
 }
+
+int isABinaryOperator(Flag flag) {
+    return isAnArithmeticBinaryOperator(flag) || isABooleanBinaryOperator(flag);
+}

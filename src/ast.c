@@ -83,33 +83,30 @@ Type typeCheck(ASTNode* node) {
     return 0;
 }
 
+int evaluateOperation(int valueOfTheFstOperand, int valueOfTheSndOperand, Flag operator) {
+    switch (operator) {
+        case flag_ADDITION:
+		return valueOfTheFstOperand + valueOfTheSndOperand;
+	case flag_MULTIPLICATION:
+		return valueOfTheFstOperand * valueOfTheSndOperand;
+	case flag_OR:
+		return valueOfTheFstOperand || valueOfTheSndOperand;
+	case flag_AND:
+		return valueOfTheFstOperand && valueOfTheSndOperand;
+	default:
+		return 0;
+    }
+}
+
 int evaluate(ASTNode* node) {
     if(node) {
         if(isLeave(node)) { return node->symbol->value; }
 	Flag flag = node->symbol->flag;
 
-	if(flag == flag_ADDITION) {
+        if(isABinaryOperator(flag)) {
 	    int valueOfTheFstOperand = evaluate(node->lSide);
 	    int valueOfTheSndOperand = evaluate(node->rSide);
-	    return (node->symbol->value = valueOfTheFstOperand + valueOfTheSndOperand);
-	}
-
-	if(flag == flag_MULTIPLICATION) {
-	    int valueOfTheFstOperand = evaluate(node->lSide);
-	    int valueOfTheSndOperand = evaluate(node->rSide);
-	    return (node->symbol->value = valueOfTheFstOperand * valueOfTheSndOperand);
-	}
-
-	if(flag == flag_OR) {
-	    int valueOfTheFstOperand = evaluate(node->lSide);
-	    int valueOfTheSndOperand = evaluate(node->rSide);
-	    return (node->symbol->value = valueOfTheFstOperand || valueOfTheSndOperand);
-	}
-
-	if(flag == flag_AND) {
-	    int valueOfTheFstOperand = evaluate(node->lSide);
-	    int valueOfTheSndOperand = evaluate(node->rSide);
-	    return (node->symbol->value = valueOfTheFstOperand && valueOfTheSndOperand);
+	    return node->symbol->value = evaluateOperation(valueOfTheFstOperand, valueOfTheSndOperand, flag);
 	}
 
 	if(flag == flag_RETURN) {
