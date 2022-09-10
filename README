@@ -1,21 +1,21 @@
 Para compilar:
->> ./compile
+>> ./compile_project
 
 Para correr los tests:
->> ./process_all bin/process <ruta a los tests>
+>> ./compile_programs bin/compile <ruta a los tests>
 
 Ejemplo:
->> ./process_all bin/process tests/invalidprograms/
+>> ./compile_programs bin/compile tests/invalidprograms/
 
 Si se encuentra un error en algun programa (lexico, sintactico o de tipos) se informara de la siguiente forma:
-processing: tests/invalidprograms/error_caracterInvalido001.txt
+compiling: tests/invalidprograms/error_caracterInvalido001.txt
 -> Lexical ERROR on line: 3
 unexpected character: %
 
-processing: tests/invalidprograms/error_sintactico002.txt
+compiling: tests/invalidprograms/error_sintactico002.txt
 -> Syntactic ERROR on line: 1
 
-processing: tests/invalidprograms/test_decl_sentencias_sinReturn.txt
+compiling: tests/invalidprograms/test_decl_sentencias_sinReturn.txt
 && arguments are of type: BoolxBool but IntxBool was found
 
 Cuando no se informa de ningun error es porque el programa es valido.

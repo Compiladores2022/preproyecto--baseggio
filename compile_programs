@@ -2,6 +2,6 @@
 exe="$1"
 pathToTests="$2"
 for file in "$pathToTests"*.txt; do
-    printf "processing: ${file}\n"	
+    printf "compiling: ${file}\n"	
     "$exe" "${file}"
 done
