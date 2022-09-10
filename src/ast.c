@@ -82,3 +82,49 @@ Type typeCheck(ASTNode* node) {
 
     return 0;
 }
+
+int evaluate(ASTNode* node) {
+    if(node) {
+        if(isLeave(node)) { return node->symbol->value; }
+	Flag flag = node->symbol->flag;
+
+	if(flag == flag_ADDITION) {
+	    int valueOfTheFstOperand = evaluate(node->lSide);
+	    int valueOfTheSndOperand = evaluate(node->rSide);
+	    return (node->symbol->value = valueOfTheFstOperand + valueOfTheSndOperand);
+	}
+
+	if(flag == flag_MULTIPLICATION) {
+	    int valueOfTheFstOperand = evaluate(node->lSide);
+	    int valueOfTheSndOperand = evaluate(node->rSide);
+	    return (node->symbol->value = valueOfTheFstOperand * valueOfTheSndOperand);
+	}
+
+	if(flag == flag_OR) {
+	    int valueOfTheFstOperand = evaluate(node->lSide);
+	    int valueOfTheSndOperand = evaluate(node->rSide);
+	    return (node->symbol->value = valueOfTheFstOperand || valueOfTheSndOperand);
+	}
+
+	if(flag == flag_AND) {
+	    int valueOfTheFstOperand = evaluate(node->lSide);
+	    int valueOfTheSndOperand = evaluate(node->rSide);
+	    return (node->symbol->value = valueOfTheFstOperand && valueOfTheSndOperand);
+	}
+
+	if(flag == flag_RETURN) {
+	    evaluate(node->lSide);
+	}
+
+	if(flag == flag_ASSIGNMENT) {
+	    evaluate(node->lSide);
+	}
+
+	if(flag == flag_SEMICOLON) {
+	    evaluate(node->lSide);
+	    evaluate(node->rSide);
+	}
+    }
+
+    return 0;
+}

@@ -1120,7 +1120,7 @@ yyreduce:
 
   case 3: /* prog: $@1 lSentences  */
 #line 40 "calc-sintaxis.y"
-                                                                       { typeCheck((yyvsp[0].n)); }
+                                                                       { typeCheck((yyvsp[0].n)); evaluate((yyvsp[0].n)); }
 #line 1125 "calc-sintaxis.tab.c"
     break;
 
@@ -1132,7 +1132,7 @@ yyreduce:
 
   case 5: /* prog: $@2 lDeclarations lSentences  */
 #line 41 "calc-sintaxis.y"
-                                                                       { typeCheck(composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n))); }
+                                                                       { ASTNode* root = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); typeCheck(root); evaluate(root); }
 #line 1137 "calc-sintaxis.tab.c"
     break;
 

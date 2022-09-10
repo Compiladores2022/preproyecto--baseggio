@@ -37,8 +37,8 @@ void yyerror(const char* s);
  
 %%
  
-prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); }
-    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { typeCheck(composeTree(flag_SEMICOLON, ";", $2, NULL, $3)); }
+prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); evaluate($2); }
+    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); typeCheck(root); evaluate(root); }
     ;
     
 lDeclarations: Declaration               { $$ = $1; }
