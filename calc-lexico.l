@@ -18,7 +18,8 @@ bool   "True"|"False"
 
 %%
 
-{digito}+ { return vINT; }
+{digito}+ { yylval.i = atoi(yytext);
+            return vINT; }
 
 {bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
             return vBOOL; }
