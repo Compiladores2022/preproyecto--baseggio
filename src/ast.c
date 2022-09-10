@@ -113,11 +113,11 @@ int evaluate(ASTNode* node) {
 	}
 
 	if(flag == flag_RETURN) {
-	    evaluate(node->lSide);
+	    printf("%d\n", evaluate(node->lSide));
 	}
 
 	if(flag == flag_ASSIGNMENT) {
-	    evaluate(node->lSide);
+	    node->lSide->symbol->value = evaluate(node->rSide);
 	}
 
 	if(flag == flag_SEMICOLON) {
