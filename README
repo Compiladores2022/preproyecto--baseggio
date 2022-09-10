@@ -5,17 +5,12 @@ Para correr los tests:
 >> ./compile_programs bin/compile <ruta a los tests>
 
 Ejemplo:
->> ./compile_programs bin/compile tests/invalidprograms/
+>> ./compile_programs bin/compile tests/invalidprograms/lexical/
 
-Si se encuentra un error en algun programa (lexico, sintactico o de tipos) se informara de la siguiente forma:
-compiling: tests/invalidprograms/error_caracterInvalido001.txt
--> Lexical ERROR on line: 3
-unexpected character: %
-
-compiling: tests/invalidprograms/error_sintactico002.txt
--> Syntactic ERROR on line: 1
-
-compiling: tests/invalidprograms/test_decl_sentencias_sinReturn.txt
-&& arguments are of type: BoolxBool but IntxBool was found
+Los tests para los programas invalidos se dividieron en las siguientes categorias:
+- lexical
+- syntactic
+- context
+- type
 
 Cuando no se informa de ningun error es porque el programa es valido.
