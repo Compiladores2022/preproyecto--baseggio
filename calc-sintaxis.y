@@ -34,11 +34,11 @@ void yyerror(const char* s);
 %right '='
 %left OR
 %left AND
- 
+
 %%
- 
-prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); evaluate($2); }
-    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); typeCheck(root); evaluate(root); }
+
+prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); }
+    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); typeCheck(root); }
     ;
     
 lDeclarations: Declaration               { $$ = $1; }
