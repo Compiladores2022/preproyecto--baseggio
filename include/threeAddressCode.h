@@ -1,10 +1,11 @@
 #ifndef THREEADDRESSCODE_H
 #define THREEADDRESSCODE_H
+#include "ast.h"
 #include "symbol.h"
-#include "operator.h"
+#include "flag.h"
 
 typedef struct instruction{
-    Operator op;
+    Flag op;
     Symbol* fstOperand;
     Symbol* sndOperand;
     Symbol* result;
@@ -16,4 +17,5 @@ typedef struct threeAddressCode {
 } ThreeAddressCode;
 
 void constructThreeAddressCode(ThreeAddressCode* threeAddressCode);
+Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode);
 #endif

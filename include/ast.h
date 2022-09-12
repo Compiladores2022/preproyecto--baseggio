@@ -28,4 +28,6 @@ int evaluate(ASTNode* node);
 
 /* The 'printAST' function prints the elements of the AST to the stdout. */
 void printAST(ASTNode* root);
+
+int isLeave(ASTNode* node);
 #endif
