@@ -16,5 +16,4 @@ typedef struct threeAddressCode {
 } ThreeAddressCode;
 
 void constructThreeAddressCode(ThreeAddressCode* threeAddressCode);
-void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction);
 #endif
