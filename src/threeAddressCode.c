@@ -23,26 +23,26 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
         if(isLeave(node)) { return node->symbol; }
         Flag flag = node->symbol->flag;
         if(isABinaryOperator(flag)) {
-            Symbol* fstOperand = generateThreeAddressCode(node->lSide, threeAddressCode);
-            Symbol* sndOperand = generateThreeAddressCode(node->rSide, threeAddressCode);
+            Symbol* fstOperand = generateIntermediateCode(node->lSide, threeAddressCode);
+            Symbol* sndOperand = generateIntermediateCode(node->rSide, threeAddressCode);
             // renombrar node->symbol
             addInstruction(threeAddressCode, createInstruction(flag, fstOperand, sndOperand, node->symbol));
             return node->symbol;
         }
         
         if(flag == flag_ASSIGNMENT) {
-            Symbol* expr = generateThreeAddressCode(node->rSide, threeAddressCode);
+            Symbol* expr = generateIntermediateCode(node->rSide, threeAddressCode);
             addInstruction(threeAddressCode, createInstruction(flag, expr, NULL, node->symbol));
         }
         
         if(flag == flag_RETURN) {
-            Symbol* expr = generateThreeAddressCode(node->lSide, threeAddressCode);
+            Symbol* expr = generateIntermediateCode(node->lSide, threeAddressCode);
             addInstruction(threeAddressCode, createInstruction(flag, NULL, NULL, expr));
         }
         
         if(flag == flag_SEMICOLON) {
-            generateThreeAddressCode(node->lSide, threeAddressCode);
-            generateThreeAddressCode(node->rSide, threeAddressCode);
+            generateIntermediateCode(node->lSide, threeAddressCode);
+            generateIntermediateCode(node->rSide, threeAddressCode);
         }
     }
     
