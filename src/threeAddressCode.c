@@ -3,13 +3,6 @@
 #include <stdio.h>
 #include "threeAddressCode.h"
 
-TACNode* constructTACNode(Instruction instruction) {
-    TACNode* node = (TACNode*) malloc(sizeof(TACNode));
-    if(node == NULL) { exit(EXIT_FAILURE); }
-    node->instruction = instruction;
-    return node;
-}
-
 Instruction constructInstruction(Flag op, Symbol* fstOperand, Symbol* sndOperand, Symbol* dest) {
     Instruction i;
     i.op = op;
@@ -19,24 +12,17 @@ Instruction constructInstruction(Flag op, Symbol* fstOperand, Symbol* sndOperand
     return i;
 }
 
-int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode) {
-    return threeAddressCode.head == NULL;
-}
-
 void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction) {
-    TACNode* node = constructTACNode(instruction);
-    if(isEmptyThreeAddressCode(*threeAddressCode)) {
-        threeAddressCode->head = node;
-        threeAddressCode->last = node;
-    } else {
-        threeAddressCode->last->next = node;
-        threeAddressCode->last       = node;
-    }
+    void* data = malloc(sizeof(Instruction));
+    (*(Instruction*) data) = instruction;
+    enqueue(&threeAddressCode->queue, data, sizeof(instruction));
 }
 
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode) {
     if(node) {
-        if(isLeave(node)) { 
+        if(isLeave(node)) {
+	    node->symbol->name = (char*) malloc(sizeof(char));
+            sprintf(node->symbol->name, "%d", node->symbol->value);	    
             return node->symbol; 
         }
         
@@ -73,24 +59,28 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
     return NULL;
 }
 
+void printInstruction(void* i) {
+  Instruction instruction = *(Instruction*) i;
+  Flag op = instruction.op;
+  if(isABinaryOperator(op)) {
+    char* oprnd1 = instruction.fstOperand->name;
+    char* oprnd2 = instruction.sndOperand->name;
+    char* dest   = instruction.dest->name;
+    printf("%s %s %s %s\n", flagToString(op), oprnd1, oprnd2, dest);
+  }
+
+  if(op == flag_ASSIGNMENT) {
+    char* expr = instruction.fstOperand->name;
+    char* dest = instruction.dest->name;
+    printf("%s %s - %s\n", flagToString(op), expr, dest);
+  }
+
+  if(op == flag_RETURN) {
+    char* expr = instruction.dest->name;
+    printf("%s - - %s\n", flagToString(op), expr);
+  }
+}
+
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
-    TACNode* node = threeAddressCode.head;
-    while(node) {
-    
-        Flag flag = node->instruction.op;
-        
-        if(isABinaryOperator(flag)) {
-            printf("%s %s %s %s\n", flagToString(flag), node->instruction.fstOperand->name, node->instruction.sndOperand->name, node->instruction.dest->name);
-        }
-        
-        if(flag == flag_ASSIGNMENT) {
-            printf("%s %s - %s\n", flagToString(flag), node->instruction.fstOperand->name, node->instruction.dest->name);
-        }
-        
-        if(flag == flag_RETURN) {
-            printf("%s - - %s\n", flagToString(flag), node->instruction.dest->name);
-        }
-    
-        node = node->next;
-    }
+    showQueue(threeAddressCode.queue, printInstruction);
 }

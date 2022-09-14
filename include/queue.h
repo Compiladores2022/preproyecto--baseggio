@@ -1,42 +1,25 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-#include "symbol.h"
+
+#include <stdlib.h>
 
 typedef struct node {
-    Symbol* symbol;
-    struct node* next;
+  void* data;
+  struct node* next;
 } TNode;
 
 typedef struct {
-   TNode* head;
-   TNode* last;
-   int length; 
+  TNode* head;
+  TNode* last;
+  int length;
 } Queue;
 
-/* The function 'length' returns the length of the Queue 'queue' */
 int length(Queue queue);
-
-/* The function 'isEmpty' returns true iff the Queue 'queue' is empty */
 int isEmpty(Queue queue);
-
-/* The function 'head' returns the a pointer to the symbol on the head of the 'queue'.
- * It is assumed that the 'queue' is not empty. */
-Symbol* head(Queue queue);
-
-/* The function 'lookUp' look for a symbol by its name in the 'queue'.
- * It returns a reference to the symbol if it is found otherwise returns NULL. */
-Symbol* lookUp(Queue queue, char* name);
-
-/* The 'enqueue' function add a reference to a symbol in the 'queue'. */
-void enqueue(Queue* queue, Symbol* symbol);
-
-/* The 'dequeue' function remove the head of the 'queue'.
- * It is assumed that the 'queue' is not empty. */
+void* head(Queue queue);
+void* lookUp(Queue queue, int (*f) (void*, void*), void* e);
+void enqueue(Queue* queue, void* data, size_t dataSize);
 void dequeue(Queue* queue);
-
-/* The 'construct' function constructs an empty 'queue'. */
-void construct(Queue* queue);
-
-/* The 'printQueue' function prints the elements in the 'queue' to the stdout. */
-void printQueue(Queue queue);
+void constructQueue(Queue* queue);
+void showQueue(Queue queue, void (*f) (void*));
 #endif

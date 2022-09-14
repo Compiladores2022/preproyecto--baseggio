@@ -3,6 +3,7 @@
 #include "ast.h"
 #include "symbol.h"
 #include "flag.h"
+#include "queue.h"
 
 typedef struct instruction{
     Flag op;
@@ -11,14 +12,8 @@ typedef struct instruction{
     Symbol* dest;
 } Instruction;
 
-typedef struct threeAddressCodeNode {
-    Instruction instruction;
-    struct threeAddressCodeNode* next;
-} TACNode;
-
 typedef struct threeAddressCode {
-    TACNode* head;
-    TACNode* last;
+    Queue queue;
     int ctr;
 } ThreeAddressCode;
 

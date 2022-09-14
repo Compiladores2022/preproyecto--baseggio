@@ -1,23 +1,34 @@
 #include "symbolTable.h"
 #include <stdio.h>
-#include <stddef.h>
+#include <string.h>
 #include <stdlib.h>
 
 #define TRUE  1
 #define FALSE 0
 
+int compareByName(void* s, void* name) {
+  Symbol* symbol = (Symbol*) s;
+  return strcmp(symbol->name, name) == 0;
+}
+
+void printData(void* data) {
+  Symbol* symbol = (Symbol*) data;
+  printf("%s ", symbol->name);
+}
+
 int addSymbol(SymbolTable* symbolTable, Symbol* symbol) {
-    if(lookUp(symbolTable->peek->queue, symbol->name) == NULL) {
-        enqueue(&symbolTable->peek->queue, symbol);
-        return TRUE;
+    if(!lookUp(symbolTable->peek->queue, compareByName, symbol->name)) {
+      enqueue(&symbolTable->peek->queue, (void*) symbol, sizeof(Symbol*));
+      return TRUE;
     }
+
     return FALSE;
 }
 
 Level* constructLevel() {
     Level* level = (Level*) malloc(sizeof(Level));
     if(level == NULL) { exit(EXIT_FAILURE); }
-    construct(&level->queue);
+    constructQueue(&level->queue);
     return level;
 }
 
@@ -45,7 +56,7 @@ void printSymbolTable(SymbolTable symbolTable) {
     int i = 0;
     while(level) {
 	printf("Level %d: \n", symbolTable.levels - i);
-        printQueue(level->queue);
+        showQueue(level->queue, printData);
 	level = level->next;
 	i++;
     }
@@ -55,7 +66,7 @@ Symbol* lookUpSymbol(SymbolTable symbolTable, char* name) {
     Level* level = symbolTable.peek;
     Symbol* symbol;
     while(level) {
-	if((symbol = lookUp(level->queue, name)))
+	if((symbol = lookUp(level->queue, compareByName, name)))
 	    return symbol;
 	level = level->next;
     }
