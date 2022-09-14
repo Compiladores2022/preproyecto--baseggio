@@ -84,11 +84,11 @@ void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
         }
         
         if(flag == flag_ASSIGNMENT) {
-            printf("%s %s NULL %s\n", flagToString(flag), node->instruction.fstOperand->name, node->instruction.dest->name);
+            printf("%s %s - %s\n", flagToString(flag), node->instruction.fstOperand->name, node->instruction.dest->name);
         }
         
         if(flag == flag_RETURN) {
-            printf("%s NULL NULL %s\n", flagToString(flag), node->instruction.dest->name);
+            printf("%s - - %s\n", flagToString(flag), node->instruction.dest->name);
         }
     
         node = node->next;
