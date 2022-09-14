@@ -9,6 +9,7 @@ typedef struct node {
 
 typedef struct {
    TNode* head;
+   TNode* last;
    int length; 
 } Queue;
 

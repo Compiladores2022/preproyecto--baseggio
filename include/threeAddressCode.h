@@ -8,14 +8,22 @@ typedef struct instruction{
     Flag op;
     Symbol* fstOperand;
     Symbol* sndOperand;
-    Symbol* result;
+    Symbol* dest;
 } Instruction;
 
-typedef struct threeAddressCode {
+typedef struct threeAddressCodeNode {
     Instruction instruction;
-    struct threeAddressCode* nextInstruction;
+    struct threeAddressCodeNode* next;
+} TACNode;
+
+typedef struct threeAddressCode {
+    TACNode* head;
+    TACNode* last;
+    int ctr;
 } ThreeAddressCode;
 
-void constructThreeAddressCode(ThreeAddressCode* threeAddressCode);
+int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode);
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode);
+
+//void constructThreeAddressCode(ThreeAddressCode* threeAddressCode);
 #endif

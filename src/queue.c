@@ -26,14 +26,12 @@ void destructNode(TNode* node) { free(node); }
 
 void enqueue(Queue* queue, Symbol* symbol) {
     TNode* node = constructNode(symbol);
-    if(queue->head == NULL) {
+    if(isEmpty(*queue)) {
         queue->head = node;
+        queue->last = node;
     } else {
-        TNode* ptr = queue->head;
-	while(ptr->next) {
-	    ptr = ptr->next;
-	}
-	ptr->next = node;
+        queue->last->next = node;
+        queue->last       = node;    
     }
     queue->length++;
 }

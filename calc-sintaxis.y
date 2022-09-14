@@ -5,8 +5,10 @@
 #include <string.h>
 #include "symbolTable.h"
 #include "ast.h"
+#include "threeAddressCode.h"
 
 SymbolTable symbolTable;
+ThreeAddressCode threeAddressCode;
 int yylex();
 void yyerror(const char* s);
 %}
@@ -37,8 +39,8 @@ void yyerror(const char* s);
 
 %%
 
-prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); }
-    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); typeCheck(root); }
+prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); generateIntermediateCode($2, &threeAddressCode); }
+    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); typeCheck(root); generateIntermediateCode($2, &threeAddressCode); }
     ;
     
 lDeclarations: Declaration               { $$ = $1; }

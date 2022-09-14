@@ -75,12 +75,14 @@
 #include <string.h>
 #include "symbolTable.h"
 #include "ast.h"
+#include "threeAddressCode.h"
 
 SymbolTable symbolTable;
+ThreeAddressCode threeAddressCode;
 int yylex();
 void yyerror(const char* s);
 
-#line 84 "calc-sintaxis.tab.c"
+#line 86 "calc-sintaxis.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -522,9 +524,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    40,    40,    40,    41,    41,    44,    45,    48,    63,
-      64,    67,    68,    77,    80,    81,    82,    83,    84,    85,
-      88,    95,   103,   114,   115
+       0,    42,    42,    42,    43,    43,    46,    47,    50,    65,
+      66,    69,    70,    79,    82,    83,    84,    85,    86,    87,
+      90,    97,   105,   116,   117
 };
 #endif
 
@@ -1113,43 +1115,43 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* $@1: %empty  */
-#line 40 "calc-sintaxis.y"
+#line 42 "calc-sintaxis.y"
       { constructSymbolTable(&symbolTable); }
-#line 1119 "calc-sintaxis.tab.c"
+#line 1121 "calc-sintaxis.tab.c"
     break;
 
   case 3: /* prog: $@1 lSentences  */
-#line 40 "calc-sintaxis.y"
-                                                                       { typeCheck((yyvsp[0].n)); }
-#line 1125 "calc-sintaxis.tab.c"
+#line 42 "calc-sintaxis.y"
+                                                                       { typeCheck((yyvsp[0].n)); generateIntermediateCode((yyvsp[0].n), &threeAddressCode); }
+#line 1127 "calc-sintaxis.tab.c"
     break;
 
   case 4: /* $@2: %empty  */
-#line 41 "calc-sintaxis.y"
+#line 43 "calc-sintaxis.y"
       { constructSymbolTable(&symbolTable); }
-#line 1131 "calc-sintaxis.tab.c"
+#line 1133 "calc-sintaxis.tab.c"
     break;
 
   case 5: /* prog: $@2 lDeclarations lSentences  */
-#line 41 "calc-sintaxis.y"
-                                                                       { ASTNode* root = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); typeCheck(root); }
-#line 1137 "calc-sintaxis.tab.c"
+#line 43 "calc-sintaxis.y"
+                                                                       { ASTNode* root = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); typeCheck(root); generateIntermediateCode((yyvsp[-1].n), &threeAddressCode); }
+#line 1139 "calc-sintaxis.tab.c"
     break;
 
   case 6: /* lDeclarations: Declaration  */
-#line 44 "calc-sintaxis.y"
+#line 46 "calc-sintaxis.y"
                                          { (yyval.n) = (yyvsp[0].n); }
-#line 1143 "calc-sintaxis.tab.c"
+#line 1145 "calc-sintaxis.tab.c"
     break;
 
   case 7: /* lDeclarations: Declaration lDeclarations  */
-#line 45 "calc-sintaxis.y"
+#line 47 "calc-sintaxis.y"
                                          { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
-#line 1149 "calc-sintaxis.tab.c"
+#line 1151 "calc-sintaxis.tab.c"
     break;
 
   case 8: /* Declaration: Type ID '=' E ';'  */
-#line 48 "calc-sintaxis.y"
+#line 50 "calc-sintaxis.y"
                                { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
 	                         symbol->name = (char*) malloc(sizeof(char));
                                  strcpy(symbol->name, (yyvsp[-3].s));
@@ -1163,29 +1165,29 @@ yyreduce:
                                      (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
                                  }
                                }
-#line 1167 "calc-sintaxis.tab.c"
+#line 1169 "calc-sintaxis.tab.c"
     break;
 
   case 9: /* lSentences: Sentence  */
-#line 63 "calc-sintaxis.y"
+#line 65 "calc-sintaxis.y"
                                 { (yyval.n) = (yyvsp[0].n); }
-#line 1173 "calc-sintaxis.tab.c"
+#line 1175 "calc-sintaxis.tab.c"
     break;
 
   case 10: /* lSentences: Sentence lSentences  */
-#line 64 "calc-sintaxis.y"
+#line 66 "calc-sintaxis.y"
                                 { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
-#line 1179 "calc-sintaxis.tab.c"
+#line 1181 "calc-sintaxis.tab.c"
     break;
 
   case 11: /* Sentence: E ';'  */
-#line 67 "calc-sintaxis.y"
+#line 69 "calc-sintaxis.y"
                        { (yyval.n) = (yyvsp[-1].n); }
-#line 1185 "calc-sintaxis.tab.c"
+#line 1187 "calc-sintaxis.tab.c"
     break;
 
   case 12: /* Sentence: ID '=' E ';'  */
-#line 68 "calc-sintaxis.y"
+#line 70 "calc-sintaxis.y"
                        { Symbol* symbol;
                          if((symbol = lookUpSymbol(symbolTable, (yyvsp[-3].s))) == NULL) {
 	                     printf("ERROR: Undeclared identifier: %s\n", (yyvsp[-3].s));
@@ -1195,64 +1197,64 @@ yyreduce:
                              (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
                          }
 	               }
-#line 1199 "calc-sintaxis.tab.c"
+#line 1201 "calc-sintaxis.tab.c"
     break;
 
   case 13: /* Sentence: RETURN E ';'  */
-#line 77 "calc-sintaxis.y"
+#line 79 "calc-sintaxis.y"
                        { (yyval.n) = composeTree(flag_RETURN, "return", (yyvsp[-1].n), NULL, NULL); }
-#line 1205 "calc-sintaxis.tab.c"
+#line 1207 "calc-sintaxis.tab.c"
     break;
 
   case 14: /* E: V  */
-#line 80 "calc-sintaxis.y"
+#line 82 "calc-sintaxis.y"
              { (yyval.n) = (yyvsp[0].n); }
-#line 1211 "calc-sintaxis.tab.c"
+#line 1213 "calc-sintaxis.tab.c"
     break;
 
   case 15: /* E: E '+' E  */
-#line 81 "calc-sintaxis.y"
+#line 83 "calc-sintaxis.y"
              { (yyval.n) = composeTree(flag_ADDITION, "+", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1217 "calc-sintaxis.tab.c"
+#line 1219 "calc-sintaxis.tab.c"
     break;
 
   case 16: /* E: E '*' E  */
-#line 82 "calc-sintaxis.y"
+#line 84 "calc-sintaxis.y"
              { (yyval.n) = composeTree(flag_MULTIPLICATION, "*", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1223 "calc-sintaxis.tab.c"
+#line 1225 "calc-sintaxis.tab.c"
     break;
 
   case 17: /* E: E OR E  */
-#line 83 "calc-sintaxis.y"
+#line 85 "calc-sintaxis.y"
              { (yyval.n) = composeTree(flag_OR, "||", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1229 "calc-sintaxis.tab.c"
+#line 1231 "calc-sintaxis.tab.c"
     break;
 
   case 18: /* E: E AND E  */
-#line 84 "calc-sintaxis.y"
+#line 86 "calc-sintaxis.y"
              { (yyval.n) = composeTree(flag_AND, "&&", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1235 "calc-sintaxis.tab.c"
+#line 1237 "calc-sintaxis.tab.c"
     break;
 
   case 19: /* E: '(' E ')'  */
-#line 85 "calc-sintaxis.y"
+#line 87 "calc-sintaxis.y"
              { (yyval.n) = (yyvsp[-1].n); }
-#line 1241 "calc-sintaxis.tab.c"
+#line 1243 "calc-sintaxis.tab.c"
     break;
 
   case 20: /* V: vINT  */
-#line 88 "calc-sintaxis.y"
+#line 90 "calc-sintaxis.y"
           { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
             symbol->type  = TYPE_INT;
             symbol->flag  = flag_VALUE_INT;
             symbol->value = (yyvsp[0].i);
             ASTNode* n = node(symbol);
             (yyval.n) = n; }
-#line 1252 "calc-sintaxis.tab.c"
+#line 1254 "calc-sintaxis.tab.c"
     break;
 
   case 21: /* V: vBOOL  */
-#line 95 "calc-sintaxis.y"
+#line 97 "calc-sintaxis.y"
           { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol)) ;
             symbol->type = TYPE_BOOL;
             symbol->flag = flag_VALUE_BOOL;
@@ -1260,11 +1262,11 @@ yyreduce:
             ASTNode* n = node(symbol);
             (yyval.n) = n; 
           }
-#line 1264 "calc-sintaxis.tab.c"
+#line 1266 "calc-sintaxis.tab.c"
     break;
 
   case 22: /* V: ID  */
-#line 103 "calc-sintaxis.y"
+#line 105 "calc-sintaxis.y"
           { Symbol* symbol;
             if((symbol = lookUpSymbol(symbolTable, (yyvsp[0].s)))) {
 	        ASTNode* n = node(symbol);
@@ -1274,23 +1276,23 @@ yyreduce:
                 exit(EXIT_FAILURE);
 	    }
 	  }
-#line 1278 "calc-sintaxis.tab.c"
+#line 1280 "calc-sintaxis.tab.c"
     break;
 
   case 23: /* Type: tINT  */
-#line 114 "calc-sintaxis.y"
+#line 116 "calc-sintaxis.y"
              { (yyval.t) = (yyvsp[0].t); }
-#line 1284 "calc-sintaxis.tab.c"
+#line 1286 "calc-sintaxis.tab.c"
     break;
 
   case 24: /* Type: tBOOL  */
-#line 115 "calc-sintaxis.y"
+#line 117 "calc-sintaxis.y"
              { (yyval.t) = (yyvsp[0].t); }
-#line 1290 "calc-sintaxis.tab.c"
+#line 1292 "calc-sintaxis.tab.c"
     break;
 
 
-#line 1294 "calc-sintaxis.tab.c"
+#line 1296 "calc-sintaxis.tab.c"
 
       default: break;
     }
@@ -1483,5 +1485,5 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 117 "calc-sintaxis.y"
+#line 119 "calc-sintaxis.y"
 
