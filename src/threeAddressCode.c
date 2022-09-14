@@ -21,8 +21,10 @@ void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction)
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode) {
     if(node) {
         if(isLeave(node)) {
+	    if(node->symbol->flag != flag_IDENTIFIER) {
 	    node->symbol->name = (char*) malloc(sizeof(char));
-            sprintf(node->symbol->name, "%d", node->symbol->value);	    
+            sprintf(node->symbol->name, "%d", node->symbol->value);
+            }	    
             return node->symbol; 
         }
         
