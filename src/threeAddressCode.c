@@ -36,32 +36,32 @@ void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction)
 
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode) {
     if(node) {
-        if(isLeave(node)) { return node->symbol; }
+        if(isLeave(node)) { 
+        node->symbol->name = (char*) malloc(sizeof(char));
+        sprintf(node->symbol->name, "%d", node->symbol->value);
+        return node->symbol; }
         Flag flag = node->symbol->flag;
         if(isABinaryOperator(flag)) {
             Symbol* fstOperand = generateIntermediateCode(node->lSide, threeAddressCode);
             Symbol* sndOperand = generateIntermediateCode(node->rSide, threeAddressCode);
             Instruction instruction = constructInstruction(flag, fstOperand, sndOperand, node->symbol);
             addInstruction(threeAddressCode, instruction);
-            sprintf(node->symbol->name, "t%d", threeAddressCode->ctr++);
+            
             //FOR DEBUG
-            printf("%s %s %s %s\n", flagToString(flag), fstOperand->name, sndOperand->name, node->symbol->name);
+            sprintf(node->symbol->name, "t%d", threeAddressCode->ctr++);
             return node->symbol;
         }
         
         if(flag == flag_ASSIGNMENT) {
             Symbol* expr = generateIntermediateCode(node->rSide, threeAddressCode);
-            Instruction instruction = constructInstruction(flag, expr, NULL, node->symbol);
+            Instruction instruction = constructInstruction(flag, expr, NULL, node->lSide->symbol);
             addInstruction(threeAddressCode, instruction);
-            //FOR DEBUG
-            printf("%s %s NULL %s\n", flagToString(flag), expr->name, node->lSide->symbol->name);
         }
         
         if(flag == flag_RETURN) {
             Symbol* expr = generateIntermediateCode(node->lSide, threeAddressCode);
             Instruction instruction = constructInstruction(flag, NULL, NULL, expr);
             addInstruction(threeAddressCode, instruction);
-            printf("%s NULL NULL %s\n", flagToString(flag), expr->name);
         }
         
         if(flag == flag_SEMICOLON) {
@@ -73,8 +73,24 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
     return NULL;
 }
 
-/*void constructThreeAddressCode(ThreeAddressCode* threeAddressCode) {
-    threeAddressCode->head = NULL;
-    threeAddressCode->last = NULL;
-    threeAddressCode->ctr  = 0;
-}*/
+void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
+    TACNode* node = threeAddressCode.head;
+    while(node) {
+    
+        Flag flag = node->instruction.op;
+        
+        if(isABinaryOperator(flag)) {
+            printf("%s %s %s %s\n", flagToString(flag), node->instruction.fstOperand->name, node->instruction.sndOperand->name, node->instruction.dest->name);
+        }
+        
+        if(flag == flag_ASSIGNMENT) {
+            printf("%s %s NULL %s\n", flagToString(flag), node->instruction.fstOperand->name, node->instruction.dest->name);
+        }
+        
+        if(flag == flag_RETURN) {
+            printf("%s NULL NULL %s\n", flagToString(flag), node->instruction.dest->name);
+        }
+    
+        node = node->next;
+    }
+}

@@ -39,8 +39,12 @@ void yyerror(const char* s);
 
 %%
 
-prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); generateIntermediateCode($2, &threeAddressCode); }
-    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); typeCheck(root); generateIntermediateCode($2, &threeAddressCode); }
+prog: { constructSymbolTable(&symbolTable); } lSentences               { typeCheck($2); generateIntermediateCode($2, &threeAddressCode); showThreeAddressCode(threeAddressCode); }
+    | { constructSymbolTable(&symbolTable); } lDeclarations lSentences { 
+    ASTNode* root = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); 
+    typeCheck(root); 
+    generateIntermediateCode(root, &threeAddressCode); 
+    showThreeAddressCode(threeAddressCode); }
     ;
     
 lDeclarations: Declaration               { $$ = $1; }

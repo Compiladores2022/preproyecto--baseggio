@@ -25,5 +25,5 @@ typedef struct threeAddressCode {
 int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode);
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode);
 
-//void constructThreeAddressCode(ThreeAddressCode* threeAddressCode);
+void showThreeAddressCode(ThreeAddressCode threeAddressCode);
 #endif
