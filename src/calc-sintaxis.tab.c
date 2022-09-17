@@ -446,9 +446,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    42,    42,    42,    44,    47,    53,    54,    57,    72,
-      73,    76,    77,    86,    89,    90,    91,    92,    93,    94,
-      97,   102,   108,   119,   120
+       0,    42,    42,    42,    44,    47,    53,    54,    57,    73,
+      74,    77,    78,    82,    85,    86,    87,    88,    89,    90,
+      93,    98,   104,   110,   111
 };
 #endif
 
@@ -1283,10 +1283,11 @@ yyreduce:
 
   case 8:
 #line 57 "calc-sintaxis.y" /* yacc.c:1646  */
-    { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-	                         symbol->name = (char*) malloc(sizeof(char));
-                                 strcpy(symbol->name, (yyvsp[-3].s));
-                                 symbol->type = (yyvsp[-4].t);
+    { //Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
+	                         //symbol->name = (char*) malloc(sizeof(char));
+                                 //strcpy(symbol->name, $2);
+                                 //symbol->type = $1;
+                                 Symbol* symbol = constructPtrToSymbol(0, (yyvsp[-4].t), (yyvsp[-3].s), 0);
                                  if(lookUpSymbol(symbolTable, symbol->name)) {
                                      printf("ERROR: Redeclared identifier: %s\n", (yyvsp[-3].s));
                                      exit(EXIT_FAILURE);
@@ -1296,130 +1297,120 @@ yyreduce:
                                      (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
                                  }
                                }
-#line 1300 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1301 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 72 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 73 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[0].n); }
-#line 1306 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1307 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 73 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 74 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
-#line 1312 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1313 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 76 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 77 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1318 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1319 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 77 "calc-sintaxis.y" /* yacc.c:1646  */
-    { Symbol* symbol;
-                         if((symbol = lookUpSymbol(symbolTable, (yyvsp[-3].s))) == NULL) {
-	                     printf("ERROR: Undeclared identifier: %s\n", (yyvsp[-3].s));
-	                     exit(EXIT_FAILURE);
-	                 } else {
-                             ASTNode* lSide = node(symbol);
-                             (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
-                         }
+#line 78 "calc-sintaxis.y" /* yacc.c:1646  */
+    { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
+                         ASTNode* lSide = node(symbol);
+                         (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
 	               }
-#line 1332 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1328 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 86 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 82 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_RETURN, "return", (yyvsp[-1].n), NULL, NULL); }
-#line 1338 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1334 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 89 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 85 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[0].n); }
-#line 1344 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1340 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 90 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 86 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_ADDITION, "+", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1350 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1346 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 91 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 87 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_MULTIPLICATION, "*", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1356 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1352 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 92 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 88 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_OR, "||", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1362 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1358 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 93 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 89 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_AND, "&&", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1368 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1364 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 94 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 90 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1374 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1370 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 97 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 93 "calc-sintaxis.y" /* yacc.c:1646  */
     { char* name = (char*) malloc(sizeof(char));
             sprintf(name, "%d", (yyvsp[0].i));
             ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, (yyvsp[0].i)));
             (yyval.n) = n; }
-#line 1383 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1379 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 102 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 98 "calc-sintaxis.y" /* yacc.c:1646  */
     { char* name = (char*) malloc(sizeof(char));
             sprintf(name, "%d", (yyvsp[0].i));
             ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, (yyvsp[0].i)));
             (yyval.n) = n; 
           }
-#line 1393 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1389 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 108 "calc-sintaxis.y" /* yacc.c:1646  */
-    { Symbol* symbol;
-            if((symbol = lookUpSymbol(symbolTable, (yyvsp[0].s)))) {
-	        ASTNode* n = node(symbol);
-                (yyval.n) = n;
-	    } else {
-	        printf("ERROR: Undeclared identifier: %s\n", (yyvsp[0].s));
-                exit(EXIT_FAILURE);
-	    }
+#line 104 "calc-sintaxis.y" /* yacc.c:1646  */
+    { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[0].s));
+            ASTNode* n     = node(symbol);
+            (yyval.n) = n;
 	  }
-#line 1407 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1398 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 119 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 110 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.t) = (yyvsp[0].t); }
-#line 1413 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1404 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 120 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 111 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.t) = (yyvsp[0].t); }
-#line 1419 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1410 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1423 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1414 "calc-sintaxis.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1647,5 +1638,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 122 "calc-sintaxis.y" /* yacc.c:1906  */
+#line 113 "calc-sintaxis.y" /* yacc.c:1906  */
 

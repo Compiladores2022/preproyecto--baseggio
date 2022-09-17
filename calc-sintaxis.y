@@ -54,10 +54,11 @@ lDeclarations: Declaration               { $$ = $1; }
              | Declaration lDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
              ;
 
-Declaration: Type ID '=' E ';' { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-	                         symbol->name = (char*) malloc(sizeof(char));
-                                 strcpy(symbol->name, $2);
-                                 symbol->type = $1;
+Declaration: Type ID '=' E ';' { //Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
+	                         //symbol->name = (char*) malloc(sizeof(char));
+                                 //strcpy(symbol->name, $2);
+                                 //symbol->type = $1;
+                                 Symbol* symbol = constructPtrToSymbol(0, $1, $2, 0);
                                  if(lookUpSymbol(symbolTable, symbol->name)) {
                                      printf("ERROR: Redeclared identifier: %s\n", $2);
                                      exit(EXIT_FAILURE);
@@ -74,14 +75,9 @@ lSentences: Sentence            { $$ = $1; }
           ;
           
 Sentence: E ';'        { $$ = $1; }
-	| ID '=' E ';' { Symbol* symbol;
-                         if((symbol = lookUpSymbol(symbolTable, $1)) == NULL) {
-	                     printf("ERROR: Undeclared identifier: %s\n", $1);
-	                     exit(EXIT_FAILURE);
-	                 } else {
-                             ASTNode* lSide = node(symbol);
-                             $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3);
-                         }
+	| ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
+                         ASTNode* lSide = node(symbol);
+                         $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3);
 	               }
         | RETURN E ';' { $$ = composeTree(flag_RETURN, "return", $2, NULL, NULL); }
         ;
@@ -105,14 +101,9 @@ V : vINT  { char* name = (char*) malloc(sizeof(char));
             $$ = n; 
           }
             
-  | ID    { Symbol* symbol;
-            if((symbol = lookUpSymbol(symbolTable, $1))) {
-	        ASTNode* n = node(symbol);
-                $$ = n;
-	    } else {
-	        printf("ERROR: Undeclared identifier: %s\n", $1);
-                exit(EXIT_FAILURE);
-	    }
+  | ID    { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
+            ASTNode* n     = node(symbol);
+            $$ = n;
 	  }
   ;
 

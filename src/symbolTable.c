@@ -73,3 +73,13 @@ Symbol* lookUpSymbol(SymbolTable symbolTable, char* name) {
 
     return NULL;
 }
+
+Symbol* checkIdentifierIsDeclared(SymbolTable symbolTable, char* name) {
+    Symbol* symbol;
+    if(!(symbol = lookUpSymbol(symbolTable, name))) {
+        printf("Undeclared identifier: %s\n", name);
+	exit(EXIT_FAILURE);
+    }
+
+    return symbol;
+}

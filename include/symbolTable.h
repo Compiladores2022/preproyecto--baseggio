@@ -32,4 +32,6 @@ void showSymbolTable(SymbolTable symbolTable);
 /* The 'lookUpSymbol' function look for a symbol by its name in the 'symbolTable'. 
  * It returns a reference to the symbol if it is found otherwise returns NULL. */
 Symbol* lookUpSymbol(SymbolTable symbolTable, char* name);
+
+Symbol* checkIdentifierIsDeclared(SymbolTable symbolTable, char* name);
 #endif
