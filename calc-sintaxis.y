@@ -54,18 +54,13 @@ lDeclarations: Declaration               { $$ = $1; }
              | Declaration lDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
              ;
 
-Declaration: Type ID '=' E ';' { //Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-	                         //symbol->name = (char*) malloc(sizeof(char));
-                                 //strcpy(symbol->name, $2);
-                                 //symbol->type = $1;
-                                 Symbol* symbol = constructPtrToSymbol(0, $1, $2, 0);
-                                 if(lookUpSymbol(symbolTable, symbol->name)) {
-                                     printf("ERROR: Redeclared identifier: %s\n", $2);
-                                     exit(EXIT_FAILURE);
-                                 } else {
-                                     addSymbol(&symbolTable, symbol);
+Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0);
+                                 if(addSymbol(&symbolTable, symbol)) {
                                      ASTNode* lSide = node(symbol);
                                      $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
+                                 } else {
+                                     printf("Redeclared identifier: %s\n", $2);
+                                     exit(EXIT_FAILURE);
                                  }
                                }
            ;
