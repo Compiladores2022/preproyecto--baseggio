@@ -44,7 +44,10 @@ void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Typ
 
 void reportAssignmentErrorIfExists(Type varType, Type exprType, char* varName) {
 	if(!(varType == exprType)) {
-	    printf("%s is of type %s but the expresion is of type %s\n", varName, typeToString(varType), typeToString(exprType));
+	    printf("%s is of type %s but the expresion is of type %s\n"
+			    ,varName
+			    ,typeToString(varType)
+			    ,typeToString(exprType));
 	    exit(EXIT_FAILURE);
 	}
 }
