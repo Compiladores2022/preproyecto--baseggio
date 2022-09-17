@@ -448,7 +448,7 @@ static const yytype_uint8 yyrline[] =
 {
        0,    42,    42,    42,    44,    47,    53,    54,    57,    72,
       73,    76,    77,    86,    89,    90,    91,    92,    93,    94,
-      97,   104,   112,   123,   124
+      97,   102,   108,   119,   120
 };
 #endif
 
@@ -1375,29 +1375,25 @@ yyreduce:
 
   case 20:
 #line 97 "calc-sintaxis.y" /* yacc.c:1646  */
-    { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-            symbol->type  = TYPE_INT;
-            symbol->flag  = flag_VALUE_INT;
-            symbol->value = (yyvsp[0].i);
-            ASTNode* n = node(symbol);
+    { char* name = (char*) malloc(sizeof(char));
+            sprintf(name, "%d", (yyvsp[0].i));
+            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, (yyvsp[0].i)));
             (yyval.n) = n; }
-#line 1385 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1383 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 104 "calc-sintaxis.y" /* yacc.c:1646  */
-    { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol)) ;
-            symbol->type = TYPE_BOOL;
-            symbol->flag = flag_VALUE_BOOL;
-            symbol->value = (yyvsp[0].i);
-            ASTNode* n = node(symbol);
+#line 102 "calc-sintaxis.y" /* yacc.c:1646  */
+    { char* name = (char*) malloc(sizeof(char));
+            sprintf(name, "%d", (yyvsp[0].i));
+            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, (yyvsp[0].i)));
             (yyval.n) = n; 
           }
-#line 1397 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1393 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 112 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 108 "calc-sintaxis.y" /* yacc.c:1646  */
     { Symbol* symbol;
             if((symbol = lookUpSymbol(symbolTable, (yyvsp[0].s)))) {
 	        ASTNode* n = node(symbol);
@@ -1407,23 +1403,23 @@ yyreduce:
                 exit(EXIT_FAILURE);
 	    }
 	  }
-#line 1411 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1407 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 123 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 119 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.t) = (yyvsp[0].t); }
-#line 1417 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1413 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 124 "calc-sintaxis.y" /* yacc.c:1646  */
+#line 120 "calc-sintaxis.y" /* yacc.c:1646  */
     { (yyval.t) = (yyvsp[0].t); }
-#line 1423 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1419 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1427 "calc-sintaxis.tab.c" /* yacc.c:1646  */
+#line 1423 "calc-sintaxis.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1651,5 +1647,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 126 "calc-sintaxis.y" /* yacc.c:1906  */
+#line 122 "calc-sintaxis.y" /* yacc.c:1906  */
 

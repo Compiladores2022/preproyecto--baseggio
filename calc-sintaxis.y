@@ -94,18 +94,14 @@ E: V         { $$ = $1; }
  | '(' E ')' { $$ = $2; }
  ;
 
-V : vINT  { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-            symbol->type  = TYPE_INT;
-            symbol->flag  = flag_VALUE_INT;
-            symbol->value = $1;
-            ASTNode* n = node(symbol);
+V : vINT  { char* name = (char*) malloc(sizeof(char));
+            sprintf(name, "%d", $1);
+            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, $1));
             $$ = n; }
             
-  | vBOOL { Symbol* symbol = (Symbol*) malloc(sizeof(Symbol)) ;
-            symbol->type = TYPE_BOOL;
-            symbol->flag = flag_VALUE_BOOL;
-            symbol->value = $1;
-            ASTNode* n = node(symbol);
+  | vBOOL { char* name = (char*) malloc(sizeof(char));
+            sprintf(name, "%d", $1);
+            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, $1));
             $$ = n; 
           }
             

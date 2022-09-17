@@ -10,5 +10,6 @@ typedef struct {
     int value;
 } Symbol;
 
+Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);
 void showSymbol(Symbol symbol);
 #endif
