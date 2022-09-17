@@ -32,7 +32,12 @@ int isLeave(ASTNode* node) {
 
 void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Type expectedType, Flag operator) {
     if(!(typeOfTheFstOperand == typeOfTheSndOperand && typeOfTheSndOperand == expectedType)) {
-	printf("%s arguments are of type: %sx%s but %sx%s was found\n", flagToString(operator), typeToString(expectedType), typeToString(expectedType), typeToString(typeOfTheFstOperand), typeToString(typeOfTheSndOperand));
+	printf("%s arguments are of type: %s x %s but %s x %s was found\n"
+		       	,flagToString(operator)
+			,typeToString(expectedType)
+			,typeToString(expectedType)
+			,typeToString(typeOfTheFstOperand) 
+			,typeToString(typeOfTheSndOperand));
 	exit(EXIT_FAILURE);
     }
 }
