@@ -7,6 +7,7 @@
 #include "ast.h"
 #include "threeAddressCode.h"
 
+int offset = 0x0;
 SymbolTable symbolTable;
 ThreeAddressCode threeAddressCode;
 int yylex();
@@ -42,12 +43,15 @@ void yyerror(const char* s);
 setUp: { constructSymbolTable(&symbolTable); } prog
 
 prog: lSentences { typeCheck($1);
-                   generateIntermediateCode($1, &threeAddressCode);
-                   showThreeAddressCode(threeAddressCode); }
+                   generateIntermediateCode($1, &threeAddressCode, &offset);
+                   //showThreeAddressCode(threeAddressCode); 
+                   
+                 }
     | lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); 
                                  typeCheck(root); 
-                                 generateIntermediateCode(root, &threeAddressCode); 
-                                 showThreeAddressCode(threeAddressCode); }
+                                 generateIntermediateCode(root, &threeAddressCode, &offset); 
+                                 //showThreeAddressCode(threeAddressCode);
+                               }
     ;
     
 lDeclarations: Declaration               { $$ = $1; }
@@ -55,6 +59,9 @@ lDeclarations: Declaration               { $$ = $1; }
              ;
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0);
+                                 symbol->offset = offset;
+                                 printf("%X\n", offset);
+                                 offset += 0x8;
                                  if(addSymbol(&symbolTable, symbol)) {
                                      ASTNode* lSide = node(symbol);
                                      $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);

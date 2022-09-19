@@ -8,6 +8,7 @@ typedef struct {
     Type type;
     char* name;
     int value;
+    int offset;
 } Symbol;
 
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);

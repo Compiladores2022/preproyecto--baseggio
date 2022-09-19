@@ -18,7 +18,7 @@ void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction)
     enqueue(&threeAddressCode->queue, data, sizeof(instruction));
 }
 
-Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode) {
+Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset) {
     if(node) {
         if(isLeave(node)) { 
             return node->symbol; 
@@ -26,31 +26,32 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
         
         Flag flag = node->symbol->flag;
         if(isABinaryOperator(flag)) {
-            Symbol* fstOperand = generateIntermediateCode(node->lSide, threeAddressCode);
-            Symbol* sndOperand = generateIntermediateCode(node->rSide, threeAddressCode);
+            Symbol* fstOperand = generateIntermediateCode(node->lSide, threeAddressCode, offset);
+            Symbol* sndOperand = generateIntermediateCode(node->rSide, threeAddressCode, offset);
             Instruction instruction = constructInstruction(flag, fstOperand, sndOperand, node->symbol);
             addInstruction(threeAddressCode, instruction);
             
-            //FOR DEBUG
-            sprintf(node->symbol->name, "t%d", threeAddressCode->ctr++);
+            node->symbol->offset = *offset;
+            printf("%X\n", *offset);
+            *offset += 0x8;
             return node->symbol;
         }
         
         if(flag == flag_ASSIGNMENT) {
-            Symbol* expr = generateIntermediateCode(node->rSide, threeAddressCode);
+            Symbol* expr = generateIntermediateCode(node->rSide, threeAddressCode, offset);
             Instruction instruction = constructInstruction(flag, expr, NULL, node->lSide->symbol);
             addInstruction(threeAddressCode, instruction);
         }
         
         if(flag == flag_RETURN) {
-            Symbol* expr = generateIntermediateCode(node->lSide, threeAddressCode);
+            Symbol* expr = generateIntermediateCode(node->lSide, threeAddressCode, offset);
             Instruction instruction = constructInstruction(flag, NULL, NULL, expr);
             addInstruction(threeAddressCode, instruction);
         }
         
         if(flag == flag_SEMICOLON) {
-            generateIntermediateCode(node->lSide, threeAddressCode);
-            generateIntermediateCode(node->rSide, threeAddressCode);
+            generateIntermediateCode(node->lSide, threeAddressCode, offset);
+            generateIntermediateCode(node->rSide, threeAddressCode, offset);
         }
     }
     
