@@ -30,10 +30,11 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
             Symbol* sndOperand = generateIntermediateCode(node->rSide, threeAddressCode, offset);
             Instruction instruction = constructInstruction(flag, fstOperand, sndOperand, node->symbol);
             addInstruction(threeAddressCode, instruction);
-            
+           
+            threeAddressCode->ctr++;
+
             node->symbol->offset = *offset;
-            printf("%X\n", *offset);
-            *offset += 0x8;
+            *offset += 8;
             return node->symbol;
         }
         
@@ -82,4 +83,76 @@ void printInstruction(void* i) {
 
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
     showQueue(threeAddressCode.queue, printInstruction);
+}
+
+void translate(FILE* fp, Instruction i) {
+    Flag op = i.op;
+    switch (op) {
+        case flag_ADDITION:
+		if(i.fstOperand->flag == flag_IDENTIFIER && i.sndOperand->flag == flag_IDENTIFIER) {
+		    fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", i.sndOperand->offset);
+		    fprintf(fp, "\n\tadd -%d(%%rbp), %%r10", i.fstOperand->offset);
+		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
+		}
+
+		if(i.fstOperand->flag == flag_IDENTIFIER) {
+		    fprintf(fp, "\n\tmov $%d, %%r10", i.sndOperand->value);
+		    fprintf(fp, "\n\tadd -%d(%%rbp), %%r10", i.fstOperand->offset);
+		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
+		}
+
+		if(i.sndOperand->flag == flag_IDENTIFIER) {
+		    fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", i.sndOperand->offset);
+		    fprintf(fp, "\n\tadd $%d, %%r10", i.fstOperand->value);
+		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
+		}
+
+		if(i.fstOperand->flag != flag_IDENTIFIER && i.sndOperand != flag_IDENTIFIER) {
+		    fprintf(fp, "\n\tmov $%d, %%r10", i.fstOperand->value);
+		    fprintf(fp, "\n\tadd $%d, %%r10", i.sndOperand->value);
+		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
+		}
+
+		break;
+	case flag_MULTIPLICATION:
+		break;
+	case flag_OR:
+		break;
+	case flag_AND:
+		break;
+	case flag_RETURN:
+		break;
+	case flag_ASSIGNMENT:
+		if(i.fstOperand->flag == flag_IDENTIFIER ||
+	          isABinaryOperator(i.fstOperand->flag)) {
+		    fprintf(fp, "\n\tmov -%d(%%rbp), -%d(%%rbp)", i.fstOperand->offset, i.dest->offset);
+		} else {
+		    fprintf(fp, "\n\tmov $%d, -%d(%%rbp)", i.fstOperand->value, i.dest->offset);
+		}
+		break;
+	default:
+		break;
+    }
+}
+
+void generateAssembler(ThreeAddressCode threeAddressCode) {
+   FILE* fp = fopen("./output.s", "w");
+   if(fp == NULL) {
+       printf("File can't be opened\n");
+       exit(1);
+   }
+
+   fprintf(fp, "\t.globl main");
+   fprintf(fp, "\nmain:");
+   fprintf(fp, "\n\tenter $(8 * %d), $0", threeAddressCode.ctr);
+
+   while(!isEmpty(threeAddressCode.queue)) {
+       Instruction instruction = *(Instruction*) head(threeAddressCode.queue);
+       translate(fp, instruction);
+       dequeue(&(threeAddressCode.queue));
+   }
+
+   fprintf(fp, "\n\tmov $0, %%rax");
+   fprintf(fp, "\n\tleave");
+   fprintf(fp, "\n\tret");
 }
