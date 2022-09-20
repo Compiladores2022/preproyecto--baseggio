@@ -11,11 +11,11 @@ int isEmpty(Queue queue) {
 }
 
 void* head(Queue queue) {
-  return queue.head;
+  return queue.head->data;
 }
 
 void* lookUp(Queue queue, int (*f) (void*, void*), void* e) {
-  TNode* node = head(queue);
+  TNode* node = queue.head;
   while(node) {
     if((*f) (node->data, e)) {
       return node->data;
@@ -57,7 +57,7 @@ void enqueue(Queue* queue, void* data, size_t dataSize) {
 }
 
 void dequeue(Queue* queue) {
-  TNode* node = head(*queue);
+  TNode* node = queue->head;
   queue->head = queue->head->next;
   free(node);
   queue->length--;
