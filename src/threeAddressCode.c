@@ -85,40 +85,90 @@ void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
     showQueue(threeAddressCode.queue, printInstruction);
 }
 
-void translate(FILE* fp, Instruction i) {
+void translateBinaryOperation(FILE* fp, char* operation, Symbol* fstOperand, Symbol* sndOperand, Symbol* dest) {
+    int cond1 = fstOperand->flag == flag_IDENTIFIER || isAnArithmeticBinaryOperator(fstOperand->flag);
+    int cond2 = sndOperand->flag == flag_IDENTIFIER || isAnArithmeticBinaryOperator(sndOperand->flag);
+    if(cond1 && cond2) {
+        fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", fstOperand->offset);
+	fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
+    } else if (cond1) {
+        fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", fstOperand->offset);
+	fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
+    } else if (cond2) {
+        fprintf(fp, "\n\tmov $%d, %%r10", fstOperand->value);
+	fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
+    } else {
+        fprintf(fp, "\n\tmov $%d, %%r10", fstOperand->value);
+	fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
+    }
+
+    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", dest->offset);
+}
+
+char* translateOperand(Symbol* symbol) {
+    char* res = (char*) malloc(sizeof(char));
+    if(isValue(symbol->flag)) {
+        sprintf(res, "$%d", symbol->value);
+    } else {
+        sprintf(res, "-%d(%%rbp)", symbol->offset);
+    }
+
+    return res;
+}
+
+void translateOR(FILE* fp, Instruction i, int* numberOfLabel) {
+    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.fstOperand));
+    fprintf(fp, "\n\tmov $1, %%r11");
+    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tje .L%d", *numberOfLabel);
+    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.sndOperand));
+    fprintf(fp, "\n\tmov $1, %%r11");
+    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tje .L%d", *numberOfLabel);
+    fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 1);
+    fprintf(fp, "\n\t.L%d:", *numberOfLabel);
+    fprintf(fp, "\n\tmov $1, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\t.L%d:", *numberOfLabel + 1);
+
+    *numberOfLabel += 2;
+}
+
+void translateAND(FILE* fp, Instruction i, int* numberOfLabel) {
+    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.fstOperand));
+    fprintf(fp, "\n\tmov $%d, %%r11", 1);
+    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tje .L%d", *numberOfLabel);
+    fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
+    fprintf(fp, "\n\n\t.L%d:", *numberOfLabel);
+    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.sndOperand));
+    fprintf(fp, "\n\tmov $%d, %%r11", 1);
+    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tje .L%d", *numberOfLabel + 1);
+    fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
+    fprintf(fp, "\n\n\t.L%d:", *numberOfLabel + 1);
+    fprintf(fp, "\n\tmov $1, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\n\t.L%d:", *numberOfLabel + 2);
+
+    *numberOfLabel += 3;
+}
+
+void translate(FILE* fp, Instruction i, int* numberOfLabel) {
     Flag op = i.op;
     switch (op) {
         case flag_ADDITION:
-		if(i.fstOperand->flag == flag_IDENTIFIER && i.sndOperand->flag == flag_IDENTIFIER) {
-		    fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", i.sndOperand->offset);
-		    fprintf(fp, "\n\tadd -%d(%%rbp), %%r10", i.fstOperand->offset);
-		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
-		}
-
-		if(i.fstOperand->flag == flag_IDENTIFIER) {
-		    fprintf(fp, "\n\tmov $%d, %%r10", i.sndOperand->value);
-		    fprintf(fp, "\n\tadd -%d(%%rbp), %%r10", i.fstOperand->offset);
-		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
-		}
-
-		if(i.sndOperand->flag == flag_IDENTIFIER) {
-		    fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", i.sndOperand->offset);
-		    fprintf(fp, "\n\tadd $%d, %%r10", i.fstOperand->value);
-		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
-		}
-
-		if(i.fstOperand->flag != flag_IDENTIFIER && i.sndOperand != flag_IDENTIFIER) {
-		    fprintf(fp, "\n\tmov $%d, %%r10", i.fstOperand->value);
-		    fprintf(fp, "\n\tadd $%d, %%r10", i.sndOperand->value);
-		    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", i.dest->offset);
-		}
-
+		translateBinaryOperation(fp, "add", i.fstOperand, i.sndOperand, i.dest);
 		break;
 	case flag_MULTIPLICATION:
+		translateBinaryOperation(fp, "imult", i.fstOperand, i.sndOperand, i.dest);
 		break;
 	case flag_OR:
+		translateOR(fp, i, numberOfLabel);
 		break;
 	case flag_AND:
+		translateAND(fp, i, numberOfLabel);
 		break;
 	case flag_RETURN:
 		break;
@@ -137,6 +187,7 @@ void translate(FILE* fp, Instruction i) {
 
 void generateAssembler(ThreeAddressCode threeAddressCode) {
    FILE* fp = fopen("./output.s", "w");
+   int numberOfLabel = 1;
    if(fp == NULL) {
        printf("File can't be opened\n");
        exit(1);
@@ -148,11 +199,11 @@ void generateAssembler(ThreeAddressCode threeAddressCode) {
 
    while(!isEmpty(threeAddressCode.queue)) {
        Instruction instruction = *(Instruction*) head(threeAddressCode.queue);
-       translate(fp, instruction);
+       translate(fp, instruction, &numberOfLabel);
        dequeue(&(threeAddressCode.queue));
    }
 
    fprintf(fp, "\n\tmov $0, %%rax");
    fprintf(fp, "\n\tleave");
-   fprintf(fp, "\n\tret");
+   fprintf(fp, "\n\tret\n");
 }

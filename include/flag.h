@@ -17,4 +17,5 @@ char* flagToString(Flag flag);
 int isAnArithmeticBinaryOperator(Flag flag);
 int isABooleanBinaryOperator(Flag flag);
 int isABinaryOperator(Flag flag);
+int isValue(Flag flag);
 #endif

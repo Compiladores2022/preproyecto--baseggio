@@ -1,0 +1,5 @@
+Bool x = True;
+Bool y = False;
+Bool w = x && y;
+Bool z = x || y;
+return 0;
