@@ -89,20 +89,20 @@ void translateBinaryOperation(FILE* fp, char* operation, Symbol* fstOperand, Sym
     int cond1 = fstOperand->flag == flag_IDENTIFIER || isAnArithmeticBinaryOperator(fstOperand->flag);
     int cond2 = sndOperand->flag == flag_IDENTIFIER || isAnArithmeticBinaryOperator(sndOperand->flag);
     if(cond1 && cond2) {
-        fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", fstOperand->offset);
+        fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", fstOperand->offset);
 	fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
     } else if (cond1) {
-        fprintf(fp, "\n\tmov -%d(%%rbp), %%r10", fstOperand->offset);
+        fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", fstOperand->offset);
 	fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
     } else if (cond2) {
-        fprintf(fp, "\n\tmov $%d, %%r10", fstOperand->value);
+        fprintf(fp, "\n\tmovq $%d, %%r10", fstOperand->value);
 	fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
     } else {
-        fprintf(fp, "\n\tmov $%d, %%r10", fstOperand->value);
+        fprintf(fp, "\n\tmovq $%d, %%r10", fstOperand->value);
 	fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
     }
 
-    fprintf(fp, "\n\tmov %%r10, -%d(%%rbp)", dest->offset);
+    fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", dest->offset);
 }
 
 char* translateOperand(Symbol* symbol) {
@@ -117,39 +117,39 @@ char* translateOperand(Symbol* symbol) {
 }
 
 void translateOR(FILE* fp, Instruction i, int* numberOfLabel) {
-    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.fstOperand));
-    fprintf(fp, "\n\tmov $1, %%r11");
+    fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(i.fstOperand));
+    fprintf(fp, "\n\tmovq $1, %%r11");
     fprintf(fp, "\n\tcmp %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
-    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.sndOperand));
-    fprintf(fp, "\n\tmov $1, %%r11");
+    fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(i.sndOperand));
+    fprintf(fp, "\n\tmovq $1, %%r11");
     fprintf(fp, "\n\tcmp %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
-    fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 1);
     fprintf(fp, "\n.L%d:", *numberOfLabel);
-    fprintf(fp, "\n\tmov $1, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n.L%d:", *numberOfLabel + 1);
 
     *numberOfLabel += 2;
 }
 
 void translateAND(FILE* fp, Instruction i, int* numberOfLabel) {
-    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.fstOperand));
-    fprintf(fp, "\n\tmov $%d, %%r11", 1);
+    fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(i.fstOperand));
+    fprintf(fp, "\n\tmovq $%d, %%r11", 1);
     fprintf(fp, "\n\tcmp %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
-    fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
     fprintf(fp, "\n\n.L%d:", *numberOfLabel);
-    fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.sndOperand));
-    fprintf(fp, "\n\tmov $%d, %%r11", 1);
+    fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(i.sndOperand));
+    fprintf(fp, "\n\tmovq $%d, %%r11", 1);
     fprintf(fp, "\n\tcmp %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel + 1);
-    fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
     fprintf(fp, "\n\n.L%d:", *numberOfLabel + 1);
-    fprintf(fp, "\n\tmov $1, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n\n.L%d:", *numberOfLabel + 2);
 
     *numberOfLabel += 3;
@@ -171,13 +171,16 @@ void translate(FILE* fp, Instruction i, int* numberOfLabel) {
 		translateAND(fp, i, numberOfLabel);
 		break;
 	case flag_RETURN:
+		fprintf(fp, "\n\tmov $0, %%rax");
+		fprintf(fp, "\n\tcall printInt");
 		break;
 	case flag_ASSIGNMENT:
 		if(i.fstOperand->flag == flag_IDENTIFIER ||
 	          isABinaryOperator(i.fstOperand->flag)) {
-		    fprintf(fp, "\n\tmov -%d(%%rbp), -%d(%%rbp)", i.fstOperand->offset, i.dest->offset);
+		    fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", i.fstOperand->offset);
+		    fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", i.dest->offset);
 		} else {
-		    fprintf(fp, "\n\tmov $%d, -%d(%%rbp)", i.fstOperand->value, i.dest->offset);
+		    fprintf(fp, "\n\tmovq $%d, -%d(%%rbp)", i.fstOperand->value, i.dest->offset);
 		}
 		break;
 	default:
@@ -203,7 +206,7 @@ void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTabl
        dequeue(&(threeAddressCode.queue));
    }
 
-   fprintf(fp, "\n\tmov $0, %%rax");
+   fprintf(fp, "\n\tmovq $0, %%rax");
    fprintf(fp, "\n\tleave");
    fprintf(fp, "\n\tret\n");
 }

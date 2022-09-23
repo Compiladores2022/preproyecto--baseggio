@@ -1,42 +1,46 @@
 	.globl main
 main:
 	enter $(8 * 6), $0
-	mov $1, -8(%rbp)
-	mov $0, -16(%rbp)
-	mov -8(%rbp), %r10
-	mov $1, %r11
+	movq $1, -8(%rbp)
+	movq $0, -16(%rbp)
+	movq -8(%rbp), %r10
+	movq $1, %r11
 	cmp %r10, %r11
 	je .L1
-	mov $0, -40(%rbp)
+	movq $0, -40(%rbp)
 	jmp .L3
 
 .L1:
-	mov -16(%rbp), %r10
-	mov $1, %r11
+	movq -16(%rbp), %r10
+	movq $1, %r11
 	cmp %r10, %r11
 	je .L2
-	mov $0, -40(%rbp)
+	movq $0, -40(%rbp)
 	jmp .L3
 
 .L2:
-	mov $1, -40(%rbp)
+	movq $1, -40(%rbp)
 
 .L3:
-	mov -40(%rbp), -24(%rbp)
-	mov -8(%rbp), %r10
-	mov $1, %r11
+	movq -40(%rbp), %r10
+	movq %r10, -24(%rbp)
+	movq -8(%rbp), %r10
+	movq $1, %r11
 	cmp %r10, %r11
 	je .L4
-	mov -16(%rbp), %r10
-	mov $1, %r11
+	movq -16(%rbp), %r10
+	movq $1, %r11
 	cmp %r10, %r11
 	je .L4
-	mov $0, -48(%rbp)
+	movq $0, -48(%rbp)
 	jmp .L5
 .L4:
-	mov $1, -48(%rbp)
+	movq $1, -48(%rbp)
 .L5:
-	mov -48(%rbp), -32(%rbp)
+	movq -48(%rbp), %r10
+	movq %r10, -32(%rbp)
 	mov $0, %rax
+	call printInt
+	movq $0, %rax
 	leave
 	ret
