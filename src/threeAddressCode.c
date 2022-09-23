@@ -31,7 +31,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
             Instruction instruction = constructInstruction(flag, fstOperand, sndOperand, node->symbol);
             addInstruction(threeAddressCode, instruction);
            
-            threeAddressCode->ctr++;
+            threeAddressCode->numberOfTemporaries++;
 
             node->symbol->offset = *offset;
             *offset += 8;
@@ -127,9 +127,9 @@ void translateOR(FILE* fp, Instruction i, int* numberOfLabel) {
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
     fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 1);
-    fprintf(fp, "\n\t.L%d:", *numberOfLabel);
+    fprintf(fp, "\n.L%d:", *numberOfLabel);
     fprintf(fp, "\n\tmov $1, -%d(%%rbp)", i.dest->offset);
-    fprintf(fp, "\n\t.L%d:", *numberOfLabel + 1);
+    fprintf(fp, "\n.L%d:", *numberOfLabel + 1);
 
     *numberOfLabel += 2;
 }
@@ -141,16 +141,16 @@ void translateAND(FILE* fp, Instruction i, int* numberOfLabel) {
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
     fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
-    fprintf(fp, "\n\n\t.L%d:", *numberOfLabel);
+    fprintf(fp, "\n\n.L%d:", *numberOfLabel);
     fprintf(fp, "\n\tmov %s, %%r10", translateOperand(i.sndOperand));
     fprintf(fp, "\n\tmov $%d, %%r11", 1);
     fprintf(fp, "\n\tcmp %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel + 1);
     fprintf(fp, "\n\tmov $0, -%d(%%rbp)", i.dest->offset);
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
-    fprintf(fp, "\n\n\t.L%d:", *numberOfLabel + 1);
+    fprintf(fp, "\n\n.L%d:", *numberOfLabel + 1);
     fprintf(fp, "\n\tmov $1, -%d(%%rbp)", i.dest->offset);
-    fprintf(fp, "\n\n\t.L%d:", *numberOfLabel + 2);
+    fprintf(fp, "\n\n.L%d:", *numberOfLabel + 2);
 
     *numberOfLabel += 3;
 }
@@ -185,7 +185,7 @@ void translate(FILE* fp, Instruction i, int* numberOfLabel) {
     }
 }
 
-void generateAssembler(ThreeAddressCode threeAddressCode) {
+void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTable) {
    FILE* fp = fopen("./output.s", "w");
    int numberOfLabel = 1;
    if(fp == NULL) {
@@ -195,7 +195,7 @@ void generateAssembler(ThreeAddressCode threeAddressCode) {
 
    fprintf(fp, "\t.globl main");
    fprintf(fp, "\nmain:");
-   fprintf(fp, "\n\tenter $(8 * %d), $0", threeAddressCode.ctr);
+   fprintf(fp, "\n\tenter $(8 * %d), $0", numberOfLocals(symbolTable) + threeAddressCode.numberOfTemporaries);
 
    while(!isEmpty(threeAddressCode.queue)) {
        Instruction instruction = *(Instruction*) head(threeAddressCode.queue);

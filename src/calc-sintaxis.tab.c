@@ -1258,7 +1258,7 @@ yyreduce:
     { typeCheck((yyvsp[0].n));
                    generateIntermediateCode((yyvsp[0].n), &threeAddressCode, &offset);
                    //showThreeAddressCode(threeAddressCode); 
-                   generateAssembler(threeAddressCode);
+                   generateAssembler(threeAddressCode, symbolTable);
                    
                  }
 #line 1265 "calc-sintaxis.tab.c" /* yacc.c:1646  */
@@ -1270,7 +1270,7 @@ yyreduce:
                                  typeCheck(root); 
                                  generateIntermediateCode(root, &threeAddressCode, &offset); 
                                  //showThreeAddressCode(threeAddressCode);
-                                 generateAssembler(threeAddressCode);
+                                 generateAssembler(threeAddressCode, symbolTable);
                                }
 #line 1276 "calc-sintaxis.tab.c" /* yacc.c:1646  */
     break;

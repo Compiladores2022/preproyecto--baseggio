@@ -45,14 +45,14 @@ setUp: { constructSymbolTable(&symbolTable); } prog
 prog: lSentences { typeCheck($1);
                    generateIntermediateCode($1, &threeAddressCode, &offset);
                    //showThreeAddressCode(threeAddressCode); 
-                   generateAssembler(threeAddressCode);
+                   generateAssembler(threeAddressCode, symbolTable);
                    
                  }
     | lDeclarations lSentences { ASTNode* root = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); 
                                  typeCheck(root); 
                                  generateIntermediateCode(root, &threeAddressCode, &offset); 
                                  //showThreeAddressCode(threeAddressCode);
-                                 generateAssembler(threeAddressCode);
+                                 generateAssembler(threeAddressCode, symbolTable);
                                }
     ;
     

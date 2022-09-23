@@ -6,6 +6,10 @@
 #define TRUE  1
 #define FALSE 0
 
+int numberOfLocals(SymbolTable symbolTable) {
+    return length(symbolTable.peek->queue);
+}
+
 int compareByName(void* s, void* name) {
   Symbol* symbol = (Symbol*) s;
   return strcmp(symbol->name, name) == 0;
