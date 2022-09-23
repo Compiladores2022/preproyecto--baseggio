@@ -15,7 +15,7 @@ typedef struct instruction{
 
 typedef struct threeAddressCode {
     Queue queue;
-    int numberOfTemporaries;
+    int numberOfTemporaries; /* TODO: numberOfTemporaries changes in each level */
 } ThreeAddressCode;
 
 int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode);
