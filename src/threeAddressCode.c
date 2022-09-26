@@ -189,7 +189,7 @@ void translate(FILE* fp, Instruction i, int* numberOfLabel) {
 }
 
 void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTable) {
-   FILE* fp = fopen("./assembler/output.s", "w");
+   FILE* fp = fopen("./target/assembler/a.s", "w");
    int numberOfLabel = 1;
    if(fp == NULL) {
        printf("File can't be opened\n");

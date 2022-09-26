@@ -1,0 +1,31 @@
+Int x = 128;
+Int y = 129;
+Int z = x;
+Bool b1 = True;
+Bool b2 = False;
+return x;
+return y;
+return b1;
+return b2;
+return x + y;
+return x * y;
+return b1 || b2;
+return b1 || b1;
+return b1 && b2;
+return b2 && b2;
+return z;
+
+/*
+expected:
+128
+129
+1
+0
+257
+16512
+1
+1
+0
+0
+128
+*/
