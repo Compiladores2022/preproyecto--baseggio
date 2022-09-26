@@ -62,7 +62,6 @@ lDeclarations: Declaration               { $$ = $1; }
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0);
                                  symbol->offset = offset;
-                                 printf("%s offset: %d\n", $2, offset);
                                  offset += 8;
                                  if(addSymbol(&symbolTable, symbol)) {
                                      ASTNode* lSide = node(symbol);
