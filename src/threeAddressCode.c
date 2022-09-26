@@ -162,7 +162,7 @@ void translate(FILE* fp, Instruction i, int* numberOfLabel) {
 		translateBinaryOperation(fp, "add", i.fstOperand, i.sndOperand, i.dest);
 		break;
 	case flag_MULTIPLICATION:
-		translateBinaryOperation(fp, "imult", i.fstOperand, i.sndOperand, i.dest);
+		translateBinaryOperation(fp, "imul", i.fstOperand, i.sndOperand, i.dest);
 		break;
 	case flag_OR:
 		translateOR(fp, i, numberOfLabel);
@@ -171,8 +171,8 @@ void translate(FILE* fp, Instruction i, int* numberOfLabel) {
 		translateAND(fp, i, numberOfLabel);
 		break;
 	case flag_RETURN:
-		fprintf(fp, "\n\tmov $0, %%rax");
-		fprintf(fp, "\n\tcall printInt");
+		fprintf(fp, "\n\tmov %s, %%edi", translateOperand(i.dest));
+		fprintf(fp, "\n\tcall print");
 		break;
 	case flag_ASSIGNMENT:
 		if(i.fstOperand->flag == flag_IDENTIFIER ||
