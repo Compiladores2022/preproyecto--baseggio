@@ -188,6 +188,11 @@ void translate(FILE* fp, Instruction i, int* numberOfLabel) {
     }
 }
 
+int memoryNeeded(int numberOfLocals, int numberOfTemporaries) {
+    int memoryNeeded = 8 * (numberOfLocals + numberOfTemporaries);
+    return memoryNeeded + (memoryNeeded % 16);
+}
+
 void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTable) {
    FILE* fp = fopen("./output/a.s", "w");
    int numberOfLabel = 1;
@@ -198,9 +203,7 @@ void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTabl
 
    fprintf(fp, "\t.globl main");
    fprintf(fp, "\nmain:");
-   int d = 8 * (numberOfLocals(symbolTable) + threeAddressCode.numberOfTemporaries);
-   d = d + (d % 16);
-   fprintf(fp, "\n\tenter $%d, $0", d);
+   fprintf(fp, "\n\tenter $%d, $0", memoryNeeded(numberOfLocals(symbolTable), threeAddressCode.numberOfTemporaries));
 
    while(!isEmpty(threeAddressCode.queue)) {
        Instruction instruction = *(Instruction*) head(threeAddressCode.queue);
