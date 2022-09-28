@@ -1,0 +1,18 @@
+Bool x = True;
+Bool y = False;
+Bool w = x && y;
+Bool z = x || y;
+return x;
+return y;
+return w;
+return z;
+return 0;
+
+/*
+expected:
+1
+0
+0
+1
+0
+*/

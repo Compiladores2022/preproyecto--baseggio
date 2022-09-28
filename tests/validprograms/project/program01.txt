@@ -1,0 +1,25 @@
+Program
+{
+  Int inc(Int x)
+  {
+      return x + 1;
+  }
+  
+  Int get_int() extern;
+  
+  void print_int(Int i) extern;
+  
+  void main()
+  {
+      Int y = 0;
+      y = get_int();
+      if (y == 1) then
+        {
+            print_int(y);
+        }
+      else 
+        {
+            return print_int(inc(y));
+        }
+  }
+}
