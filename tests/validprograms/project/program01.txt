@@ -1,5 +1,9 @@
+Int x_1;
+
 Program
 {
+Int x_0;
+-10
   Int inc(Int x)
   {
       return x + 1;
@@ -13,7 +17,7 @@ Program
   {
       Int y = 0;
       y = get_int();
-      if (y == 1) then
+      if (y < 1) then
         {
             print_int(y);
         }

@@ -12,13 +12,29 @@
 %option noyywrap
 %option yylineno
 
-letra  [a-zA-Z]      
-digito [0-9]
-bool   "True"|"False"
+digit     [0-9]
+alpha     [a-zA-Z]
+alpha_num alpha|digit|"_"
+bool      "True"|"False"
+keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
 %%
 
-{digito}+ { yylval.i = atoi(yytext);
+"Program"
+
+"if"
+
+"then"
+
+"else"
+
+"extern"
+
+"void"
+
+"while"
+
+-?{digit}+ { yylval.i = atoi(yytext);
             return vINT; }
 
 {bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
@@ -32,16 +48,26 @@ bool   "True"|"False"
 "Bool"    { yylval.t = TYPE_BOOL;
             return tBOOL; }
 
-{letra}({letra}|{digito})* { yylval.s = (char*) malloc(sizeof(char));
-                             strcpy(yylval.s, yytext);
-                             return ID; 
-                           }    
+{alpha}({alpha}|{digit}|"_")* { yylval.s = (char*) malloc(sizeof(char));
+                        strcpy(yylval.s, yytext);
+                        return ID; 
+                      }
 
-[+*=;()] { return *yytext; }
+"<"
+
+">"
+
+"=="
+
+[+-*/%=;()] { return *yytext; }
                                   
 "&&"     { return AND; }
        
 "||"     { return OR; }
+
+"{"
+
+"}"
 
 "//".*"\n"
 
