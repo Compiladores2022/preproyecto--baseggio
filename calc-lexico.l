@@ -14,7 +14,7 @@
 
 digit     [0-9]
 alpha     [a-zA-Z]
-alpha_num alpha|digit|"_"
+alpha_num {alpha}|{digit}|"_"
 bool      "True"|"False"
 keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
@@ -34,12 +34,6 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
 "while"
 
--?{digit}+ { yylval.i = atoi(yytext);
-            return vINT; }
-
-{bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
-            return vBOOL; }
-
 "return"  { return RETURN; }
 
 "Int"     { yylval.t = TYPE_INT;
@@ -48,26 +42,28 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 "Bool"    { yylval.t = TYPE_BOOL;
             return tBOOL; }
 
-{alpha}({alpha}|{digit}|"_")* { yylval.s = (char*) malloc(sizeof(char));
-                        strcpy(yylval.s, yytext);
-                        return ID; 
-                      }
+{bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
+            return vBOOL; }
 
-"<"
+{alpha}{alpha_num}* { yylval.s = (char*) malloc(sizeof(char));
+                      strcpy(yylval.s, yytext);
+                      return ID; 
+                    }
 
-">"
+"-"?{digit}+ { yylval.i = atoi(yytext);
+            return vINT; }
+
+[<]
+
+[>]
 
 "=="
 
-[+-*/%=;()] { return *yytext; }
+[+*/%=;(){}]|"-" { return *yytext; }
                                   
 "&&"     { return AND; }
        
 "||"     { return OR; }
-
-"{"
-
-"}"
 
 "//".*"\n"
 
