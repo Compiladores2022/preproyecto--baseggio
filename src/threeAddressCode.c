@@ -198,7 +198,9 @@ void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTabl
 
    fprintf(fp, "\t.globl main");
    fprintf(fp, "\nmain:");
-   fprintf(fp, "\n\tenter $(8 * %d), $0", numberOfLocals(symbolTable) + threeAddressCode.numberOfTemporaries);
+   int d = 8 * (numberOfLocals(symbolTable) + threeAddressCode.numberOfTemporaries);
+   d = d + (d % 16);
+   fprintf(fp, "\n\tenter $%d, $0", d);
 
    while(!isEmpty(threeAddressCode.queue)) {
        Instruction instruction = *(Instruction*) head(threeAddressCode.queue);
