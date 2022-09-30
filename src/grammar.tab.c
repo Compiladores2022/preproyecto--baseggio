@@ -1444,13 +1444,13 @@ yyreduce:
 
   case 35:
 #line 124 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_MULTIPLICATION, "*", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1449 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
 #line 125 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_DIVISION, "/", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1455 "grammar.tab.c" /* yacc.c:1646  */
     break;
 

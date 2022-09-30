@@ -5,6 +5,7 @@ typedef enum {
     flag_ADDITION,
     flag_SUBSTRACTION,
     flag_MULTIPLICATION,
+    flag_DIVISION,
     flag_OR,
     flag_AND,
     flag_ASSIGNMENT,
