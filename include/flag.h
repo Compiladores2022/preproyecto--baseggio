@@ -3,6 +3,7 @@
 typedef enum {
     flag_IDENTIFIER,
     flag_ADDITION,
+    flag_SUBSTRACTION,
     flag_MULTIPLICATION,
     flag_OR,
     flag_AND,

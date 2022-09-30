@@ -1432,13 +1432,13 @@ yyreduce:
 
   case 33:
 #line 122 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_ADDITION, "+", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1437 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 123 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_SUBSTRACTION, "-", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1443 "grammar.tab.c" /* yacc.c:1646  */
     break;
 

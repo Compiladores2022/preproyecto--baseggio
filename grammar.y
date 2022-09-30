@@ -119,8 +119,8 @@ E: ID         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
               }
  | MethodCall { $$ = NULL; }
  | V          { $$ = $1; }
- | E '+' E    { $$ = NULL; }
- | E '-' E    { $$ = NULL; }
+ | E '+' E    { $$ = composeTree(flag_ADDITION, "+", $1, NULL, $3); }
+ | E '-' E    { $$ = composeTree(flag_SUBSTRACTION, "-", $1, NULL, $3); }
  | E '*' E    { $$ = NULL; }
  | E '/' E    { $$ = NULL; }
  | E '%' E    { $$ = NULL; }
