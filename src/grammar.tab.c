@@ -1498,7 +1498,7 @@ yyreduce:
 
   case 44:
 #line 133 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_NEG, "!", (yyvsp[0].n), NULL, NULL); }
 #line 1503 "grammar.tab.c" /* yacc.c:1646  */
     break;
 

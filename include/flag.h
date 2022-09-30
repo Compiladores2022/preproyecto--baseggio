@@ -13,6 +13,7 @@ typedef enum {
     flag_GT,
     flag_EQT,
     flag_MINUS,
+    flag_NEG,
     flag_ASSIGNMENT,
     flag_SEMICOLON,
     flag_VALUE_INT,
