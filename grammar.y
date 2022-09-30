@@ -129,7 +129,7 @@ E: ID         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
  | E EQT E    { $$ = composeTree(flag_EQT, "==", $1, NULL, $3); }
  | E OR  E    { $$ = composeTree(flag_OR, "||", $1, NULL, $3); }
  | E AND E    { $$ = composeTree(flag_AND, "&&", $1, NULL, $3); }
- | '-' E      { $$ = NULL; }
+ | '-' E      { $$ = composeTree(flag_MINUS, "-", $2, NULL, NULL); }
  | '!' E      { $$ = NULL; }
  | '(' E ')'  { $$ = $2; }
  ;

@@ -1480,19 +1480,19 @@ yyreduce:
 
   case 41:
 #line 130 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_OR, "||", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1485 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
 #line 131 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_AND, "&&", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1491 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
 #line 132 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_MINUS, "-", (yyvsp[0].n), NULL, NULL); }
 #line 1497 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
