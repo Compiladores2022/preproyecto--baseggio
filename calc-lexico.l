@@ -20,49 +20,42 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
 %%
 
-"Program" { printf("TOKEN: %s\n", yytext);return PROGRAM; }
+"Program" { return PROGRAM; }
 
-"if"      { printf("TOKEN: %s\n", yytext);return IF; }
+"if"      { return IF; }
 
-"then"    { printf("TOKEN: %s\n", yytext); return THEN; }
+"then"    { return THEN; }
 
-"else"    { printf("TOKEN: %s\n", yytext); return ELSE; }
+"else"    { return ELSE; }
 
-"extern"  { printf("TOKEN: %s\n", yytext); return EXTERN; }
+"extern"  { return EXTERN; }
 
-"void"    { printf("TOKEN: %s\n", yytext); return VOID; }
+"void"    { return VOID; }
 
-"while"   { printf("TOKEN: %s\n", yytext); return WHILE; }
+"while"   { return WHILE; }
 
-"return"  { printf("TOKEN: %s\n", yytext); return RETURN; }
+"return"  { return RETURN; }
 
 "Int"     { //yylval.t = TYPE_INT;
-            printf("type int: %s\n", yytext);
             return tINT; }
 
 "Bool"    { //yylval.t = TYPE_BOOL;
-            printf("type bool: %s\n", yytext);
             return tBOOL; }
 
 {bool}    { //yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
-            printf("bool value: %s\n", yytext);
             return vBOOL; }
 
 {alpha}{alpha_num}* { //yylval.s = (char*) malloc(sizeof(char));
                       //strcpy(yylval.s, yytext);
-                      printf("ID: %s\n", yytext);
                       return ID; 
                     }
 
 "-"?{digit}+ { //yylval.i = atoi(yytext);
-            printf("value int: %s\n", yytext);
             return vINT; }
 
-"==" { printf("rel op: %s\n", yytext);
-       return EQT; }
+"==" { return EQT; }
 
-[+*/%=;(){}<>,]|"-" { printf("Symbol: %s\n", yytext);
-                   return *yytext; }
+[+*/%=;(){}<>,]|"-" { return *yytext; }
                                   
 "&&"     { return AND; }
        
