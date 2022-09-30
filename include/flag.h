@@ -10,6 +10,7 @@ typedef enum {
     flag_OR,
     flag_AND,
     flag_LT,
+    flag_GT,
     flag_ASSIGNMENT,
     flag_SEMICOLON,
     flag_VALUE_INT,
