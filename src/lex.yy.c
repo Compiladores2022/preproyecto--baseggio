@@ -863,34 +863,34 @@ YY_RULE_SETUP
 case 9:
 YY_RULE_SETUP
 #line 39 "calc-lexico.l"
-{ //yylval.t = TYPE_INT;
+{ yylval.t = TYPE_INT;
             return tINT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 42 "calc-lexico.l"
-{ //yylval.t = TYPE_BOOL;
+{ yylval.t = TYPE_BOOL;
             return tBOOL; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 45 "calc-lexico.l"
-{ //yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
+{ yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
             return vBOOL; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 48 "calc-lexico.l"
-{ //yylval.s = (char*) malloc(sizeof(char));
-                      //strcpy(yylval.s, yytext);
+{ yylval.s = (char*) malloc(sizeof(char));
+                      strcpy(yylval.s, yytext);
                       return ID; 
                     }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 53 "calc-lexico.l"
-{ //yylval.i = atoi(yytext);
-            return vINT; }
+{ yylval.i = atoi(yytext);
+               return vINT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP

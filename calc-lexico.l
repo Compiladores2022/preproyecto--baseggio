@@ -36,22 +36,22 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
 "return"  { return RETURN; }
 
-"Int"     { //yylval.t = TYPE_INT;
+"Int"     { yylval.t = TYPE_INT;
             return tINT; }
 
-"Bool"    { //yylval.t = TYPE_BOOL;
+"Bool"    { yylval.t = TYPE_BOOL;
             return tBOOL; }
 
-{bool}    { //yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
+{bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
             return vBOOL; }
 
-{alpha}{alpha_num}* { //yylval.s = (char*) malloc(sizeof(char));
-                      //strcpy(yylval.s, yytext);
+{alpha}{alpha_num}* { yylval.s = (char*) malloc(sizeof(char));
+                      strcpy(yylval.s, yytext);
                       return ID; 
                     }
 
-"-"?{digit}+ { //yylval.i = atoi(yytext);
-            return vINT; }
+"-"?{digit}+ { yylval.i = atoi(yytext);
+               return vINT; }
 
 "==" { return EQT; }
 

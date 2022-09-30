@@ -1,10 +1,18 @@
 %{
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <symbolTable.h>
+#include <ast.h>
+
+SymbolTable symbolTable;
 
 int yylex();
 void yyerror(const char* s);
 %}
+
+%union { int i; char* s; struct astNode* n; enum type t }
 
 %token PROGRAM
 %token IF
@@ -13,14 +21,22 @@ void yyerror(const char* s);
 %token RETURN
 %token EXTERN
 %token WHILE
-%token ID
-%token vINT
-%token vBOOL
-%token tINT
-%token tBOOL
+%token <s> ID
+%token <i> vINT
+%token <i> vBOOL
+%token <t> tINT
+%token <t> tBOOL
 %token VOID
 %token OR
 %token AND
+
+%type <n> lDeclarations
+%type <n> lStatements
+%type <n> Declaration
+%type <n> Statement
+%type <n> E
+%type <n> V
+%type <t> Type
 
 %left '+'
 %left '-'
@@ -40,9 +56,9 @@ void yyerror(const char* s);
 
 %%
 
-program: PROGRAM '{' lDeclarations MethodDeclarations '}' ;
+program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' ;
 
-lDeclarations: 
+lDeclarations: { $$ = NULL; } 
 	     | lDeclarations Declaration
              ;
 
@@ -70,46 +86,67 @@ Param: Type ID ;
 
 Block: '{' lDeclarations lStatements '}' ;
 
-lStatements: 
+lStatements: { $$ = NULL; }
 	   | lStatements Statement
            ;
 
-Statement: ID '=' E ';'
-	 | MethodCall ';'
-         | IF '(' E ')' THEN Block
-         | IF '(' E ')' THEN Block ELSE Block
-         | WHILE E Block
-         | RETURN ';'
-         | RETURN E ';'
-         | ';'
-         | Block
+Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
+	                  ASTNode* lSide = node(symbol);
+                          $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3);
+	                }
+	 | E ';'                               { $$ = $1; }
+         | IF '(' E ')' THEN Block             { $$ = NULL; }
+         | IF '(' E ')' THEN Block ELSE Block  { $$ = NULL; }
+         | WHILE E Block                       { $$ = NULL; }
+         | RETURN ';'                          { $$ = NULL; }
+         | RETURN E ';'                        { $$ = NULL; }
+         | ';'                                 { $$ = NULL; }
+         | Block                               { $$ = NULL; }
          ;
 
-Declaration: Type ID '=' E ';' ;
+Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
+	                         if(addSymbol(&symbolTable, symbol)) {
+                                   printf("var added\n");
+				 } else {
+                                   printf("Redeclared var\n");
+                                   exit(EXIT_FAILURE);
+				 }
+                               }
 
-E: ID
- | MethodCall 
- | V
- | E '+' E
- | E '-' E
- | E '*' E
- | E '/' E
- | E '%' E
- | E '<' E
- | E '>' E
- | E EQT E
- | E OR  E
- | E AND E
- | '-' E
- | '!' E
- | '(' E ')'
+E: ID         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1); 
+                ASTNode* n = node(symbol);
+                $$ = n;
+              }
+ | MethodCall { $$ = NULL; }
+ | V          { $$ = $1; }
+ | E '+' E    { $$ = NULL; }
+ | E '-' E    { $$ = NULL; }
+ | E '*' E    { $$ = NULL; }
+ | E '/' E    { $$ = NULL; }
+ | E '%' E    { $$ = NULL; }
+ | E '<' E    { $$ = NULL; }
+ | E '>' E    { $$ = NULL; }
+ | E EQT E    { $$ = NULL; }
+ | E OR  E    { $$ = NULL; }
+ | E AND E    { $$ = NULL; }
+ | '-' E      { $$ = NULL; }
+ | '!' E      { $$ = NULL; }
+ | '(' E ')'  { $$ = $2; }
  ;
 
-V: vINT
- | vBOOL
+V: vINT {  char* name = (char*) malloc(sizeof(char));
+           sprintf(name, "%d", $1);
+           ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, $1));
+           $$ = n;
+        }
+ | vBOOL { char* name = (char*) malloc(sizeof(char));
+           sprintf(name, "%d", $1);
+           ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, $1));
+           $$ = n;
+         }
  ;
 
-Expressions: 
+Expressions:
 	   | OneOrMoreExpressions
            ;
 
@@ -117,10 +154,10 @@ OneOrMoreExpressions: E
 		    | E ',' OneOrMoreExpressions
                     ;
 
-Type : tINT
-     | tBOOL
+Type : tINT  { $$ = $1; }
+     | tBOOL { $$ = $1; }
      ;
 
-MethodCall: ID '(' Expressions ')' ;
+MethodCall: ID '(' Expressions ')' { checkIdentifierIsDeclared(symbolTable, $1); }
 
 %%
