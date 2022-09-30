@@ -126,9 +126,9 @@ E: ID         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
  | E '%' E    { $$ = composeTree(flag_MOD, "%", $1, NULL, $3); }
  | E '<' E    { $$ = composeTree(flag_LT, "<", $1, NULL, $3); }
  | E '>' E    { $$ = composeTree(flag_GT, ">", $1, NULL, $3); }
- | E EQT E    { $$ = NULL; }
- | E OR  E    { $$ = NULL; }
- | E AND E    { $$ = NULL; }
+ | E EQT E    { $$ = composeTree(flag_EQT, "==", $1, NULL, $3); }
+ | E OR  E    { $$ = composeTree(flag_OR, "||", $1, NULL, $3); }
+ | E AND E    { $$ = composeTree(flag_AND, "&&", $1, NULL, $3); }
  | '-' E      { $$ = NULL; }
  | '!' E      { $$ = NULL; }
  | '(' E ')'  { $$ = $2; }

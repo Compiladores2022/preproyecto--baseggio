@@ -11,6 +11,7 @@ typedef enum {
     flag_AND,
     flag_LT,
     flag_GT,
+    flag_EQT,
     flag_ASSIGNMENT,
     flag_SEMICOLON,
     flag_VALUE_INT,
