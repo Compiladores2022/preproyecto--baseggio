@@ -1462,7 +1462,7 @@ yyreduce:
 
   case 38:
 #line 127 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = NULL; }
+    { (yyval.n) = composeTree(flag_LT, "<", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1467 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
