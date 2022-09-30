@@ -1,3 +1,39 @@
-Int x = 0;
-Int y = 1;
-return x == y;
+Program {
+    Int x = 0;
+    Int y = 1;
+    Bool b1 = True;
+    Bool b2 = False;
+
+    Int foo_1(Int x1, Int x2) {
+        return x1 + x2 - x1;
+    }
+
+    Bool foo_2(Bool b1, Bool b2) {
+	return False && b1 && b2;
+    }
+
+    Int get_int() extern;
+
+    void print_int(Int x) extern;
+
+    void foo_3() {
+    	print_int(123456789);
+    }
+
+    void main() {
+	Int y = 0;
+	y = get_int();
+        if(y == 0) then {
+		foo_3();
+	} else {
+		if(y < 0) then {
+			print_int(y);
+		} else {
+			if(y > 0) then {
+				print_int(-y);
+			}
+		}
+        }
+    }
+}
+

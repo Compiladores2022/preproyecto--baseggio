@@ -2,7 +2,7 @@
 
 make clean
 flex calc-lexico.l
-bison -d calc-sintaxis.y
+bison -d grammar.y
 mv *.c src/
 mv *.h include/
 make all

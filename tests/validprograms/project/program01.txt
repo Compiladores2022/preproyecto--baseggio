@@ -1,9 +1,7 @@
-Int x_1 = 0;
-
 Program
 {
-  Int inc(Int x)
-  {
+  Int x = -10;
+  Int inc (Int x ) {
       return x + 1;
   }
   

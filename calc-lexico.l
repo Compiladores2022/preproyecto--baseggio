@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "type.h"
-#include "calc-sintaxis.tab.h"
+#include "grammar.tab.h"
 
 %}
 %x IN_COMMENT
@@ -20,46 +20,49 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
 %%
 
-"Program"
+"Program" { printf("TOKEN: %s\n", yytext);return PROGRAM; }
 
-"if"
+"if"      { printf("TOKEN: %s\n", yytext);return IF; }
 
-"then"
+"then"    { printf("TOKEN: %s\n", yytext); return THEN; }
 
-"else"
+"else"    { printf("TOKEN: %s\n", yytext); return ELSE; }
 
-"extern"
+"extern"  { printf("TOKEN: %s\n", yytext); return EXTERN; }
 
-"void"
+"void"    { printf("TOKEN: %s\n", yytext); return VOID; }
 
-"while"
+"while"   { printf("TOKEN: %s\n", yytext); return WHILE; }
 
-"return"  { return RETURN; }
+"return"  { printf("TOKEN: %s\n", yytext); return RETURN; }
 
-"Int"     { yylval.t = TYPE_INT;
+"Int"     { //yylval.t = TYPE_INT;
+            printf("type int: %s\n", yytext);
             return tINT; }
 
-"Bool"    { yylval.t = TYPE_BOOL;
+"Bool"    { //yylval.t = TYPE_BOOL;
+            printf("type bool: %s\n", yytext);
             return tBOOL; }
 
-{bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
+{bool}    { //yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
+            printf("bool value: %s\n", yytext);
             return vBOOL; }
 
-{alpha}{alpha_num}* { yylval.s = (char*) malloc(sizeof(char));
-                      strcpy(yylval.s, yytext);
+{alpha}{alpha_num}* { //yylval.s = (char*) malloc(sizeof(char));
+                      //strcpy(yylval.s, yytext);
+                      printf("ID: %s\n", yytext);
                       return ID; 
                     }
 
-"-"?{digit}+ { yylval.i = atoi(yytext);
+"-"?{digit}+ { //yylval.i = atoi(yytext);
+            printf("value int: %s\n", yytext);
             return vINT; }
 
-[<]
+"==" { printf("rel op: %s\n", yytext);
+       return EQT; }
 
-[>]
-
-"=="
-
-[+*/%=;(){}]|"-" { return *yytext; }
+[+*/%=;(){}<>,]|"-" { printf("Symbol: %s\n", yytext);
+                   return *yytext; }
                                   
 "&&"     { return AND; }
        
@@ -77,7 +80,7 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
   \n        yylineno++;
 }
 
-" "|\n 
+" "|\n|\t
 
 . { printf("%s%d\n", "-> Lexical ERROR on line: ", yylineno);
     printf("%s%s\n", "unexpected character: ", yytext);
