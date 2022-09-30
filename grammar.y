@@ -81,6 +81,7 @@ Statement: ID '=' E ';'
          | WHILE E Block
          | RETURN ';'
          | RETURN E ';'
+         | ';'
          | Block
          ;
 
