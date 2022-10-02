@@ -16,24 +16,12 @@ Program {
 
     void print_int(Int x) extern;
 
+
     void foo_3() {
     	print_int(123456789);
     }
 
     void main() {
-	Int y = 0;
-	y = get_int();
-        if(y == 0) then {
-		foo_3();
-	} else {
-		if(y < 0) then {
-			print_int(y);
-		} else {
-			if(y > 0) then {
-				print_int(-y);
-			}
-		}
-        }
     }
 }
 

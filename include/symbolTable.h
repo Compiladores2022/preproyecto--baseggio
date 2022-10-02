@@ -29,7 +29,7 @@ void closeLevel(SymbolTable* symbolTable);
 int addSymbol(SymbolTable* symbolTable, Symbol* symbol);
 
 /* The 'printSymbolTable' function prints the elements in the 'symbolTable' to the stdout. */
-void showSymbolTable(SymbolTable symbolTable);
+void printSymbolTable(SymbolTable symbolTable);
 
 /* The 'lookUpSymbol' function look for a symbol by its name in the 'symbolTable'. 
  * It returns a reference to the symbol if it is found otherwise returns NULL. */

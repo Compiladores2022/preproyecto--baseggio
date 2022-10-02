@@ -3,16 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <symbolTable.h>
-#include <ast.h>
+#include "symbolTable.h"
+#include "ast.h"
+#include "queue.h"
 
 SymbolTable symbolTable;
 
 int yylex();
 void yyerror(const char* s);
+void addAll(SymbolTable* symbolTable, Symbol* symbol);
 %}
 
-%union { int i; char* s; struct astNode* n; enum type t }
+%union { int i; char* s; struct astNode* n; enum type t; struct symbol* sb; }
 
 %token PROGRAM
 %token IF
@@ -32,8 +34,18 @@ void yyerror(const char* s);
 
 %type <n> lDeclarations
 %type <n> lStatements
+%type <n> MethodDeclarations
+%type <n> Expressions
+%type <n> OneOrMoreExpressions
 %type <n> Declaration
 %type <n> Statement
+%type <n> MethodDeclaration
+%type <n> Method
+%type <n> MethodCall
+%type <sb> Params
+%type <sb> OneOrMoreParams
+%type <sb> Param
+%type <n> Block
 %type <n> E
 %type <n> V
 %type <t> Type
@@ -56,38 +68,72 @@ void yyerror(const char* s);
 
 %%
 
-program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' ;
+program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
+       
+        ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
+        printAST(root);
+} ;
 
 lDeclarations: { $$ = NULL; } 
-	     | lDeclarations Declaration
+	     | lDeclarations Declaration { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
              ;
 
-MethodDeclarations: 
-		  | MethodDeclaration MethodDeclarations
+MethodDeclarations: { $$ = NULL; }
+		  | MethodDeclaration MethodDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
                   ;
 
-MethodDeclaration: Method Block
-		 | Method EXTERN ';'
+MethodDeclaration: Method { printSymbolTable(symbolTable);
+		            openLevel(&symbolTable);
+		            ASTNode* n     = $1;
+		            Symbol* params = n->symbol->params;
+                            addAll(&symbolTable, params);
+                            printSymbolTable(symbolTable);
+                          } Block  { printSymbolTable(symbolTable); closeLevel(&symbolTable); $$ = composeTree(0, "Method declaration", $1, NULL, $3); }
+		 | Method
+                   { printSymbolTable(symbolTable);
+                   }
+                   EXTERN ';' { $$ = composeTree(0, "Method declaration", $1, NULL, NULL); }
                  ;
 
-Method: VOID ID '(' Params ')'
-      | Type ID '(' Params ')'
+Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, TYPE_VOID, $2, 0);
+                                 if(addSymbol(&symbolTable, symbol)) {
+                                     symbol->params = $4;
+                                     ASTNode* n = node(symbol);
+                                     $$ = n;
+                                 } else {
+                                     printf("Redeclared identifier: %s\n", $2);
+                                 }
+                               }
+      | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, $1, $2, 0);
+                                 if(addSymbol(&symbolTable, symbol)) {
+                                     symbol->params = $4;
+                                     ASTNode* n = node(symbol);
+                                     $$ = n;
+                                 } else {
+                                     printf("Redeclared identifier: %s\n", $2);
+                                 }
+                               }
       ;
 
-Params: 
-      | OneOrMoreParams
+Params:                 { $$ = NULL; }
+      | OneOrMoreParams { $$ = $1;   }
       ;
 
-OneOrMoreParams : Param
-		| Param ',' OneOrMoreParams
+OneOrMoreParams : Param                     { $$ = $1; }
+		| Param ',' OneOrMoreParams { Symbol* symbol = $1;
+                                              symbol->params = $3;
+                                              $$ = symbol;
+                                            }
                 ;
 
-Param: Type ID ;
+Param: Type ID { Symbol* symbol = constructPtrToSymbol(flag_PARAM, $1, $2, 0);
+                 $$ = symbol;
+               } ;
 
-Block: '{' lDeclarations lStatements '}' ;
+Block: '{' lDeclarations lStatements '}' { $$ = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); } ;
 
 lStatements: { $$ = NULL; }
-	   | lStatements Statement
+	   | lStatements Statement { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
            ;
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
@@ -95,29 +141,30 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
                           $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3);
 	                }
 	 | E ';'                               { $$ = $1; }
-         | IF '(' E ')' THEN Block             { $$ = NULL; }
-         | IF '(' E ')' THEN Block ELSE Block  { $$ = NULL; }
-         | WHILE E Block                       { $$ = NULL; }
-         | RETURN ';'                          { $$ = NULL; }
-         | RETURN E ';'                        { $$ = NULL; }
-         | ';'                                 { $$ = NULL; }
-         | Block                               { $$ = NULL; }
+         | IF '(' E ')' THEN Block             { $$ = composeTree(flag_IF, "if-then", $3, NULL, $6); }
+         | IF '(' E ')' THEN Block ELSE Block  { $$ = composeTree(flag_IF_ELSE, "if-then-else", $3, $6, $8); }
+         | WHILE E Block                       { $$ = composeTree(flag_WHILE, "while", $2, NULL, $3); }
+         | RETURN ';'                          { $$ = composeTree(flag_RETURN, "return", NULL, NULL, NULL); }
+         | RETURN E ';'                        { $$ = composeTree(flag_RETURN, "return", $2, NULL, NULL); }
+         | ';'                                 { $$ = composeTree(flag_SEMICOLON, ";", NULL, NULL, NULL); }
+         | Block                               { $$ = $1; }
          ;
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
 	                         if(addSymbol(&symbolTable, symbol)) {
-                                   printf("var added\n");
+                                   printf("var %s added\n", $2);
 				 } else {
                                    printf("Redeclared var\n");
                                    exit(EXIT_FAILURE);
 				 }
                                }
+           ;
 
 E: ID         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1); 
                 ASTNode* n = node(symbol);
                 $$ = n;
               }
- | MethodCall { $$ = NULL; }
+ | MethodCall { $$ = $1; }
  | V          { $$ = $1; }
  | E '+' E    { $$ = composeTree(flag_ADDITION, "+", $1, NULL, $3); }
  | E '-' E    { $$ = composeTree(flag_SUBSTRACTION, "-", $1, NULL, $3); }
@@ -146,18 +193,27 @@ V: vINT {  char* name = (char*) malloc(sizeof(char));
          }
  ;
 
-Expressions:
-	   | OneOrMoreExpressions
+Expressions: { $$ = NULL; }
+	   | OneOrMoreExpressions { $$ = $1; }
            ;
 
-OneOrMoreExpressions: E
-		    | E ',' OneOrMoreExpressions
+OneOrMoreExpressions: E { $$ = $1; }
+		    | E ',' OneOrMoreExpressions { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $3); }
                     ;
 
 Type : tINT  { $$ = $1; }
      | tBOOL { $$ = $1; }
      ;
 
-MethodCall: ID '(' Expressions ')' { checkIdentifierIsDeclared(symbolTable, $1); }
+MethodCall: ID '(' Expressions ')' { $$ = NULL;
+                                   } ;
 
 %%
+
+void addAll(SymbolTable* symbolTable, Symbol* symbol) {
+    if(symbol) {
+        printf("PARAM: %s\n", symbol->name);
+        addSymbol(symbolTable, symbol);
+        addAll(symbolTable, symbol->params);
+    }
+}

@@ -23,7 +23,7 @@ void printData(void* data) {
 int addSymbol(SymbolTable* symbolTable, Symbol* symbol) {
     int found = lookUp(symbolTable->peek->queue, compareByName, symbol->name) != NULL;
     if(!found) {
-      enqueue(&symbolTable->peek->queue, (void*) symbol, sizeof(Symbol*));
+      enqueue(&(symbolTable->peek->queue), (void*) symbol, sizeof(Symbol*));
       return TRUE;
     }
 
@@ -59,12 +59,15 @@ void closeLevel(SymbolTable* symbolTable) {
 void printSymbolTable(SymbolTable symbolTable) {
     Level* level = symbolTable.peek;
     int i = 0;
+    printf("\n--- SYMBOL TABLE ---\n");
     while(level) {
-	printf("Level %d: \n", symbolTable.levels - i);
+	printf("\nLevel %d: \n", symbolTable.levels - i);
         showQueue(level->queue, printData);
 	level = level->next;
 	i++;
     }
+
+    printf("\n--- SYMBOL TABLE ---\n");
 }
 
 Symbol* lookUpSymbol(SymbolTable symbolTable, char* name) {

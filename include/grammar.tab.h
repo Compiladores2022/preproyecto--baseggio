@@ -69,8 +69,8 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 15 "grammar.y" /* yacc.c:1909  */
- int i; char* s; struct astNode* n; enum type t 
+#line 17 "grammar.y" /* yacc.c:1909  */
+ int i; char* s; struct astNode* n; enum type t; struct symbol* sb; 
 
 #line 76 "grammar.tab.h" /* yacc.c:1909  */
 };

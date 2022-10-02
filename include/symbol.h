@@ -3,11 +3,12 @@
 #include "type.h"
 #include "flag.h"
 
-typedef struct {
+typedef struct symbol {
     Flag flag;
     Type type;
     char* name;
     int value;
+    struct symbol* params;
     int offset;
 } Symbol;
 

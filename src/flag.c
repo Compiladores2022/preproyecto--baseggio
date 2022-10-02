@@ -6,12 +6,28 @@ char* flagToString(Flag flag) {
 		    return "ID";
 	    case flag_ADDITION:
 		    return "+";
+	    case flag_SUBSTRACTION:
+		    return "-";
 	    case flag_MULTIPLICATION:
 		    return "*";
+	    case flag_DIVISION:
+		    return "/";
+	    case flag_MOD:
+		    return "%";
+            case flag_LT:
+		    return "<";
+	    case flag_GT:
+		    return ">";
+	    case flag_EQT:
+		    return "==";
 	    case flag_OR:
 		    return "||";
 	    case flag_AND:
 		    return "&&";
+	    case flag_MINUS:
+		    return "-";
+	    case flag_NEG:
+		    return "!";
 	    case flag_ASSIGNMENT:
 		    return "=";
 	    case flag_SEMICOLON:
@@ -22,6 +38,10 @@ char* flagToString(Flag flag) {
 		    return "vBool";
 	    case flag_RETURN:
 		    return "return";
+            case flag_METHOD:
+		    return "method";
+	    case flag_PARAM:
+		    return "param";
 	    default:
 		    return "NRF";
 	}
