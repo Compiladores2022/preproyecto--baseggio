@@ -169,21 +169,21 @@ E: ID         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
                 ASTNode* n = node(symbol);
                 $$ = n;
               }
- | MethodCall { $$ = $1; }
- | V          { $$ = $1; }
- | E '+' E    { $$ = composeTree(flag_ADDITION, "+", $1, NULL, $3); }
- | E '-' E    { $$ = composeTree(flag_SUBSTRACTION, "-", $1, NULL, $3); }
- | E '*' E    { $$ = composeTree(flag_MULTIPLICATION, "*", $1, NULL, $3); }
- | E '/' E    { $$ = composeTree(flag_DIVISION, "/", $1, NULL, $3); }
- | E '%' E    { $$ = composeTree(flag_MOD, "%", $1, NULL, $3); }
- | E '<' E    { $$ = composeTree(flag_LT, "<", $1, NULL, $3); }
- | E '>' E    { $$ = composeTree(flag_GT, ">", $1, NULL, $3); }
- | E EQT E    { $$ = composeTree(flag_EQT, "==", $1, NULL, $3); }
- | E OR  E    { $$ = composeTree(flag_OR, "||", $1, NULL, $3); }
- | E AND E    { $$ = composeTree(flag_AND, "&&", $1, NULL, $3); }
- | '-' E      { $$ = composeTree(flag_MINUS, "-", $2, NULL, NULL); }
- | '!' E      { $$ = composeTree(flag_NEG, "!", $2, NULL, NULL); }
- | '(' E ')'  { $$ = $2; }
+ | MethodCall { $$ = $1;                                                     }
+ | V          { $$ = $1;                                                     }
+ | E '+' E    { $$ = composeTree(flag_ADDITION,       "+",  $1, NULL, $3);   }
+ | E '-' E    { $$ = composeTree(flag_SUBSTRACTION,   "-",  $1, NULL, $3);   }
+ | E '*' E    { $$ = composeTree(flag_MULTIPLICATION, "*",  $1, NULL, $3);   }
+ | E '/' E    { $$ = composeTree(flag_DIVISION,       "/",  $1, NULL, $3);   }
+ | E '%' E    { $$ = composeTree(flag_MOD,            "%",  $1, NULL, $3);   }
+ | E '<' E    { $$ = composeTree(flag_LT,             "<",  $1, NULL, $3);   }
+ | E '>' E    { $$ = composeTree(flag_GT,             ">",  $1, NULL, $3);   }
+ | E EQT E    { $$ = composeTree(flag_EQT,            "==", $1, NULL, $3);   }
+ | E OR  E    { $$ = composeTree(flag_OR,             "||", $1, NULL, $3);   }
+ | E AND E    { $$ = composeTree(flag_AND,            "&&", $1, NULL, $3);   }
+ | '-' E      { $$ = composeTree(flag_MINUS,          "-",  $2, NULL, NULL); }
+ | '!' E      { $$ = composeTree(flag_NEG,            "!",  $2, NULL, NULL); }
+ | '(' E ')'  { $$ = $2;                                                     }
  ;
 
 V: vINT {  char* name = (char*) malloc(sizeof(char));
