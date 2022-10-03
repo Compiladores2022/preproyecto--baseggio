@@ -40,7 +40,7 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 %type <n> Declaration
 %type <n> Statement
 %type <n> MethodDeclaration
-%type <n> Method
+%type <sb> Method
 %type <n> MethodCall
 %type <sb> Params
 %type <sb> OneOrMoreParams
@@ -82,19 +82,26 @@ MethodDeclarations: { $$ = NULL; }
 		  | MethodDeclaration MethodDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
                   ;
 
-MethodDeclaration: Method { openLevel(&symbolTable);
-		            ASTNode* n     = $1;
-		            Symbol* params = n->symbol->params;
-                            addAll(&symbolTable, params);
-                          } Block  { closeLevel(&symbolTable); $$ = composeTree(0, "Method declaration", $1, NULL, $3); }
-		 | Method EXTERN ';' { $$ = composeTree(0, "Method declaration", $1, NULL, NULL); }
+MethodDeclaration: Method 
+                   { openLevel(&symbolTable); 
+                     Symbol* symbol = $1;
+                     addAll(&symbolTable, symbol->params);
+                   }
+                   Block  
+                   { closeLevel(&symbolTable);
+                     ASTNode* n = node($1);
+                     n->lSide = $3;
+                     $$ = n;
+                   }
+		 | Method EXTERN ';' { ASTNode* n = node($1);
+		                       $$ = n;
+		                     }
                  ;
 
 Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, TYPE_VOID, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
                                      symbol->params = $4;
-                                     ASTNode* n = node(symbol);
-                                     $$ = n;
+                                     $$ = symbol;
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
                                      exit(EXIT_FAILURE);
@@ -103,8 +110,7 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
       | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, $1, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
                                      symbol->params = $4;
-                                     ASTNode* n = node(symbol);
-                                     $$ = n;
+                                     $$ = symbol;
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
                                      exit(EXIT_FAILURE);
@@ -127,7 +133,8 @@ Param: Type ID { Symbol* symbol = constructPtrToSymbol(flag_PARAM, $1, $2, 0);
                  $$ = symbol;
                } ;
 
-Block: '{' lDeclarations lStatements '}' { $$ = composeTree(flag_SEMICOLON, ";", $2, NULL, $3); } ;
+Block: { openLevel(&symbolTable); } '{' lDeclarations lStatements '}' 
+       { closeLevel(&symbolTable); $$ = composeTree(flag_SEMICOLON, ";", $3, NULL, $4); } ;
 
 lStatements: { $$ = NULL; }
 	   | lStatements Statement { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }

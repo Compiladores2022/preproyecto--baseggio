@@ -144,14 +144,14 @@ void printAST(ASTNode* root) {
 	//root->mSide;
 	//root->rSide;
 
-	//printf("FLAG: %s NAME: %s\n", flagToString(root->symbol->flag), root->symbol->name);
-	/*if(root->symbol->flag == flag_METHOD) {
+	printf("FLAG: %s NAME: %s\n", flagToString(root->symbol->flag), root->symbol->name);
+	if(root->symbol->flag == flag_METHOD) {
 	    
 	    Symbol* params = root->symbol->params;
 	    while(params) {
 	        printf("TYPE: %s, NAME: %s\n", typeToString(params->type), params->name);
 		params = params->params;
 	    }
-	}*/
+	}
     }
 }
