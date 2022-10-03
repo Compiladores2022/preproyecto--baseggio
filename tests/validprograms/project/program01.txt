@@ -1,6 +1,20 @@
 Program
 {
   Int x = -10;
+  
+  Int f(Int x, Int y) {
+    if(x == y) then {
+        return x;
+    }
+    
+    if(x < y) then {
+        return f(x + 1, y);
+    }
+    
+    return f(x, y + 1);
+    return f(f(x - 1, y * 2), y + 1);
+  }
+  
   Int inc (Int x ) {
       return x + 1;
   }

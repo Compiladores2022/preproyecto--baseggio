@@ -38,6 +38,12 @@ char* flagToString(Flag flag) {
 		    return "vBool";
 	    case flag_RETURN:
 		    return "return";
+            case flag_IF:
+                    return "if";
+            case flag_IF_ELSE:
+                    return "if-then-else";
+            case flag_WHILE:
+                    return "while";
             case flag_METHOD:
 		    return "method";
 	    case flag_PARAM:

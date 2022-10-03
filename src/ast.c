@@ -139,10 +139,6 @@ void printAST(ASTNode* root) {
         printAST(root->lSide);
 	printAST(root->mSide);
 	printAST(root->rSide);
-	//
-	//root->lSide;
-	//root->mSide;
-	//root->rSide;
 
 	printf("FLAG: %s NAME: %s\n", flagToString(root->symbol->flag), root->symbol->name);
 	if(root->symbol->flag == flag_METHOD) {

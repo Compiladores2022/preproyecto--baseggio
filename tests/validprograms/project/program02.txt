@@ -5,6 +5,7 @@ Program {
     Bool b2 = False;
 
     Int foo_1(Int x1, Int x2) {
+        Int x1 = 0;
         return x1 + x2 - x1;
     }
 
