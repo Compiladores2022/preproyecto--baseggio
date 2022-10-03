@@ -82,17 +82,12 @@ MethodDeclarations: { $$ = NULL; }
 		  | MethodDeclaration MethodDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
                   ;
 
-MethodDeclaration: Method { printSymbolTable(symbolTable);
-		            openLevel(&symbolTable);
+MethodDeclaration: Method { openLevel(&symbolTable);
 		            ASTNode* n     = $1;
 		            Symbol* params = n->symbol->params;
                             addAll(&symbolTable, params);
-                            printSymbolTable(symbolTable);
-                          } Block  { printSymbolTable(symbolTable); closeLevel(&symbolTable); $$ = composeTree(0, "Method declaration", $1, NULL, $3); }
-		 | Method
-                   { printSymbolTable(symbolTable);
-                   }
-                   EXTERN ';' { $$ = composeTree(0, "Method declaration", $1, NULL, NULL); }
+                          } Block  { closeLevel(&symbolTable); $$ = composeTree(0, "Method declaration", $1, NULL, $3); }
+		 | Method EXTERN ';' { $$ = composeTree(0, "Method declaration", $1, NULL, NULL); }
                  ;
 
 Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, TYPE_VOID, $2, 0);
@@ -102,6 +97,7 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
                                      $$ = n;
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
+                                     exit(EXIT_FAILURE);
                                  }
                                }
       | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, $1, $2, 0);
@@ -111,6 +107,7 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
                                      $$ = n;
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
+                                     exit(EXIT_FAILURE);
                                  }
                                }
       ;
@@ -152,7 +149,8 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
 	                         if(addSymbol(&symbolTable, symbol)) {
-                                   printf("var %s added\n", $2);
+                                   ASTNode* n = node(symbol);
+                                   $$ = n;
 				 } else {
                                    printf("Redeclared var\n");
                                    exit(EXIT_FAILURE);
@@ -205,14 +203,12 @@ Type : tINT  { $$ = $1; }
      | tBOOL { $$ = $1; }
      ;
 
-MethodCall: ID '(' Expressions ')' { $$ = NULL;
-                                   } ;
+MethodCall: ID '(' Expressions ')' { $$ = NULL; } ;
 
 %%
 
 void addAll(SymbolTable* symbolTable, Symbol* symbol) {
     if(symbol) {
-        printf("PARAM: %s\n", symbol->name);
         addSymbol(symbolTable, symbol);
         addAll(symbolTable, symbol->params);
     }

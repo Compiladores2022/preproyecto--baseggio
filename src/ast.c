@@ -136,9 +136,9 @@ int evaluate(ASTNode* node) {
 
 void printAST(ASTNode* root) {
     if(root != NULL) {        
-        //printAST(root->lSide);
-	//printAST(root->mSide);
-	//printAST(root->rSide);
+        printAST(root->lSide);
+	printAST(root->mSide);
+	printAST(root->rSide);
 	//
 	//root->lSide;
 	//root->mSide;
