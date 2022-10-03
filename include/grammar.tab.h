@@ -69,7 +69,8 @@ extern int yydebug;
     VOID = 270,                    /* VOID  */
     OR = 271,                      /* OR  */
     AND = 272,                     /* AND  */
-    EQT = 273                      /* EQT  */
+    UMINUS = 273,                  /* UMINUS  */
+    EQT = 274                      /* EQT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -81,7 +82,7 @@ union YYSTYPE
 #line 17 "grammar.y"
  int i; char* s; struct astNode* n; enum type t; struct symbol* sb; 
 
-#line 85 "grammar.tab.h"
+#line 86 "grammar.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

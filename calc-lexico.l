@@ -50,7 +50,7 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
                       return ID; 
                     }
 
-"-"?{digit}+ { yylval.i = atoi(yytext);
+{digit}+ { yylval.i = atoi(yytext);
                return vINT; }
 
 "==" { return EQT; }
