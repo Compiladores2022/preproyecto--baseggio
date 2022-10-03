@@ -1596,12 +1596,16 @@ yyreduce:
 
   case 56: /* MethodCall: ID '(' Expressions ')'  */
 #line 213 "grammar.y"
-                                   { (yyval.n) = NULL; }
-#line 1601 "grammar.tab.c"
+                                   { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
+                                     ASTNode* n = node(symbol);
+                                     n->lSide = (yyvsp[-1].n);
+                                     (yyval.n) = n;
+                                   }
+#line 1605 "grammar.tab.c"
     break;
 
 
-#line 1605 "grammar.tab.c"
+#line 1609 "grammar.tab.c"
 
       default: break;
     }
@@ -1794,7 +1798,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 215 "grammar.y"
+#line 219 "grammar.y"
 
 
 void addAll(SymbolTable* symbolTable, Symbol* symbol) {

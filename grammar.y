@@ -210,7 +210,11 @@ Type : tINT  { $$ = $1; }
      | tBOOL { $$ = $1; }
      ;
 
-MethodCall: ID '(' Expressions ')' { $$ = NULL; } ;
+MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
+                                     ASTNode* n = node(symbol);
+                                     n->lSide = $3;
+                                     $$ = n;
+                                   } ;
 
 %%
 
