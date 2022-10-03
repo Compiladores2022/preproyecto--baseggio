@@ -10,8 +10,12 @@ typedef struct symbol {
     int value;
     struct symbol* params;
     int offset;
+    int isFunction;
 } Symbol;
 
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);
+
+int isFunction(Symbol symbol);
+
 void showSymbol(Symbol symbol);
 #endif

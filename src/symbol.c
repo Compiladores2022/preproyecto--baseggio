@@ -13,6 +13,10 @@ Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value) {
     return symbol;
 }
 
+int isFunction(Symbol symbol) {
+    return symbol.isFunction;
+}
+
 void showSymbol(Symbol symbol) {
     printf("FLAG: %d, NAME: %s, VALUE: %d\n", symbol.flag, symbol.name, symbol.value);
 }

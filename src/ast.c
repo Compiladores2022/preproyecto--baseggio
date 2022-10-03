@@ -135,19 +135,31 @@ int evaluate(ASTNode* node) {
 }
 
 void printAST(ASTNode* root) {
-    if(root != NULL) {        
-        printAST(root->lSide);
-	printAST(root->mSide);
-	printAST(root->rSide);
+	if(root) {
+	  printf("-- FATHER --\n");
+	  printf("FLAG: %s, NAME: %s\n", flagToString(root->symbol->flag), root->symbol->name);
+	  if(isFunction(*(root->symbol))) {
+	      Symbol* params = root->symbol->params;
+	      while(params) {
+	          printf("PARAM: %s, ", params->name);
+		  params = params->params;
+	      }
+	  }
+	  if(root->lSide) {
+	      printf("Left side: \n");
+	      printAST(root->lSide);
+	  }
 
-	printf("FLAG: %s NAME: %s\n", flagToString(root->symbol->flag), root->symbol->name);
-	if(root->symbol->flag == flag_METHOD) {
-	    
-	    Symbol* params = root->symbol->params;
-	    while(params) {
-	        printf("TYPE: %s, NAME: %s\n", typeToString(params->type), params->name);
-		params = params->params;
-	    }
+	  if(root->mSide) {
+	      printf("Mid side: \n");
+	      printAST(root->mSide);
+	  }
+
+	  if(root->rSide) {
+	      printf("Right side: \n");
+	      printAST(root->rSide);
+	  }
+
+	  printf(" -- BACKTRACK  -- \n");
 	}
-    }
 }

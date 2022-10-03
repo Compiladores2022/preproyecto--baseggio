@@ -7,6 +7,9 @@
 #include "ast.h"
 #include "queue.h"
 
+#define TRUE 1
+#define FALSE 0
+
 SymbolTable symbolTable;
 
 int yylex();
@@ -70,7 +73,6 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 %%
 
 program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
-       
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
         printAST(root);
 } ;
@@ -99,8 +101,9 @@ MethodDeclaration: Method
 		                     }
                  ;
 
-Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, TYPE_VOID, $2, 0);
+Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, TYPE_VOID, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
+                                     symbol->isFunction = TRUE;
                                      symbol->params = $4;
                                      $$ = symbol;
                                  } else {
@@ -108,8 +111,9 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
                                      exit(EXIT_FAILURE);
                                  }
                                }
-      | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD, $1, $2, 0);
+      | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
+                                     symbol->isFunction = TRUE;
                                      symbol->params = $4;
                                      $$ = symbol;
                                  } else {
@@ -157,8 +161,8 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
 	                         if(addSymbol(&symbolTable, symbol)) {
-                                   ASTNode* n = node(symbol);
-                                   $$ = n;
+                                   ASTNode* lSide = node(symbol);
+                                   $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
 				 } else {
                                    printf("Redeclared var\n");
                                    exit(EXIT_FAILURE);
@@ -212,9 +216,14 @@ Type : tINT  { $$ = $1; }
      ;
 
 MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-                                     ASTNode* n = node(symbol);
-                                     n->lSide = $3;
-                                     $$ = n;
+	                             if(isFunction(*symbol)) {
+                                         ASTNode* n = node(symbol);
+                                         n->lSide = $3;
+                                         $$ = n;
+                                     } else {
+                                         printf("%s is not a function\n", symbol->name);
+                                         exit(EXIT_FAILURE);
+                                     }
                                    } ;
 
 %%

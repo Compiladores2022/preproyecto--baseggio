@@ -5,7 +5,6 @@ Program {
     Bool b2 = False;
 
     Int foo_1(Int x1, Int x2) {
-        Int x1 = 0;
         return x1 + x2 - x1;
     }
 
@@ -23,6 +22,18 @@ Program {
     }
 
     void main() {
+        Int y = get_int();
+        if ( y == 0 ) then {
+        	print_int(1);
+        } else {
+		if ( y == 1 ) then {
+			print_int(2);
+		} else {
+			if ( y == 2 ) then {
+				print_int(4);
+			}
+		}
+	}
     }
 }
 
