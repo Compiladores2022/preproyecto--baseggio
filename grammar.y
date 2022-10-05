@@ -208,7 +208,7 @@ Expressions: { $$ = NULL; }
 	   | OneOrMoreExpressions { $$ = $1; }
            ;
 
-OneOrMoreExpressions: E { $$ = $1; }
+OneOrMoreExpressions: E { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, NULL); }
 		    | E ',' OneOrMoreExpressions { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $3); }
                     ;
 
@@ -217,7 +217,9 @@ Type : tINT  { $$ = $1; }
      ;
 
 MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-	                             if(isFunction(*symbol)) {
+	                             int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
+	                             if(isAFunction) {
+                                         symbol = copy(symbol);
 	                                 symbol->flag = flag_METHOD_CALL;
                                          ASTNode* n = node(symbol);
                                          n->lSide = $3;
