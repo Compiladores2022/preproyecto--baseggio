@@ -13,6 +13,15 @@ Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value) {
     return symbol;
 }
 
+Symbol* copy(Symbol* symbol) {
+    Symbol* c = constructPtrToSymbol(symbol->flag, symbol->type, symbol->name, symbol->value);
+    if(symbol->params) {
+        c->params = copy(symbol->params);
+    }
+
+    return c;
+}
+
 int isFunction(Symbol symbol) {
     return symbol.isFunction;
 }

@@ -14,7 +14,7 @@ typedef struct symbol {
 } Symbol;
 
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);
-
+Symbol* copy(Symbol* symbol);
 int isFunction(Symbol symbol);
 
 void showSymbol(Symbol symbol);

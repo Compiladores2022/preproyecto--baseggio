@@ -72,25 +72,6 @@ void checkReturn(ASTNode* node, Type expected) {
     }
 }
 
-void checkParams(Symbol* fParams, ASTNode* rParams) {
-    if(fParams && rParams) {
-        Type typeOfTheFParam = fParams->type;
-        Type typeOfTheRParam = rParams->lSide->symbol->type;
-        if(typeOfTheFParam != typeOfTheRParam) {
-            printf("Formal param and real param does not match\n");
-            exit(EXIT_FAILURE);
-        }
-        
-        checkParams(fParams->params, rParams->rSide);
-    } else if(fParams) {
-        printf("few parameters");
-        exit(EXIT_FAILURE);
-    } else if(rParams) {
-        printf("many parameters");
-        exit(EXIT_FAILURE);    
-    }
-}
-
 int thereIsAtLeastOneReturn(ASTNode* node) {
     if(node) {
         return (node->symbol->flag == flag_RETURN)
