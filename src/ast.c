@@ -55,23 +55,21 @@ void reportAssignmentErrorIfExists(Type varType, Type exprType, char* varName) {
 	}
 }
 
-int checkReturn(ASTNode* node, Type expected) {
+void checkReturn(ASTNode* node, Type expected) {
     if(node) {
         Flag flag = node->symbol->flag;
         if(flag == flag_RETURN) {
             Type returnType = typeCheck(node->lSide);
-            if(returnType == expected) {
-                return TRUE;
-            } else {
+            if(returnType != expected) {
                 printf("%s was expected in return statement\n", typeToString(expected));
 		exit(EXIT_FAILURE);
             }
-        } else {
-            return checkReturn(node->lSide, expected) || checkReturn(node->mSide, expected) || checkReturn(node->rSide, expected);
         }
+        
+	checkReturn(node->lSide, expected);
+        checkReturn(node->mSide, expected);
+        checkReturn(node->rSide, expected);
     }
-    
-    return FALSE;
 }
 
 void checkParams(Symbol* fParams, ASTNode* rParams) {
@@ -91,6 +89,17 @@ void checkParams(Symbol* fParams, ASTNode* rParams) {
         printf("many parameters");
         exit(EXIT_FAILURE);    
     }
+}
+
+int thereIsAtLeastOneReturn(ASTNode* node) {
+    if(node) {
+        return (node->symbol->flag == flag_RETURN)
+		|| thereIsAtLeastOneReturn(node->lSide)
+		|| thereIsAtLeastOneReturn(node->mSide)
+		|| thereIsAtLeastOneReturn(node->rSide);
+    }
+
+    return FALSE;
 }
 
 Type typeCheck(ASTNode* node) {
@@ -220,12 +229,15 @@ Type typeCheck(ASTNode* node) {
 		int hasReturnType = node->symbol->type != TYPE_VOID;
 		ASTNode* block          = node->lSide;
 		Type expectedReturnType = node->symbol->type;
-		if(hasReturnType && !isExtern && !checkReturn(block, expectedReturnType)) {
-		    printf("return statement is missing in %s function.\n", node->symbol->name);
-		    exit(EXIT_FAILURE);
+		if(hasReturnType && !isExtern) {
+		    if(thereIsAtLeastOneReturn(block)) {
+		        checkReturn(block, expectedReturnType);
+			typeCheck(block);
+		    } else {
+		        printf("return statement is missing in %s function\n", node->symbol->name);
+			exit(EXIT_FAILURE);
+		    }
 		}
-		
-		typeCheck(block);
 	    }
     }
 
