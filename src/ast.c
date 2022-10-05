@@ -4,6 +4,9 @@
 #include "ast.h"
 #include "symbol.h"
 
+#define TRUE 1
+#define FALSE 0
+
 ASTNode* node(Symbol* symbol) {
     ASTNode* leaf = (ASTNode*) malloc(sizeof(ASTNode));
     if(leaf == NULL) { exit(EXIT_FAILURE); }
@@ -37,7 +40,7 @@ void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Typ
 			,typeToString(expectedType)
 			,typeToString(expectedType)
 			,typeToString(typeOfTheFstOperand) 
-			,typeToString(typeOfTheSndOperand));
+			,typeToString(typeOfTheSndOperand));	
 	exit(EXIT_FAILURE);
     }
 }
@@ -50,6 +53,44 @@ void reportAssignmentErrorIfExists(Type varType, Type exprType, char* varName) {
 			    ,typeToString(exprType));
 	    exit(EXIT_FAILURE);
 	}
+}
+
+int checkReturn(ASTNode* node, Type expected) {
+    if(node) {
+        Flag flag = node->symbol->flag;
+        if(flag == flag_RETURN) {
+            Type returnType = typeCheck(node->lSide);
+            if(returnType == expected) {
+                return TRUE;
+            } else {
+                printf("%s was expected in return statement\n", typeToString(expected));
+		exit(EXIT_FAILURE);
+            }
+        } else {
+            return checkReturn(node->lSide, expected) || checkReturn(node->mSide, expected) || checkReturn(node->rSide, expected);
+        }
+    }
+    
+    return FALSE;
+}
+
+void checkParams(Symbol* fParams, ASTNode* rParams) {
+    if(fParams && rParams) {
+        Type typeOfTheFParam = fParams->type;
+        Type typeOfTheRParam = rParams->lSide->symbol->type;
+        if(typeOfTheFParam != typeOfTheRParam) {
+            printf("Formal param and real param does not match\n");
+            exit(EXIT_FAILURE);
+        }
+        
+        checkParams(fParams->params, rParams->rSide);
+    } else if(fParams) {
+        printf("few parameters");
+        exit(EXIT_FAILURE);
+    } else if(rParams) {
+        printf("many parameters");
+        exit(EXIT_FAILURE);    
+    }
 }
 
 Type typeCheck(ASTNode* node) {
@@ -86,49 +127,106 @@ Type typeCheck(ASTNode* node) {
 	        typeCheck(node->lSide);
 		typeCheck(node->rSide);
 	    }
-    }
-
-    return 0;
-}
-
-int evaluateOperation(int valueOfTheFstOperand, int valueOfTheSndOperand, Flag operator) {
-    switch (operator) {
-        case flag_ADDITION:
-		return valueOfTheFstOperand + valueOfTheSndOperand;
-	case flag_MULTIPLICATION:
-		return valueOfTheFstOperand * valueOfTheSndOperand;
-	case flag_OR:
-		return valueOfTheFstOperand || valueOfTheSndOperand;
-	case flag_AND:
-		return valueOfTheFstOperand && valueOfTheSndOperand;
-	default:
-		return 0;
-    }
-}
-
-int evaluate(ASTNode* node) {
-    if(node) {
-        if(isLeave(node)) { return node->symbol->value; }
-	Flag flag = node->symbol->flag;
-
-        if(isABinaryOperator(flag)) {
-	    int valueOfTheFstOperand = evaluate(node->lSide);
-	    int valueOfTheSndOperand = evaluate(node->rSide);
-	    return node->symbol->value = evaluateOperation(valueOfTheFstOperand, valueOfTheSndOperand, flag);
-	}
-
-	if(flag == flag_RETURN) {
-	    printf("%d\n", evaluate(node->lSide));
-	}
-
-	if(flag == flag_ASSIGNMENT) {
-	    node->lSide->symbol->value = evaluate(node->rSide);
-	}
-
-	if(flag == flag_SEMICOLON) {
-	    evaluate(node->lSide);
-	    evaluate(node->rSide);
-	}
+	    
+	    if(flag == flag_LT) {
+	        Type typeOfTheFstOperand = typeCheck(node->lSide);
+		Type typeOfTheSndOperand = typeCheck(node->rSide);
+		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
+		return TYPE_BOOL;
+	    }
+	    
+	    if(flag == flag_GT) {
+	        Type typeOfTheFstOperand = typeCheck(node->lSide);
+		Type typeOfTheSndOperand = typeCheck(node->rSide);
+		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
+		return TYPE_BOOL;
+	    }
+	    
+	    if(flag == flag_EQT) {
+	        Type typeOfTheFstOperand = typeCheck(node->lSide);
+		Type typeOfTheSndOperand = typeCheck(node->rSide);
+		if(typeOfTheFstOperand == typeOfTheSndOperand) {
+		    return TYPE_BOOL;
+		} else {
+		    printf("%s arguments %s x %s does not match.\n"
+		       	,flagToString(flag_EQT)
+			,typeToString(typeOfTheFstOperand) 
+			,typeToString(typeOfTheSndOperand));
+		    exit(EXIT_FAILURE);
+		}
+	    }
+	    
+	    if(flag == flag_MINUS) {
+	        Type typeOfTheFstOperand = typeCheck(node->lSide);
+	        if(typeOfTheFstOperand == TYPE_INT) {
+	        	return typeOfTheFstOperand;
+	        } else {
+	        	printf("%s is of type %s but the expression is of type %s.\n"
+		       	,flagToString(flag_MINUS)
+			,typeToString(TYPE_INT) 
+			,typeToString(typeOfTheFstOperand));
+		    exit(EXIT_FAILURE);
+	        }
+	    }
+	    
+	    if(flag == flag_NEG) {
+	    	Type typeOfTheFstOperand = typeCheck(node->lSide);
+	        if(typeOfTheFstOperand == TYPE_BOOL) {
+	        	return typeOfTheFstOperand;
+	        } else {
+	        	printf("%s is of type %s but the expression is of type %s.\n"
+		       	,flagToString(flag_NEG)
+			,typeToString(TYPE_BOOL) 
+			,typeToString(typeOfTheFstOperand));
+		    exit(EXIT_FAILURE);
+	        }
+	    }
+	    
+	    if(flag == flag_IF) {
+	    	Type typeOfTheFstOperand = typeCheck(node->lSide);
+	    	if(typeOfTheFstOperand == TYPE_BOOL) {
+	    	    typeCheck(node->rSide);
+	    	} else {
+	    	    printf("Bool expression was expected.\n");
+		    exit(EXIT_FAILURE);
+	    	}
+	    }
+	    
+	    if(flag == flag_IF_ELSE) {
+	        Type typeOfTheFstOperand = typeCheck(node->lSide);
+	    	if(typeOfTheFstOperand == TYPE_BOOL) {
+	    	    typeCheck(node->mSide);
+	    	    typeCheck(node->rSide);
+	    	} else {
+	    	    printf("Bool expression was expected.\n");
+		    exit(EXIT_FAILURE);
+	    	}
+	    }
+	    
+	    if(flag == flag_WHILE) {
+		Type typeOfTheFstOperand = typeCheck(node->lSide);
+	    	if(typeOfTheFstOperand == TYPE_BOOL) {
+	    	    return typeOfTheFstOperand;
+	    	} else {
+	    	    printf("Bool expression was expected.\n");
+		    exit(EXIT_FAILURE);
+	    	}
+	    	
+	    	typeCheck(node->rSide);
+	    }
+	    
+	    if(flag == flag_METHOD_DECLARATION) {
+		int isExtern      = node->lSide == NULL;
+		int hasReturnType = node->symbol->type != TYPE_VOID;
+		ASTNode* block          = node->lSide;
+		Type expectedReturnType = node->symbol->type;
+		if(hasReturnType && !isExtern && !checkReturn(block, expectedReturnType)) {
+		    printf("return statement is missing in %s function.\n", node->symbol->name);
+		    exit(EXIT_FAILURE);
+		}
+		
+		typeCheck(block);
+	    }
     }
 
     return 0;

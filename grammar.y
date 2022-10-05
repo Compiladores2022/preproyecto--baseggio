@@ -74,7 +74,8 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 
 program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
-        printAST(root);
+        typeCheck(root);
+        //printAST(root);
 } ;
 
 lDeclarations: { $$ = NULL; } 
@@ -101,7 +102,7 @@ MethodDeclaration: Method
 		                     }
                  ;
 
-Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, TYPE_VOID, $2, 0);
+Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, TYPE_VOID, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
                                      symbol->isFunction = TRUE;
                                      symbol->params = $4;
@@ -111,7 +112,7 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_IDEN
                                      exit(EXIT_FAILURE);
                                  }
                                }
-      | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0);
+      | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, $1, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
                                      symbol->isFunction = TRUE;
                                      symbol->params = $4;
@@ -217,6 +218,7 @@ Type : tINT  { $$ = $1; }
 
 MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
 	                             if(isFunction(*symbol)) {
+	                                 symbol->flag = flag_METHOD_CALL;
                                          ASTNode* n = node(symbol);
                                          n->lSide = $3;
                                          $$ = n;

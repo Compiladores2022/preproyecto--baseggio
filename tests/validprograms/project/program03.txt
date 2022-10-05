@@ -20,5 +20,8 @@ Program {
         Int x = get_int();
         Int y = get_int();
         print_int(gcd(x, y));
+        if(1 < 0) then {
+            Int x = get_int();
+        }
     }
 }

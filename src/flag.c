@@ -44,8 +44,8 @@ char* flagToString(Flag flag) {
                     return "if-then-else";
             case flag_WHILE:
                     return "while";
-            case flag_METHOD:
-		    return "method";
+            case flag_METHOD_DECLARATION:
+		    return "method declaration";
 	    case flag_PARAM:
 		    return "param";
 	    default:
@@ -54,7 +54,7 @@ char* flagToString(Flag flag) {
 }
 
 int isAnArithmeticBinaryOperator(Flag flag) {
-    return flag == flag_ADDITION || flag == flag_MULTIPLICATION;
+    return flag == flag_ADDITION || flag == flag_SUBSTRACTION || flag == flag_MULTIPLICATION || flag == flag_DIVISION || flag == flag_MOD;
 }
 
 int isABooleanBinaryOperator(Flag flag) {
