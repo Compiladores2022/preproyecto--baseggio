@@ -1344,7 +1344,7 @@ yyreduce:
     { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[-1].n));
         typeCheck(root);
-        //printAST(root);
+       // printAST(root);
 }
 #line 1350 "grammar.tab.c" /* yacc.c:1646  */
     break;
@@ -1693,7 +1693,7 @@ yyreduce:
 
   case 52:
 #line 211 "grammar.y" /* yacc.c:1646  */
-    { (yyval.n) = (yyvsp[0].n); }
+    { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[0].n), NULL, NULL); }
 #line 1698 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1718,7 +1718,9 @@ yyreduce:
   case 56:
 #line 219 "grammar.y" /* yacc.c:1646  */
     { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
-	                             if(isFunction(*symbol)) {
+	                             int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
+	                             if(isAFunction) {
+                                         symbol = copy(symbol);
 	                                 symbol->flag = flag_METHOD_CALL;
                                          ASTNode* n = node(symbol);
                                          n->lSide = (yyvsp[-1].n);
@@ -1728,11 +1730,11 @@ yyreduce:
                                          exit(EXIT_FAILURE);
                                      }
                                    }
-#line 1732 "grammar.tab.c" /* yacc.c:1646  */
+#line 1734 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1736 "grammar.tab.c" /* yacc.c:1646  */
+#line 1738 "grammar.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1960,7 +1962,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 231 "grammar.y" /* yacc.c:1906  */
+#line 233 "grammar.y" /* yacc.c:1906  */
 
 
 void addAll(SymbolTable* symbolTable, Symbol* symbol) {

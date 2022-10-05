@@ -83,10 +83,29 @@ int thereIsAtLeastOneReturn(ASTNode* node) {
     return FALSE;
 }
 
+void checkParams(Symbol* fParams, ASTNode* rParams) {
+    if(fParams && rParams) {
+        Type fParamType = fParams->type;
+	Type rParamType = rParams->lSide->symbol->type;
+	if(fParamType == rParamType) {
+	    checkParams(fParams->params, rParams->rSide);
+	} else {
+	    printf("params don't match");
+	    exit(EXIT_FAILURE);
+	}
+    } else if(fParams) {
+        printf("too few params\n");
+	exit(EXIT_FAILURE);
+    } else if(rParams) {
+        printf("too many params\n");
+	exit(EXIT_FAILURE);
+    }
+}
+
 Type typeCheck(ASTNode* node) {
     if(node) {
-	    if(isLeave(node)) { return node->symbol->type; }
 	    Flag flag = node->symbol->flag;
+	    if(flag == flag_VALUE_INT || flag == flag_VALUE_BOOL || flag == flag_IDENTIFIER || flag == flag_PARAM) { return node->symbol->type; }
 	    if(isAnArithmeticBinaryOperator(flag)) {
 	        Type typeOfTheFstOperand = typeCheck(node->lSide);
 		Type typeOfTheSndOperand = typeCheck(node->rSide);
@@ -122,6 +141,7 @@ Type typeCheck(ASTNode* node) {
 	        Type typeOfTheFstOperand = typeCheck(node->lSide);
 		Type typeOfTheSndOperand = typeCheck(node->rSide);
 		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
+		node->symbol->type = TYPE_BOOL;
 		return TYPE_BOOL;
 	    }
 	    
@@ -129,6 +149,7 @@ Type typeCheck(ASTNode* node) {
 	        Type typeOfTheFstOperand = typeCheck(node->lSide);
 		Type typeOfTheSndOperand = typeCheck(node->rSide);
 		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
+		node->symbol->type = TYPE_BOOL;
 		return TYPE_BOOL;
 	    }
 	    
@@ -136,6 +157,7 @@ Type typeCheck(ASTNode* node) {
 	        Type typeOfTheFstOperand = typeCheck(node->lSide);
 		Type typeOfTheSndOperand = typeCheck(node->rSide);
 		if(typeOfTheFstOperand == typeOfTheSndOperand) {
+		    node->symbol->type = TYPE_BOOL;
 		    return TYPE_BOOL;
 		} else {
 		    printf("%s arguments %s x %s does not match.\n"
@@ -149,6 +171,7 @@ Type typeCheck(ASTNode* node) {
 	    if(flag == flag_MINUS) {
 	        Type typeOfTheFstOperand = typeCheck(node->lSide);
 	        if(typeOfTheFstOperand == TYPE_INT) {
+			node->symbol->type = TYPE_INT;
 	        	return typeOfTheFstOperand;
 	        } else {
 	        	printf("%s is of type %s but the expression is of type %s.\n"
@@ -162,6 +185,7 @@ Type typeCheck(ASTNode* node) {
 	    if(flag == flag_NEG) {
 	    	Type typeOfTheFstOperand = typeCheck(node->lSide);
 	        if(typeOfTheFstOperand == TYPE_BOOL) {
+			node->symbol->type = TYPE_BOOL;
 	        	return typeOfTheFstOperand;
 	        } else {
 	        	printf("%s is of type %s but the expression is of type %s.\n"
@@ -196,13 +220,11 @@ Type typeCheck(ASTNode* node) {
 	    if(flag == flag_WHILE) {
 		Type typeOfTheFstOperand = typeCheck(node->lSide);
 	    	if(typeOfTheFstOperand == TYPE_BOOL) {
-	    	    return typeOfTheFstOperand;
+		    typeCheck(node->rSide);
 	    	} else {
 	    	    printf("Bool expression was expected.\n");
 		    exit(EXIT_FAILURE);
 	    	}
-	    	
-	    	typeCheck(node->rSide);
 	    }
 	    
 	    if(flag == flag_METHOD_DECLARATION) {
@@ -210,15 +232,23 @@ Type typeCheck(ASTNode* node) {
 		int hasReturnType = node->symbol->type != TYPE_VOID;
 		ASTNode* block          = node->lSide;
 		Type expectedReturnType = node->symbol->type;
-		if(hasReturnType && !isExtern) {
-		    if(thereIsAtLeastOneReturn(block)) {
-		        checkReturn(block, expectedReturnType);
-			typeCheck(block);
-		    } else {
-		        printf("return statement is missing in %s function\n", node->symbol->name);
-			exit(EXIT_FAILURE);
+		if(!isExtern) {
+		    if(hasReturnType) {
+		        if(thereIsAtLeastOneReturn(block)) {
+			    checkReturn(block, expectedReturnType);
+			} else {
+			    printf("return is missing in function %s\n", node->symbol->name);
+			    exit(EXIT_FAILURE);
+			}
 		    }
+		    typeCheck(block);
 		}
+	    }
+
+            if(flag == flag_METHOD_CALL) { 
+		  Symbol*  fParams = node->symbol->params;
+                  ASTNode* rParams = node->lSide;
+		  checkParams(fParams, rParams);
 	    }
     }
 

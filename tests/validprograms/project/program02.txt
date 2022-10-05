@@ -24,7 +24,7 @@ Program {
     void main() {
         Int y = get_int();
         if ( y == 0 ) then {
-        	print_int(1);
+        	print_int(1,2);
         } else {
 		if ( y == 1 ) then {
 			print_int(2);
