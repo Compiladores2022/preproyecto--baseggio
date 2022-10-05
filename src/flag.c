@@ -46,6 +46,8 @@ char* flagToString(Flag flag) {
                     return "while";
             case flag_METHOD_DECLARATION:
 		    return "method declaration";
+	    case flag_METHOD_CALL:
+		    return "method call";
 	    case flag_PARAM:
 		    return "param";
 	    default:
