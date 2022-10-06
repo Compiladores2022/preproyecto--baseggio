@@ -83,21 +83,21 @@ int thereIsAtLeastOneReturn(ASTNode* node) {
     return FALSE;
 }
 
-void checkParams(Symbol* fParams, ASTNode* rParams) {
+void checkParams(Symbol* fParams, ASTNode* rParams, char* functionName) {
     if(fParams && rParams) {
         Type fParamType = fParams->type;
 	Type rParamType = rParams->lSide->symbol->type;
 	if(fParamType == rParamType) {
-	    checkParams(fParams->params, rParams->rSide);
+	    checkParams(fParams->params, rParams->rSide, functionName);
 	} else {
-	    printf("params don't match");
+	    printf("%s function expected %s but argument is of type %s\n", functionName, typeToString(fParamType), typeToString(rParamType));
 	    exit(EXIT_FAILURE);
 	}
     } else if(fParams) {
-        printf("too few params\n");
+        printf("too few params to function %s\n", functionName);
 	exit(EXIT_FAILURE);
     } else if(rParams) {
-        printf("too many params\n");
+        printf("too many params to function %s\n", functionName);
 	exit(EXIT_FAILURE);
     }
 }
@@ -248,7 +248,7 @@ Type typeCheck(ASTNode* node) {
             if(flag == flag_METHOD_CALL) { 
 		  Symbol*  fParams = node->symbol->params;
                   ASTNode* rParams = node->lSide;
-		  checkParams(fParams, rParams);
+		  checkParams(fParams, rParams, node->symbol->name);
 	    }
     }
 
