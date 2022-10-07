@@ -1379,15 +1379,15 @@ yyreduce:
   case 22: /* Statement: ID '=' E ';'  */
 #line 149 "grammar.y"
                         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
-	                  ASTNode* lSide = node(symbol);
+	                        ASTNode* lSide = node(symbol);
                           (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
-	                }
+	                      }
 #line 1386 "grammar.tab.c"
     break;
 
   case 23: /* Statement: E ';'  */
 #line 153 "grammar.y"
-                                               { (yyval.n) = (yyvsp[-1].n); }
+                                                     { (yyval.n) = (yyvsp[-1].n); }
 #line 1392 "grammar.tab.c"
     break;
 
@@ -1436,13 +1436,13 @@ yyreduce:
   case 31: /* Declaration: Type ID '=' E ';'  */
 #line 163 "grammar.y"
                                { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, (yyvsp[-4].t), (yyvsp[-3].s), 0); 
-	                         if(addSymbol(&symbolTable, symbol)) {
-                                   ASTNode* lSide = node(symbol);
-                                   (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
-				 } else {
-                                   printf("Redeclared var\n");
-                                   exit(EXIT_FAILURE);
-				 }
+	                               if(addSymbol(&symbolTable, symbol)) {
+                                     ASTNode* lSide = node(symbol);
+                                     (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
+				                         } else {
+                                     printf("Redeclared var\n");
+                                     exit(EXIT_FAILURE);
+				                         }
                                }
 #line 1448 "grammar.tab.c"
     break;
@@ -1574,7 +1574,7 @@ yyreduce:
 
   case 51: /* Expressions: OneOrMoreExpressions  */
 #line 208 "grammar.y"
-                                  { (yyval.n) = (yyvsp[0].n); }
+                                        { (yyval.n) = (yyvsp[0].n); }
 #line 1579 "grammar.tab.c"
     break;
 
@@ -1586,7 +1586,7 @@ yyreduce:
 
   case 53: /* OneOrMoreExpressions: E ',' OneOrMoreExpressions  */
 #line 212 "grammar.y"
-                                                 { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
+                                                             { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
 #line 1591 "grammar.tab.c"
     break;
 
@@ -1605,10 +1605,10 @@ yyreduce:
   case 56: /* MethodCall: ID '(' Expressions ')'  */
 #line 219 "grammar.y"
                                    { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
-	                             int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
-	                             if(isAFunction) {
+	                                   int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
+	                                   if(isAFunction) {
                                          symbol = copy(symbol);
-	                                 symbol->flag = flag_METHOD_CALL;
+                                         setFlag(symbol, flag_METHOD_CALL);
                                          ASTNode* n = node(symbol);
                                          n->lSide = (yyvsp[-1].n);
                                          (yyval.n) = n;

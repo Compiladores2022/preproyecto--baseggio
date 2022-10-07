@@ -147,10 +147,10 @@ lStatements: { $$ = NULL; }
            ;
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-	                  ASTNode* lSide = node(symbol);
+	                        ASTNode* lSide = node(symbol);
                           $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3);
-	                }
-	 | E ';'                               { $$ = $1; }
+	                      }
+	       | E ';'                               { $$ = $1; }
          | IF '(' E ')' THEN Block             { $$ = composeTree(flag_IF, "if-then", $3, NULL, $6); }
          | IF '(' E ')' THEN Block ELSE Block  { $$ = composeTree(flag_IF_ELSE, "if-then-else", $3, $6, $8); }
          | WHILE E Block                       { $$ = composeTree(flag_WHILE, "while", $2, NULL, $3); }
@@ -161,13 +161,13 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
          ;
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
-	                         if(addSymbol(&symbolTable, symbol)) {
-                                   ASTNode* lSide = node(symbol);
-                                   $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
-				 } else {
-                                   printf("Redeclared var\n");
-                                   exit(EXIT_FAILURE);
-				 }
+	                               if(addSymbol(&symbolTable, symbol)) {
+                                     ASTNode* lSide = node(symbol);
+                                     $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
+				                         } else {
+                                     printf("Redeclared var\n");
+                                     exit(EXIT_FAILURE);
+				                         }
                                }
            ;
 
@@ -205,11 +205,11 @@ V: vINT {  char* name = (char*) malloc(sizeof(char));
  ;
 
 Expressions: { $$ = NULL; }
-	   | OneOrMoreExpressions { $$ = $1; }
+	         | OneOrMoreExpressions { $$ = $1; }
            ;
 
 OneOrMoreExpressions: E { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, NULL); }
-		    | E ',' OneOrMoreExpressions { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $3); }
+		                | E ',' OneOrMoreExpressions { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $3); }
                     ;
 
 Type : tINT  { $$ = $1; }
@@ -217,10 +217,10 @@ Type : tINT  { $$ = $1; }
      ;
 
 MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-	                             int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
-	                             if(isAFunction) {
+	                                   int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
+	                                   if(isAFunction) {
                                          symbol = copy(symbol);
-	                                 symbol->flag = flag_METHOD_CALL;
+                                         setFlag(symbol, flag_METHOD_CALL);
                                          ASTNode* n = node(symbol);
                                          n->lSide = $3;
                                          $$ = n;
