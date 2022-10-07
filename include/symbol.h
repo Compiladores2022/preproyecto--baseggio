@@ -20,7 +20,7 @@ int getValue(Symbol symbol);
 int offset(Symbol symbol);
 void setFlag(Symbol* symbol, Flag flag);
 void setType(Symbol* symbol, Type type);
-void setName(Symbol* symbol, char* name);
+void setName(Symbol* symbol, const char* name);
 void setValue(Symbol* symbol, int value);
 void setOffset(Symbol* symbol, int offset);
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);

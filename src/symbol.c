@@ -31,7 +31,7 @@ void setType(Symbol* symbol, Type type) {
     symbol->type = type;
 }
 
-void setName(Symbol* symbol, char* name) {
+void setName(Symbol* symbol, const char* name) {
     strcpy(symbol->name, name);
 }
 
