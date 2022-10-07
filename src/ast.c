@@ -158,7 +158,7 @@ Type typeCheck(ASTNode* node) {
 			case flag_IDENTIFIER:
 		    	return getType(*(node->symbol));
 			case flag_PARAM:
-		    	return node->symbol->type; // getType(getSymbol(node));
+		    	return getType(*(node->symbol));
 			case flag_ADDITION:
 		    	typeCheckBinaryOperation(flag_ADDITION, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
 		    	node->symbol->type = TYPE_INT; // setType(getSymbol(node), TYPE_INT);
