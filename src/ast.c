@@ -165,7 +165,7 @@ Type typeCheck(ASTNode* node) {
 		    	return TYPE_INT;
 			case flag_SUBSTRACTION:
 		    	typeCheckBinaryOperation(flag_SUBSTRACTION, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
-		    	node->symbol->type = TYPE_INT;
+		    	setType(node->symbol, TYPE_INT);
 		    	return TYPE_INT;
 			case flag_MULTIPLICATION:
 			    typeCheckBinaryOperation(flag_MULTIPLICATION, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
