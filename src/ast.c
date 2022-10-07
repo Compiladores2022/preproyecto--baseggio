@@ -143,7 +143,7 @@ void typeCheckAssignment(Type varType, Type expressionType, char* name) {
 
 Type typeCheck(ASTNode* node) {
     if(node) {
-    	Flag flag = getFlag(*(node->symbol));//node->symbol->flag; // getFlag(getSymbol(node));
+    	Flag flag = getFlag(*(node->symbol));
 		ASTNode* block;
 		ASTNode* thenBlock;
 		ASTNode* elseBlock;
@@ -152,7 +152,7 @@ Type typeCheck(ASTNode* node) {
 		Type  returnType;
 		switch (flag) {
 			case flag_VALUE_INT:
-		    	return getType(*(node->symbol));//node->symbol->type; // getType(getSymbol(node));
+		    	return getType(*(node->symbol));
 			case flag_VALUE_BOOL:
 		    	return getType(*(node->symbol));
 			case flag_IDENTIFIER:
@@ -161,7 +161,7 @@ Type typeCheck(ASTNode* node) {
 		    	return getType(*(node->symbol));
 			case flag_ADDITION:
 		    	typeCheckBinaryOperation(flag_ADDITION, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
-		    	node->symbol->type = TYPE_INT; // setType(getSymbol(node), TYPE_INT);
+				setType(node->symbol, TYPE_INT);
 		    	return TYPE_INT;
 			case flag_SUBSTRACTION:
 		    	typeCheckBinaryOperation(flag_SUBSTRACTION, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
