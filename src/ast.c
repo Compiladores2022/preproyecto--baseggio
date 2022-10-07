@@ -256,7 +256,7 @@ Type typeCheck(ASTNode* node) {
 void printAST(ASTNode* root) {
 	if(root) {
 	  printf("-- FATHER --\n");
-	  printf("FLAG: %s, NAME: %s\n", flagToString(root->symbol->flag), root->symbol->name);
+	  printf("FLAG: %s, NAME: %s\n", flagToString(getFlag(*(root->symbol))), getName(*(root->symbol)));
 	  if(isFunction(*(root->symbol))) {
 	      Symbol* params = root->symbol->params;
 	      while(params) {
