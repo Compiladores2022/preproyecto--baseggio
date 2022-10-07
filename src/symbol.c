@@ -50,10 +50,9 @@ Symbol* constructPtrToEmptySymbol() {
 }
 
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value) {
-    Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
+    Symbol* symbol = constructPtrToEmptySymbol();
     symbol->flag = flag;
     symbol->type = type;
-    symbol->name = (char*) malloc(sizeof(char));
     strcpy(symbol->name, name);
     symbol->value = value;
     return symbol;
