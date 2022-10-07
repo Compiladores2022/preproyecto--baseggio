@@ -243,7 +243,7 @@ Type typeCheck(ASTNode* node) {
 			case flag_METHOD_CALL:
 			    fParams = node->symbol->params;
 		    	rParams = node->lSide;
-			    checkParams(fParams, rParams, node->symbol->name);
+			    checkParams(fParams, rParams, getName(*(node->symbol)));
 			    return node->symbol->type;
 			default:
 		    	break;
