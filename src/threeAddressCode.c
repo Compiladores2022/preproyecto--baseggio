@@ -69,8 +69,8 @@ void printInstruction(void* i) {
   }
 
   if(op == flag_ASSIGNMENT) {
-    char* expr = instruction.fstOperand->name;
-    char* dest = instruction.dest->name;
+    char* expr = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
+    char* dest = getName(*(instruction.dest)); //instruction.dest->name;
     printf("%s %s - %s\n", flagToString(op), expr, dest);
   }
 
