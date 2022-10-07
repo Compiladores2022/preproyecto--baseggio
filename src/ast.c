@@ -65,8 +65,8 @@ int thereIsAtLeastOneReturn(ASTNode* node) {
 
 void checkParams(Symbol* fParams, ASTNode* rParams, char* functionName) {
     if(fParams && rParams) {
-        Type fParamType = fParams->type;
-	Type rParamType = rParams->lSide->symbol->type;
+        Type fParamType = getType(*fParams);
+	    Type rParamType = getType(*(rParams->lSide->symbol));//rParams->lSide->symbol->type;
 	if(fParamType == rParamType) {
 	    checkParams(fParams->params, rParams->rSide, functionName);
 	} else {
@@ -75,10 +75,10 @@ void checkParams(Symbol* fParams, ASTNode* rParams, char* functionName) {
 	}
     } else if(fParams) {
         printf("too few params to function %s\n", functionName);
-	exit(EXIT_FAILURE);
+	    exit(EXIT_FAILURE);
     } else if(rParams) {
         printf("too many params to function %s\n", functionName);
-	exit(EXIT_FAILURE);
+	    exit(EXIT_FAILURE);
     }
 }
 
