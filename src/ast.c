@@ -237,7 +237,7 @@ Type typeCheck(ASTNode* node) {
 			case flag_METHOD_DECLARATION:
 			    block      = node->lSide;
 			    returnType = getType(*(node->symbol));
-		    	checkMethodDeclaration(block, returnType, node->symbol->name);
+		    	checkMethodDeclaration(block, returnType, getName(*(node->symbol)));
 		    	typeCheck(block);
 		    	break;
 			case flag_METHOD_CALL:
