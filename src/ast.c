@@ -18,8 +18,7 @@ ASTNode* node(Symbol* symbol) {
 }
 
 ASTNode* composeTree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide, ASTNode* rSide) {
-    Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-    symbol->name = (char*) malloc(sizeof(char));
+	Symbol* symbol = constructPtrToEmptySymbol();
 
 	setName(symbol, name);
 	setFlag(symbol, flag);

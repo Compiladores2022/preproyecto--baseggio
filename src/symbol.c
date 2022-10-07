@@ -43,6 +43,12 @@ void setOffset(Symbol* symbol, int offset) {
     symbol->offset = offset;
 }
 
+Symbol* constructPtrToEmptySymbol() {
+    Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
+    symbol->name = (char*) malloc(sizeof(char));
+    return symbol;
+}
+
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value) {
     Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
     symbol->flag = flag;
