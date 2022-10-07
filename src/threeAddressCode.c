@@ -176,7 +176,7 @@ void translate(FILE* fp, Instruction i, int* numberOfLabel) {
 	case flag_ASSIGNMENT:
 		if(getFlag(*(i.fstOperand)) == flag_IDENTIFIER ||
 	        isABinaryOperator(getFlag(*(i.fstOperand)))) {
-		    fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", i.fstOperand->offset);
+		    fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", getOffset(*(i.fstOperand)));
 		    fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", i.dest->offset);
 		} else {
 		    fprintf(fp, "\n\tmovq $%d, -%d(%%rbp)", i.fstOperand->value, i.dest->offset);
