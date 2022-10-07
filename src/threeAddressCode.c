@@ -124,7 +124,7 @@ void translateOR(FILE* fp, Instruction i, int* numberOfLabel) {
     fprintf(fp, "\n\tmovq $1, %%r11");
     fprintf(fp, "\n\tcmp %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
-    fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", i.dest->offset);
+    fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(i.dest)));
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 1);
     fprintf(fp, "\n.L%d:", *numberOfLabel);
     fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", i.dest->offset);
