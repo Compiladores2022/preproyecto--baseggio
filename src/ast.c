@@ -215,7 +215,7 @@ Type typeCheck(ASTNode* node) {
 		    	return TYPE_INT;
 			case flag_NEG:
 			    typeCheckUnaryOperation(flag_NEG, typeCheck(node->lSide), TYPE_BOOL);
-			    node->symbol->type = TYPE_BOOL;
+			    setType(node->symbol, TYPE_BOOL);
                 return TYPE_BOOL;
 			case flag_IF:
 		    	thenBlock = node->rSide;
