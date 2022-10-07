@@ -37,16 +37,16 @@ int isLeave(ASTNode* node) {
 
 void checkReturn(ASTNode* node, Type expected) {
     if(node) {
-        Flag flag = node->symbol->flag;
+        Flag flag =  getFlag(*(node->symbol)); //node->symbol->flag;
         if(flag == flag_RETURN) {
             Type returnType = typeCheck(node->lSide);
             if(returnType != expected) {
                 printf("%s was expected in return statement\n", typeToString(expected));
-		exit(EXIT_FAILURE);
+		        exit(EXIT_FAILURE);
             }
         }
         
-	checkReturn(node->lSide, expected);
+	    checkReturn(node->lSide, expected);
         checkReturn(node->mSide, expected);
         checkReturn(node->rSide, expected);
     }
