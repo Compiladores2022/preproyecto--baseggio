@@ -21,7 +21,7 @@ void printData(void* data) {
 }
 
 int addSymbol(SymbolTable* symbolTable, Symbol* symbol) {
-    int found = lookUp(symbolTable->peek->queue, compareByName, symbol->name) != NULL;
+    int found = lookUp(symbolTable->peek->queue, compareByName, getName(*symbol)) != NULL;
     if(!found) {
       enqueue(&(symbolTable->peek->queue), (void*) symbol, sizeof(Symbol*));
       return TRUE;
