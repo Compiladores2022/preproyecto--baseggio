@@ -244,7 +244,7 @@ Type typeCheck(ASTNode* node) {
 			    fParams = node->symbol->params;
 		    	rParams = node->lSide;
 			    checkParams(fParams, rParams, getName(*(node->symbol)));
-			    return node->symbol->type;
+			    return getType(*(node->symbol));
 			default:
 		    	break;
 		}
