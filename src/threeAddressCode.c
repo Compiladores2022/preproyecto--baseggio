@@ -85,7 +85,6 @@ void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
 }
 
 void translateBinaryOperation(FILE* fp, char* operation, Symbol* fstOperand, Symbol* sndOperand, Symbol* dest) {
-    //int cond1 = fstOperand->flag == flag_IDENTIFIER || isAnArithmeticBinaryOperator(fstOperand->flag);
     int cond1 = getFlag(*fstOperand) == flag_IDENTIFIER || isAnArithmeticBinaryOperator(getFlag(*fstOperand));
     int cond2 = getFlag(*sndOperand) == flag_IDENTIFIER || isAnArithmeticBinaryOperator(getFlag(*sndOperand));
     if(cond1 && cond2) {
@@ -107,7 +106,7 @@ void translateBinaryOperation(FILE* fp, char* operation, Symbol* fstOperand, Sym
 
 char* translateOperand(Symbol* symbol) {
     char* res = (char*) malloc(sizeof(char));
-    if(isValue(symbol->flag)) {
+    if(isValue(getFlag(*symbol))) {
         sprintf(res, "$%d", symbol->value);
     } else {
         sprintf(res, "-%d(%%rbp)", symbol->offset);
