@@ -75,7 +75,7 @@ void printInstruction(void* i) {
   }
 
   if(op == flag_RETURN) {
-    char* expr = instruction.dest->name;
+    char* expr = getName(*(instruction.dest)); //instruction.dest->name;
     printf("%s - - %s\n", flagToString(op), expr);
   }
 }
