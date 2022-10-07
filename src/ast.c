@@ -207,7 +207,7 @@ Type typeCheck(ASTNode* node) {
 		    	return TYPE_BOOL;
 			case flag_EQT:
 			    typeCheckEqual(typeCheck(node->lSide), typeCheck(node->rSide));
-		    	node->symbol->type = TYPE_BOOL;
+		    	setType(node->symbol, TYPE_BOOL);
 		    	return TYPE_BOOL;
 			case flag_MINUS:
 			    typeCheckUnaryOperation(flag_MINUS, typeCheck(node->lSide), TYPE_INT);
