@@ -252,6 +252,22 @@ Type typeCheck(ASTNode* node) {
     return 0;
 }
 
+Symbol* getSymbol(ASTNode* node) {
+	return node->symbol;
+}
+
+ASTNode* getLSide(ASTNode* node) {
+	return node->lSide;
+}
+
+ASTNode* getMSide(ASTNode* node) {
+	return node->mSide;
+}
+
+ASTNode* getRSide(ASTNode* node) {
+	return node->rSide;
+}
+
 void printAST(ASTNode* root) {
 	if(root) {
 	  printf("-- FATHER --\n");

@@ -26,6 +26,12 @@ Type typeCheck(ASTNode* node);
 
 int evaluate(ASTNode* node);
 
+
+Symbol* getSymbol(ASTNode* node);
+ASTNode* getLSide(ASTNode* node);
+ASTNode* getMSide(ASTNode* node);
+ASTNode* getRSide(ASTNode* node);
+
 /* The 'printAST' function prints the elements of the AST to the stdout. */
 void printAST(ASTNode* root);
 
