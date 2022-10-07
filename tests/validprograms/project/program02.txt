@@ -22,7 +22,8 @@ Program {
     }
 
     void main() {
-        Int y = get_int();
+        Int  y = get_int();
+        Int x = 1 == 0;
         while(True) { print_int(0); }
         if ( y == 0 ) then {
         	print_int(1);

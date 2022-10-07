@@ -189,7 +189,7 @@ Type typeCheck(ASTNode* node) {
 		    typeCheck(node->lSide); // typeCheck(leftSide(node));
 		    break;
 		case flag_ASSIGNMENT:
-		    typeCheckAssignment(typeCheck(node->lSide), typeCheck(node->rSide), node->symbol->name);
+		    typeCheckAssignment(typeCheck(node->lSide), typeCheck(node->rSide), node->lSide->symbol->name);
 		    break;
 		case flag_SEMICOLON:
 		    typeCheck(node->lSide);
