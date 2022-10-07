@@ -12,7 +12,7 @@ int numberOfLocals(SymbolTable symbolTable) {
 
 int compareByName(void* s, void* name) {
   Symbol* symbol = (Symbol*) s;
-  return strcmp(symbol->name, name) == 0;
+  return strcmp(getName(*symbol), name) == 0;
 }
 
 void printData(void* data) {

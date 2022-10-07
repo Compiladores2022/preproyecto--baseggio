@@ -37,7 +37,7 @@ int isLeave(ASTNode* node) {
 
 void checkReturn(ASTNode* node, Type expected) {
     if(node) {
-        Flag flag =  getFlag(*(node->symbol)); //node->symbol->flag;
+        Flag flag =  getFlag(*(node->symbol));
         if(flag == flag_RETURN) {
             Type returnType = typeCheck(node->lSide);
             if(returnType != expected) {
@@ -66,7 +66,7 @@ int thereIsAtLeastOneReturn(ASTNode* node) {
 void checkParams(Symbol* fParams, ASTNode* rParams, char* functionName) {
     if(fParams && rParams) {
         Type fParamType = getType(*fParams);
-	    Type rParamType = getType(*(rParams->lSide->symbol));//rParams->lSide->symbol->type;
+	    Type rParamType = getType(*(rParams->lSide->symbol));
 	if(fParamType == rParamType) {
 	    checkParams(fParams->params, rParams->rSide, functionName);
 	} else {
