@@ -95,7 +95,6 @@ MethodDeclaration: Method
                    { closeLevel(&symbolTable);
                      ASTNode* n = node($1);
                      setLSide(n, $3);
-                     //n->lSide = $3;
                      $$ = n;
                    }
 		 | Method EXTERN ';' { ASTNode* n = node($1);
@@ -130,7 +129,7 @@ Params:                 { $$ = NULL; }
       ;
 
 OneOrMoreParams : Param                     { $$ = $1; }
-		| Param ',' OneOrMoreParams { Symbol* symbol = $1;
+		            | Param ',' OneOrMoreParams { Symbol* symbol = $1;
                                               symbol->params = $3;
                                               $$ = symbol;
                                             }
@@ -144,7 +143,7 @@ Block: { openLevel(&symbolTable); } '{' lDeclarations lStatements '}'
        { closeLevel(&symbolTable); $$ = composeTree(flag_SEMICOLON, ";", $3, NULL, $4); } ;
 
 lStatements: { $$ = NULL; }
-	   | lStatements Statement { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
+	         | lStatements Statement { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
            ;
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
@@ -172,37 +171,34 @@ Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDEN
                                }
            ;
 
-E: ID         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1); 
-                ASTNode* n = node(symbol);
-                $$ = n;
-              }
- | MethodCall { $$ = $1; }
- | V          { $$ = $1; }
- | E '+' E    { $$ = composeTree(flag_ADDITION,       "+",  $1, NULL, $3);   }
- | E '-' E    { $$ = composeTree(flag_SUBSTRACTION,   "-",  $1, NULL, $3);   }
- | E '*' E    { $$ = composeTree(flag_MULTIPLICATION, "*",  $1, NULL, $3);   }
- | E '/' E    { $$ = composeTree(flag_DIVISION,       "/",  $1, NULL, $3);   }
- | E '%' E    { $$ = composeTree(flag_MOD,            "%",  $1, NULL, $3);   }
- | E '<' E    { $$ = composeTree(flag_LT,             "<",  $1, NULL, $3);   }
- | E '>' E    { $$ = composeTree(flag_GT,             ">",  $1, NULL, $3);   }
- | E EQT E    { $$ = composeTree(flag_EQT,            "==", $1, NULL, $3);   }
- | E OR  E    { $$ = composeTree(flag_OR,             "||", $1, NULL, $3);   }
- | E AND E    { $$ = composeTree(flag_AND,            "&&", $1, NULL, $3);   }
- | '-' E %prec UMINUS      { $$ = composeTree(flag_MINUS,          "-",  $2, NULL, NULL); }
- | '!' E      { $$ = composeTree(flag_NEG,            "!",  $2, NULL, NULL); }
- | '(' E ')'  { $$ = $2; }
+E: ID                 { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1); 
+                        ASTNode* n = node(symbol);
+                        $$ = n;  }
+ | MethodCall         { $$ = $1; }
+ | V                  { $$ = $1; }
+ | E '+' E            { $$ = composeTree(flag_ADDITION,       "+",  $1, NULL, $3);   }
+ | E '-' E            { $$ = composeTree(flag_SUBSTRACTION,   "-",  $1, NULL, $3);   }
+ | E '*' E            { $$ = composeTree(flag_MULTIPLICATION, "*",  $1, NULL, $3);   }
+ | E '/' E            { $$ = composeTree(flag_DIVISION,       "/",  $1, NULL, $3);   }
+ | E '%' E            { $$ = composeTree(flag_MOD,            "%",  $1, NULL, $3);   }
+ | E '<' E            { $$ = composeTree(flag_LT,             "<",  $1, NULL, $3);   }
+ | E '>' E            { $$ = composeTree(flag_GT,             ">",  $1, NULL, $3);   }
+ | E EQT E            { $$ = composeTree(flag_EQT,            "==", $1, NULL, $3);   }
+ | E OR  E            { $$ = composeTree(flag_OR,             "||", $1, NULL, $3);   }
+ | E AND E            { $$ = composeTree(flag_AND,            "&&", $1, NULL, $3);   }
+ | '-' E %prec UMINUS { $$ = composeTree(flag_MINUS,          "-",  $2, NULL, NULL); }
+ | '!' E              { $$ = composeTree(flag_NEG,            "!",  $2, NULL, NULL); }
+ | '(' E ')'          { $$ = $2; }
  ;
 
 V: vINT {  char* name = (char*) malloc(sizeof(char));
            sprintf(name, "%d", $1);
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, $1));
-           $$ = n;
-        }
+           $$ = n; }
  | vBOOL { char* name = (char*) malloc(sizeof(char));
            sprintf(name, "%d", $1);
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, $1));
-           $$ = n;
-         }
+           $$ = n; }
  ;
 
 Expressions: { $$ = NULL; }
@@ -223,7 +219,8 @@ MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(
                                          symbol = copy(symbol);
                                          setFlag(symbol, flag_METHOD_CALL);
                                          ASTNode* n = node(symbol);
-                                         n->lSide = $3;
+                                         //n->lSide = $3;
+                                         setLSide(n, $3);
                                          $$ = n;
                                      } else {
                                          printf("%s is not a function\n", symbol->name);
