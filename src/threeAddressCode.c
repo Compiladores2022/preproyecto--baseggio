@@ -109,7 +109,7 @@ char* translateOperand(Symbol* symbol) {
     if(isValue(getFlag(*symbol))) {
         sprintf(res, "$%d", getValue(*symbol));
     } else {
-        sprintf(res, "-%d(%%rbp)", symbol->offset);
+        sprintf(res, "-%d(%%rbp)", getOffset(*symbol));
     }
 
     return res;
