@@ -54,7 +54,7 @@ void checkReturn(ASTNode* node, Type expected) {
 
 int thereIsAtLeastOneReturn(ASTNode* node) {
     if(node) {
-        return (node->symbol->flag == flag_RETURN)
+        return (getFlag(*(node->symbol)) == flag_RETURN)
 		|| thereIsAtLeastOneReturn(node->lSide)
 		|| thereIsAtLeastOneReturn(node->mSide)
 		|| thereIsAtLeastOneReturn(node->rSide);
