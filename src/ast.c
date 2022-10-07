@@ -33,28 +33,6 @@ int isLeave(ASTNode* node) {
     return !node->lSide && !node->mSide && !node->rSide;
 }
 
-void reportErrorIfExists(Type typeOfTheFstOperand, Type typeOfTheSndOperand, Type expectedType, Flag operator) {
-    if(!(typeOfTheFstOperand == typeOfTheSndOperand && typeOfTheSndOperand == expectedType)) {
-	printf("%s arguments are of type: %s x %s but %s x %s was found\n"
-		       	,flagToString(operator)
-			,typeToString(expectedType)
-			,typeToString(expectedType)
-			,typeToString(typeOfTheFstOperand) 
-			,typeToString(typeOfTheSndOperand));	
-	exit(EXIT_FAILURE);
-    }
-}
-
-void reportAssignmentErrorIfExists(Type varType, Type exprType, char* varName) {
-	if(!(varType == exprType)) {
-	    printf("%s is of type %s but the expresion is of type %s\n"
-			    ,varName
-			    ,typeToString(varType)
-			    ,typeToString(exprType));
-	    exit(EXIT_FAILURE);
-	}
-}
-
 void checkReturn(ASTNode* node, Type expected) {
     if(node) {
         Flag flag = node->symbol->flag;
@@ -102,159 +80,6 @@ void checkParams(Symbol* fParams, ASTNode* rParams, char* functionName) {
     }
 }
 
-Type typeCheck(ASTNode* node) {
-    if(node) {
-	    Flag flag = node->symbol->flag;
-	    if(flag == flag_VALUE_INT || flag == flag_VALUE_BOOL || flag == flag_IDENTIFIER || flag == flag_PARAM) { return node->symbol->type; }
-	    if(isAnArithmeticBinaryOperator(flag)) {
-	        Type typeOfTheFstOperand = typeCheck(node->lSide);
-		Type typeOfTheSndOperand = typeCheck(node->rSide);
-		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
-		node->symbol->type = typeOfTheFstOperand;
-		return node->symbol->type;
-	    }
-
-	    if(isABooleanBinaryOperator(flag)) {
-	        Type typeOfTheFstOperand = typeCheck(node->lSide);
-		Type typeOfTheSndOperand = typeCheck(node->rSide);
-		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_BOOL, flag);
-		node->symbol->type = typeOfTheFstOperand;
-		return node->symbol->type;
-	    }
-
-	    if(flag == flag_RETURN) {
-	        typeCheck(node->lSide);
-	    }
-
-	    if(flag == flag_ASSIGNMENT) {
-	        Type varType  = typeCheck(node->lSide);
-		Type exprType = typeCheck(node->rSide);
-		reportAssignmentErrorIfExists(varType, exprType, node->lSide->symbol->name);
-	    }
-
-	    if(flag == flag_SEMICOLON) {
-	        typeCheck(node->lSide);
-		typeCheck(node->rSide);
-	    }
-	    
-	    if(flag == flag_LT) {
-	        Type typeOfTheFstOperand = typeCheck(node->lSide);
-		Type typeOfTheSndOperand = typeCheck(node->rSide);
-		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
-		node->symbol->type = TYPE_BOOL;
-		return TYPE_BOOL;
-	    }
-	    
-	    if(flag == flag_GT) {
-	        Type typeOfTheFstOperand = typeCheck(node->lSide);
-		Type typeOfTheSndOperand = typeCheck(node->rSide);
-		reportErrorIfExists(typeOfTheFstOperand, typeOfTheSndOperand, TYPE_INT, flag);
-		node->symbol->type = TYPE_BOOL;
-		return TYPE_BOOL;
-	    }
-	    
-	    if(flag == flag_EQT) {
-	        Type typeOfTheFstOperand = typeCheck(node->lSide);
-		Type typeOfTheSndOperand = typeCheck(node->rSide);
-		if(typeOfTheFstOperand == typeOfTheSndOperand) {
-		    node->symbol->type = TYPE_BOOL;
-		    return TYPE_BOOL;
-		} else {
-		    printf("%s arguments %s x %s does not match.\n"
-		       	,flagToString(flag_EQT)
-			,typeToString(typeOfTheFstOperand) 
-			,typeToString(typeOfTheSndOperand));
-		    exit(EXIT_FAILURE);
-		}
-	    }
-	    
-	    if(flag == flag_MINUS) {
-	        Type typeOfTheFstOperand = typeCheck(node->lSide);
-	        if(typeOfTheFstOperand == TYPE_INT) {
-			node->symbol->type = TYPE_INT;
-	        	return typeOfTheFstOperand;
-	        } else {
-	        	printf("%s is of type %s but the expression is of type %s.\n"
-		       	,flagToString(flag_MINUS)
-			,typeToString(TYPE_INT) 
-			,typeToString(typeOfTheFstOperand));
-		    exit(EXIT_FAILURE);
-	        }
-	    }
-	    
-	    if(flag == flag_NEG) {
-	    	Type typeOfTheFstOperand = typeCheck(node->lSide);
-	        if(typeOfTheFstOperand == TYPE_BOOL) {
-			node->symbol->type = TYPE_BOOL;
-	        	return typeOfTheFstOperand;
-	        } else {
-	        	printf("%s is of type %s but the expression is of type %s.\n"
-		       	,flagToString(flag_NEG)
-			,typeToString(TYPE_BOOL) 
-			,typeToString(typeOfTheFstOperand));
-		    exit(EXIT_FAILURE);
-	        }
-	    }
-	    
-	    if(flag == flag_IF) {
-	    	Type typeOfTheFstOperand = typeCheck(node->lSide);
-	    	if(typeOfTheFstOperand == TYPE_BOOL) {
-	    	    typeCheck(node->rSide);
-	    	} else {
-	    	    printf("Bool expression was expected.\n");
-		    exit(EXIT_FAILURE);
-	    	}
-	    }
-	    
-	    if(flag == flag_IF_ELSE) {
-	        Type typeOfTheFstOperand = typeCheck(node->lSide);
-	    	if(typeOfTheFstOperand == TYPE_BOOL) {
-	    	    typeCheck(node->mSide);
-	    	    typeCheck(node->rSide);
-	    	} else {
-	    	    printf("Bool expression was expected.\n");
-		    exit(EXIT_FAILURE);
-	    	}
-	    }
-	    
-	    if(flag == flag_WHILE) {
-		Type typeOfTheFstOperand = typeCheck(node->lSide);
-	    	if(typeOfTheFstOperand == TYPE_BOOL) {
-		    typeCheck(node->rSide);
-	    	} else {
-	    	    printf("Bool expression was expected.\n");
-		    exit(EXIT_FAILURE);
-	    	}
-	    }
-	    
-	    if(flag == flag_METHOD_DECLARATION) {
-		int isExtern      = node->lSide == NULL;
-		int hasReturnType = node->symbol->type != TYPE_VOID;
-		ASTNode* block          = node->lSide;
-		Type expectedReturnType = node->symbol->type;
-		if(!isExtern) {
-		    if(hasReturnType) {
-		        if(thereIsAtLeastOneReturn(block)) {
-			    checkReturn(block, expectedReturnType);
-			} else {
-			    printf("return is missing in function %s\n", node->symbol->name);
-			    exit(EXIT_FAILURE);
-			}
-		    }
-		    typeCheck(block);
-		}
-	    }
-
-            if(flag == flag_METHOD_CALL) { 
-		  Symbol*  fParams = node->symbol->params;
-                  ASTNode* rParams = node->lSide;
-		  checkParams(fParams, rParams, node->symbol->name);
-	    }
-    }
-
-    return 0;
-}
-
 void typeCheckBinaryOperation(Flag op, Type typeOfTheFstOperand, Type typeOfTheSndOperand, Type expected) {
     if(typeOfTheFstOperand != expected || typeOfTheSndOperand != expected) {
         printf("%s arguments are of type %s x %s but %s x %s were found\n"
@@ -263,6 +88,13 @@ void typeCheckBinaryOperation(Flag op, Type typeOfTheFstOperand, Type typeOfTheS
 			,typeToString(expected)
 			,typeToString(typeOfTheFstOperand)
 			,typeToString(typeOfTheSndOperand));
+	exit(EXIT_FAILURE);
+    }
+}
+
+void typeCheckEqual(Type typeOfTheFstOperand, Type typeOfTheSndOperand) {
+    if(typeOfTheFstOperand != typeOfTheSndOperand) {
+        printf("== arguments do not math\n");
 	exit(EXIT_FAILURE);
     }
 }
@@ -286,11 +118,14 @@ void checkIfIsABoolExpression(Type type) {
 
 void checkMethodDeclaration(ASTNode* block, Type returnType, char* name) {
     int hasReturnType = returnType != TYPE_VOID;
-    if(hasReturnType && thereIsAtLeastOneReturn(block)) {
-        checkReturn(block, returnType);
-    } else if(hasReturnType) {
-        printf("return statement is missing in %s function\n", name);
-	exit(EXIT_FAILURE);
+    int isExtern      = block == NULL;
+    if(!isExtern) {
+        if(hasReturnType && thereIsAtLeastOneReturn(block)) {
+            checkReturn(block, returnType);
+        } else if(hasReturnType) {
+            printf("return statement is missing in %s function\n", name);
+	    exit(EXIT_FAILURE);
+        }
     }
 }
 
@@ -304,7 +139,7 @@ void typeCheckAssignment(Type varType, Type expressionType, char* name) {
     }
 }
 
-Type typeCheck_(ASTNode* node) {
+Type typeCheck(ASTNode* node) {
     if(node) {
     	Flag flag = node->symbol->flag; // getFlag(getSymbol(node));
 	ASTNode* block;
@@ -369,7 +204,7 @@ Type typeCheck_(ASTNode* node) {
 		    node->symbol->type = TYPE_BOOL;
 		    return TYPE_BOOL;
 		case flag_EQT:
-		    typeCheckBinaryOperation(flag_EQT, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_IDC);
+		    typeCheckEqual(typeCheck(node->lSide), typeCheck(node->rSide));
 		    node->symbol->type = TYPE_BOOL;
 		    return TYPE_BOOL;
 		case flag_MINUS:

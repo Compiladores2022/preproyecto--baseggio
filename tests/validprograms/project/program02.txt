@@ -23,7 +23,7 @@ Program {
 
     void main() {
         Int y = get_int();
-        while(0) { print_int(0); }
+        while(True) { print_int(0); }
         if ( y == 0 ) then {
         	print_int(1);
         } else {

@@ -4,8 +4,7 @@
 typedef enum type {
     TYPE_INT,
     TYPE_BOOL,
-    TYPE_VOID,
-    TYPE_IDC
+    TYPE_VOID
 } Type;
 
 char* typeToString(Type type);

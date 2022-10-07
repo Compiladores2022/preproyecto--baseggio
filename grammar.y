@@ -74,7 +74,7 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 
 program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
-        typeCheck_(root);
+        typeCheck(root);
        // printAST(root);
 } ;
 

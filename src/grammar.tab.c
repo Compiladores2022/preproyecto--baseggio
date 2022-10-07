@@ -1343,7 +1343,7 @@ yyreduce:
 #line 75 "grammar.y" /* yacc.c:1646  */
     { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[-1].n));
-        typeCheck_(root);
+        typeCheck(root);
        // printAST(root);
 }
 #line 1350 "grammar.tab.c" /* yacc.c:1646  */
