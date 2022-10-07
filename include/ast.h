@@ -24,6 +24,8 @@ ASTNode* composeTree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide
 /* The 'typeCheck' function performs the type check of the AST. */
 Type typeCheck(ASTNode* node);
 
+Type typeCheck_(ASTNode* node);
+
 int evaluate(ASTNode* node);
 
 /* The 'printAST' function prints the elements of the AST to the stdout. */
