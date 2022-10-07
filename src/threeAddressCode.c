@@ -107,7 +107,7 @@ void translateBinaryOperation(FILE* fp, char* operation, Symbol* fstOperand, Sym
 char* translateOperand(Symbol* symbol) {
     char* res = (char*) malloc(sizeof(char));
     if(isValue(getFlag(*symbol))) {
-        sprintf(res, "$%d", symbol->value);
+        sprintf(res, "$%d", getValue(*symbol));
     } else {
         sprintf(res, "-%d(%%rbp)", symbol->offset);
     }
