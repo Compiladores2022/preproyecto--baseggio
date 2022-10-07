@@ -260,8 +260,8 @@ void printAST(ASTNode* root) {
 	  if(isFunction(*(root->symbol))) {
 	      Symbol* params = root->symbol->params;
 	      while(params) {
-	          printf("PARAM: %s, ", params->name);
-		  params = params->params;
+	        printf("PARAM: %s, ", getName(*params));
+		    params = params->params;
 	      }
 	  }
 	  if(root->lSide) {
