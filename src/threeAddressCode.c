@@ -93,7 +93,7 @@ void translateBinaryOperation(FILE* fp, char* operation, Symbol* fstOperand, Sym
 	    fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, getOffset(*sndOperand));
     } else if (cond1) {
         fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", getOffset(*fstOperand));
-	    fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
+	    fprintf(fp, "\n\t%s $%d, %%r10", operation, getValue(*sndOperand));
     } else if (cond2) {
         fprintf(fp, "\n\tmovq $%d, %%r10", fstOperand->value);
 	    fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
