@@ -89,17 +89,17 @@ void translateBinaryOperation(FILE* fp, char* operation, Symbol* fstOperand, Sym
     int cond1 = getFlag(*fstOperand) == flag_IDENTIFIER || isAnArithmeticBinaryOperator(getFlag(*fstOperand));
     int cond2 = getFlag(*sndOperand) == flag_IDENTIFIER || isAnArithmeticBinaryOperator(getFlag(*sndOperand));
     if(cond1 && cond2) {
-        fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", fstOperand->offset);
-	fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
+        fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", getOffset(*fstOperand));
+	    fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
     } else if (cond1) {
         fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", fstOperand->offset);
-	fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
+	    fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
     } else if (cond2) {
         fprintf(fp, "\n\tmovq $%d, %%r10", fstOperand->value);
-	fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
+	    fprintf(fp, "\n\t%s -%d(%%rbp), %%r10", operation, sndOperand->offset);
     } else {
         fprintf(fp, "\n\tmovq $%d, %%r10", fstOperand->value);
-	fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
+	    fprintf(fp, "\n\t%s $%d, %%r10", operation, sndOperand->value);
     }
 
     fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", dest->offset);

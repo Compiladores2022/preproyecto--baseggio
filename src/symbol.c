@@ -19,7 +19,7 @@ int getValue(Symbol symbol) {
     return symbol.value;
 }
 
-int offset(Symbol symbol) {
+int getOffset(Symbol symbol) {
     return symbol.offset;
 }
 
