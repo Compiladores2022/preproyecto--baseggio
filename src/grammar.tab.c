@@ -1605,7 +1605,7 @@ yyreduce:
   case 56: /* MethodCall: ID '(' Expressions ')'  */
 #line 219 "grammar.y"
                                    { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
-	                                   int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
+	                                   int isAFunction = getFlag(*symbol) == flag_METHOD_DECLARATION;
 	                                   if(isAFunction) {
                                          symbol = copy(symbol);
                                          setFlag(symbol, flag_METHOD_CALL);

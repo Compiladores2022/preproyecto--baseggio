@@ -217,7 +217,7 @@ Type : tINT  { $$ = $1; }
      ;
 
 MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-	                                   int isAFunction = symbol->flag == flag_METHOD_DECLARATION;
+	                                   int isAFunction = getFlag(*symbol) == flag_METHOD_DECLARATION;
 	                                   if(isAFunction) {
                                          symbol = copy(symbol);
                                          setFlag(symbol, flag_METHOD_CALL);
