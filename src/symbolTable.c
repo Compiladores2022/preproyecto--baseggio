@@ -61,10 +61,10 @@ void printSymbolTable(SymbolTable symbolTable) {
     int i = 0;
     printf("\n--- SYMBOL TABLE ---\n");
     while(level) {
-	printf("\nLevel %d: \n", symbolTable.levels - i);
+	    printf("\nLevel %d: \n", symbolTable.levels - i);
         showQueue(level->queue, printData);
-	level = level->next;
-	i++;
+	    level = level->next;
+	    i++;
     }
 
     printf("\n--- SYMBOL TABLE ---\n");

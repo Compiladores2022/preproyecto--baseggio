@@ -24,7 +24,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
             return node->symbol; 
         }
         
-        Flag flag = node->symbol->flag;
+        Flag flag = getFlag(*(node->symbol)); //node->symbol->flag;
         if(isABinaryOperator(flag)) {
             Symbol* fstOperand = generateIntermediateCode(node->lSide, threeAddressCode, offset);
             Symbol* sndOperand = generateIntermediateCode(node->rSide, threeAddressCode, offset);
@@ -32,8 +32,8 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
             addInstruction(threeAddressCode, instruction);
            
             threeAddressCode->numberOfTemporaries++;
-
-            node->symbol->offset = *offset;
+            setOffset(node->symbol, *offset);
+            //node->symbol->offset = *offset;
             *offset += 8;
             return node->symbol;
         }
