@@ -268,6 +268,18 @@ ASTNode* getRSide(ASTNode* node) {
 	return node->rSide;
 }
 
+void setLSide(ASTNode* node, ASTNode* lSide) {
+	node->lSide = lSide;
+}
+
+void setMSide(ASTNode* node, ASTNode* mSide) {
+	node->mSide = mSide;
+}
+
+void setRSide(ASTNode* node, ASTNode* rSide) {
+	node->rSide = rSide;
+}
+
 void printAST(ASTNode* root) {
 	if(root) {
 	  printf("-- FATHER --\n");

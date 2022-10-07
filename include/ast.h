@@ -31,6 +31,9 @@ Symbol* getSymbol(ASTNode* node);
 ASTNode* getLSide(ASTNode* node);
 ASTNode* getMSide(ASTNode* node);
 ASTNode* getRSide(ASTNode* node);
+void setLSide(ASTNode* node, ASTNode* lSide);
+void setMSide(ASTNode* node, ASTNode* mSide);
+void setRSide(ASTNode* node, ASTNode* rSide);
 
 /* The 'printAST' function prints the elements of the AST to the stdout. */
 void printAST(ASTNode* root);
