@@ -79,11 +79,11 @@ program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations Metho
 } ;
 
 lDeclarations: { $$ = NULL; } 
-	     | lDeclarations Declaration { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
+	           | lDeclarations Declaration { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
              ;
 
 MethodDeclarations: { $$ = NULL; }
-		  | MethodDeclaration MethodDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
+		              | MethodDeclaration MethodDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
                   ;
 
 MethodDeclaration: Method 
@@ -94,7 +94,8 @@ MethodDeclaration: Method
                    Block  
                    { closeLevel(&symbolTable);
                      ASTNode* n = node($1);
-                     n->lSide = $3;
+                     setLSide(n, $3);
+                     //n->lSide = $3;
                      $$ = n;
                    }
 		 | Method EXTERN ';' { ASTNode* n = node($1);
