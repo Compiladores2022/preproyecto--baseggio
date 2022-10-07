@@ -152,7 +152,7 @@ Type typeCheck(ASTNode* node) {
 		Type  returnType;
 		switch (flag) {
 			case flag_VALUE_INT:
-		    	return node->symbol->type; // getType(getSymbol(node));
+		    	return getType(*(node->symbol));//node->symbol->type; // getType(getSymbol(node));
 			case flag_VALUE_BOOL:
 		    	return node->symbol->type; // getType(getSymbol(node));
 			case flag_IDENTIFIER:
