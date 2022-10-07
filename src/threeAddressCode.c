@@ -24,7 +24,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
             return node->symbol; 
         }
         
-        Flag flag = getFlag(*(node->symbol)); //node->symbol->flag;
+        Flag flag = getFlag(*(node->symbol));
         if(isABinaryOperator(flag)) {
             Symbol* fstOperand = generateIntermediateCode(node->lSide, threeAddressCode, offset);
             Symbol* sndOperand = generateIntermediateCode(node->rSide, threeAddressCode, offset);
@@ -33,7 +33,6 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
            
             threeAddressCode->numberOfTemporaries++;
             setOffset(node->symbol, *offset);
-            //node->symbol->offset = *offset;
             *offset += 8;
             return node->symbol;
         }
@@ -63,9 +62,9 @@ void printInstruction(void* i) {
   Instruction instruction = *(Instruction*) i;
   Flag op = instruction.op;
   if(isABinaryOperator(op)) {
-    char* oprnd1 = instruction.fstOperand->name;
-    char* oprnd2 = instruction.sndOperand->name;
-    char* dest   = instruction.dest->name;
+    char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
+    char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
+    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
     printf("%s %s %s %s\n", flagToString(op), oprnd1, oprnd2, dest);
   }
 
