@@ -17,7 +17,7 @@ int compareByName(void* s, void* name) {
 
 void printData(void* data) {
   Symbol* symbol = (Symbol*) data;
-  printf("%s ", symbol->name);
+  printf("%s ", getName(*symbol));
 }
 
 int addSymbol(SymbolTable* symbolTable, Symbol* symbol) {
