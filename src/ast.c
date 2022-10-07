@@ -185,7 +185,7 @@ Type typeCheck(ASTNode* node) {
 		    	return TYPE_BOOL;
 			case flag_AND:
 			    typeCheckBinaryOperation(flag_AND, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_BOOL);
-			    node->symbol->type = TYPE_BOOL;
+			    setType(node->symbol, TYPE_BOOL);
 			    return TYPE_BOOL;
 			case flag_RETURN:
 		    	typeCheck(node->lSide); // typeCheck(leftSide(node));
