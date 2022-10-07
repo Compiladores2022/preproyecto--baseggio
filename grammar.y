@@ -89,17 +89,14 @@ MethodDeclarations: { $$ = NULL; }
 MethodDeclaration: Method 
                    { openLevel(&symbolTable); 
                      Symbol* symbol = $1;
-                     addAll(&symbolTable, symbol->params);
-                   }
+                     addAll(&symbolTable, symbol->params); }
                    Block  
                    { closeLevel(&symbolTable);
                      ASTNode* n = node($1);
                      setLSide(n, $3);
-                     $$ = n;
-                   }
+                     $$ = n; }
 		 | Method EXTERN ';' { ASTNode* n = node($1);
-		                       $$ = n;
-		                     }
+		                       $$ = n; }
                  ;
 
 Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, TYPE_VOID, $2, 0);
@@ -110,8 +107,7 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
                                      exit(EXIT_FAILURE);
-                                 }
-                               }
+                                 } }
       | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, $1, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
                                      symbol->isFunction = TRUE;
@@ -120,8 +116,7 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
                                      exit(EXIT_FAILURE);
-                                 }
-                               }
+                                 } }
       ;
 
 Params:                 { $$ = NULL; }
@@ -131,13 +126,11 @@ Params:                 { $$ = NULL; }
 OneOrMoreParams : Param                     { $$ = $1; }
 		            | Param ',' OneOrMoreParams { Symbol* symbol = $1;
                                               symbol->params = $3;
-                                              $$ = symbol;
-                                            }
+                                              $$ = symbol; }
                 ;
 
 Param: Type ID { Symbol* symbol = constructPtrToSymbol(flag_PARAM, $1, $2, 0);
-                 $$ = symbol;
-               } ;
+                 $$ = symbol; } ;
 
 Block: { openLevel(&symbolTable); } '{' lDeclarations lStatements '}' 
        { closeLevel(&symbolTable); $$ = composeTree(flag_SEMICOLON, ";", $3, NULL, $4); } ;
@@ -148,8 +141,7 @@ lStatements: { $$ = NULL; }
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
 	                        ASTNode* lSide = node(symbol);
-                          $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3);
-	                      }
+                          $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3); }
 	       | E ';'                               { $$ = $1; }
          | IF '(' E ')' THEN Block             { $$ = composeTree(flag_IF, "if-then", $3, NULL, $6); }
          | IF '(' E ')' THEN Block ELSE Block  { $$ = composeTree(flag_IF_ELSE, "if-then-else", $3, $6, $8); }
@@ -219,14 +211,12 @@ MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(
                                          symbol = copy(symbol);
                                          setFlag(symbol, flag_METHOD_CALL);
                                          ASTNode* n = node(symbol);
-                                         //n->lSide = $3;
                                          setLSide(n, $3);
                                          $$ = n;
                                      } else {
                                          printf("%s is not a function\n", symbol->name);
                                          exit(EXIT_FAILURE);
-                                     }
-                                   } ;
+                                     } } ;
 
 %%
 

@@ -26,7 +26,6 @@ Type typeCheck(ASTNode* node);
 
 int evaluate(ASTNode* node);
 
-
 Symbol* getSymbol(ASTNode* node);
 ASTNode* getLSide(ASTNode* node);
 ASTNode* getMSide(ASTNode* node);
