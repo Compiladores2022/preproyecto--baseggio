@@ -3,11 +3,11 @@
 #include "ast.h"
 #include "symbol.h"
 #include "symbolTable.h"
-#include "flag.h"
+#include "code.h"
 #include "queue.h"
 
 typedef struct instruction{
-    Flag op;
+    Code code;
     Symbol* fstOperand;
     Symbol* sndOperand;
     Symbol* dest;
