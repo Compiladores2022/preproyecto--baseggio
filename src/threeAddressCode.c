@@ -335,6 +335,13 @@ void printInstruction(void* i) {
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 
+  if(op == code_LABEL_END_OF_FUNCTION) {
+    //char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
+    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
+    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
+  }
+
   if(op == code_MINUS) {
     char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
     //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;

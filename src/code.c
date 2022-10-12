@@ -45,7 +45,7 @@ char* iCodeToString(Code code) {
         case code_LABEL_START_OF_FUNCTION:
             return "start of function";
         case code_LABEL_END_OF_FUNCTION:
-            return "start of function";
+            return "end of function";
         case code_RETURN:
             return "return";
         case code_ASSIGNMENT:
