@@ -288,72 +288,17 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 void printInstruction(void* i) {
   Instruction instruction = *(Instruction*) i;
   Code op = instruction.code;
+  char* oprnd1 = (char*) malloc(2 * sizeof(char));
+  char* oprnd2 = (char*) malloc(2 * sizeof(char));
+  char* dest;
 
-  if(iCodeIsABinaryOperator(op)) {
-    char* oprnd1 = getName(*(instruction.fstOperand));
-    char* oprnd2 = getName(*(instruction.sndOperand));
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, oprnd2, dest);
-  }
+  strcpy(oprnd1, "-");
+  strcpy(oprnd2, "-");
 
-  if(op == code_ASSIGNMENT) {
-    char* expr = getName(*(instruction.fstOperand));
-    char* dest = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), expr, "-", dest);
-  }
-
-  if(op == code_RETURN) {
-    char* dest = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
-  }
-
-  if(op == code_FALSE_CONDITIONAL) {
-    char* oprnd1 = getName(*(instruction.fstOperand));
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, "-", dest);
-  }
-
-  if(op == code_JMP) {
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
-  }
-
-  if(op == code_LABEL) {
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
-  }
-
-  if(op == code_LABEL_START_OF_FUNCTION) {
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
-  }
-
-  if(op == code_LABEL_END_OF_FUNCTION) {
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
-  }
-
-  if(op == code_MINUS) {
-    char* oprnd1 = getName(*(instruction.fstOperand));
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, "-", dest);
-  }
-
-  if(op == code_NEG) {
-    char* oprnd1 = getName(*(instruction.fstOperand));
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, "-", dest);
-  }
-
-  if(op == code_CALL) {
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
-  }
-
-  if(op == code_LOAD) {
-    char* dest   = getName(*(instruction.dest));
-    printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
-  }
+  if(instruction.fstOperand) { oprnd1 = getName(*(instruction.fstOperand)); }
+  if(instruction.sndOperand) { oprnd2 = getName(*(instruction.sndOperand)); }
+  dest = getName(*(instruction.dest));
+  printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, oprnd2, dest);
 }
 
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
