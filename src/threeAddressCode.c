@@ -267,6 +267,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 
 			
 				label = constructInstruction(code_LABEL, getSymbol(node), NULL, start_of_function);
+                addInstruction(threeAddressCode, label);
 				generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 				label = constructInstruction(code_LABEL, getSymbol(node), NULL, end_of_function);
 		    	break;

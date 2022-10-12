@@ -47,7 +47,7 @@ char* iCodeToString(Code code) {
         case code_ASSIGNMENT:
             return "=";
         case code_MINUS:
-            return "-";
+            return "minus";
         case code_NEG:
             return "!";
         case code_CALL:
