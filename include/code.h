@@ -19,6 +19,8 @@ typedef enum {
     ,code_ASSIGNMENT
     ,code_MINUS
     ,code_NEG
+    ,code_CALL
+    ,code_LOAD
 } Code;
 
 #endif
