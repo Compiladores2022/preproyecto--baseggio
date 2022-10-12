@@ -290,83 +290,68 @@ void printInstruction(void* i) {
   Code op = instruction.code;
 
   if(iCodeIsABinaryOperator(op)) {
-    char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* oprnd1 = getName(*(instruction.fstOperand));
+    char* oprnd2 = getName(*(instruction.sndOperand));
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, oprnd2, dest);
   }
 
   if(op == code_ASSIGNMENT) {
-    char* expr = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    char* dest = getName(*(instruction.dest)); //instruction.dest->name;
+    char* expr = getName(*(instruction.fstOperand));
+    char* dest = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), expr, "-", dest);
   }
 
   if(op == code_RETURN) {
-    char* dest = getName(*(instruction.dest)); //instruction.dest->name;
+    char* dest = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 
   if(op == code_FALSE_CONDITIONAL) {
-    char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* oprnd1 = getName(*(instruction.fstOperand));
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, "-", dest);
   }
 
   if(op == code_JMP) {
-    //char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 
   if(op == code_LABEL) {
-    //char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 
   if(op == code_LABEL_START_OF_FUNCTION) {
-    //char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 
   if(op == code_LABEL_END_OF_FUNCTION) {
-    //char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 
   if(op == code_MINUS) {
-    char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* oprnd1 = getName(*(instruction.fstOperand));
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, "-", dest);
   }
 
   if(op == code_NEG) {
-    char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* oprnd1 = getName(*(instruction.fstOperand));
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, "-", dest);
   }
 
   if(op == code_CALL) {
-    //char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 
   if(op == code_LOAD) {
-    //char* oprnd1 = getName(*(instruction.fstOperand)); //instruction.fstOperand->name;
-    //char* oprnd2 = getName(*(instruction.sndOperand)); //instruction.sndOperand->name;
-    char* dest   = getName(*(instruction.dest)); //instruction.dest->name;
+    char* dest   = getName(*(instruction.dest));
     printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), "-", "-", dest);
   }
 }
