@@ -42,6 +42,8 @@ char* iCodeToString(Code code) {
             return "jmp";
         case code_LABEL:
             return "label";
+        case code_LABEL_START_OF_FUNCTION:
+            return "start of function";
         case code_RETURN:
             return "return";
         case code_ASSIGNMENT:
