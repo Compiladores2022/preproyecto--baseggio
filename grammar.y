@@ -4,13 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbolTable.h"
+#include "threeAddressCode.h"
 #include "ast.h"
 #include "queue.h"
 
 #define TRUE 1
 #define FALSE 0
 
+int offset;
 SymbolTable symbolTable;
+ThreeAddressCode threeAddressCode;
 
 int yylex();
 void yyerror(const char* s);
@@ -75,7 +78,8 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
         typeCheck(root);
-       // printAST(root);
+        generateIntermediateCode(root, &threeAddressCode, &offset);
+        showThreeAddressCode(threeAddressCode);
 } ;
 
 lDeclarations: { $$ = NULL; } 
@@ -184,11 +188,11 @@ E: ID                 { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, 
  ;
 
 V: vINT {  char* name = (char*) malloc(sizeof(char));
-           sprintf(name, "%d", $1);
+           snprintf(name, sizeof(int), "%d", $1);
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, $1));
            $$ = n; }
  | vBOOL { char* name = (char*) malloc(sizeof(char));
-           sprintf(name, "%d", $1);
+           snprintf(name, sizeof(int), "%d", $1);
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, $1));
            $$ = n; }
  ;

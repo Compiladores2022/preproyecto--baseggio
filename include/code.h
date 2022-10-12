@@ -23,4 +23,7 @@ typedef enum {
     ,code_LOAD
 } Code;
 
+int iCodeIsABinaryOperator(Code code);
+char* iCodeToString(Code code);
+
 #endif

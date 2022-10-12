@@ -24,7 +24,8 @@ typedef enum {
     flag_SEMICOLON,
     flag_VALUE_INT,
     flag_VALUE_BOOL,
-    flag_RETURN
+    flag_RETURN,
+    flag_LABEL
 } Flag;
 
 char* flagToString(Flag flag);
