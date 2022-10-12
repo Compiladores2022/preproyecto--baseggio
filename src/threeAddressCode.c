@@ -45,13 +45,17 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 		switch (flag) {
 			case flag_VALUE_INT:
 			    return getSymbol(node);
+                break;
 			case flag_VALUE_BOOL:
                 setName(getSymbol(node), (getValue(*getSymbol(node)) == 1? "true" : "false"));
 			    return getSymbol(node);
+                break;
 			case flag_IDENTIFIER:
 			    return getSymbol(node);
+                break;
 			case flag_PARAM:
 			    return getSymbol(node);
+                break;
 			case flag_ADDITION:
 			    fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -62,6 +66,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_SUBSTRACTION:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -72,6 +77,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_MULTIPLICATION:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -82,6 +88,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_DIVISION:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -92,6 +99,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_MOD:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -102,6 +110,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_OR:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -112,6 +121,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_AND:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -122,6 +132,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_RETURN:
 			    expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    instruction = constructInstruction(code_RETURN, NULL, NULL, expression);
@@ -149,6 +160,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_GT:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -159,6 +171,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_EQT:
 				fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
@@ -169,6 +182,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_MINUS:
 				expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    instruction = constructInstruction(code_MINUS, expression, NULL, getSymbol(node));
@@ -178,6 +192,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_NEG:
 				expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 			    instruction = constructInstruction(code_NEG, expression, NULL, getSymbol(node));
@@ -187,6 +202,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 setName(getSymbol(node), name);
 
 			    return getSymbol(node);
+                break;
 			case flag_IF:
 				expression = generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 				
@@ -277,6 +293,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				call = constructInstruction(code_CALL, NULL, NULL, getSymbol(node));
 				addInstruction(threeAddressCode, call);
                 return getSymbol(node);
+                break;
             default:
                 break;
 		}

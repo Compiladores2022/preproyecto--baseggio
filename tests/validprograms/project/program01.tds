@@ -25,8 +25,8 @@ Program
   
   void main()
   {
-	Int v  = 1%2;
-	Int w = 1/2;
+	Int v   = 1%2;
+	Int w   = 1/2;
 	Bool x  = 1<2;
 	Bool y  = 1>2;
 	Bool z  = 1==2;
