@@ -16,6 +16,7 @@ typedef enum {
     ,code_JMP
     ,code_LABEL
     ,code_LABEL_START_OF_FUNCTION
+    ,code_LABEL_END_OF_FUNCTION
     ,code_RETURN
     ,code_ASSIGNMENT
     ,code_MINUS
