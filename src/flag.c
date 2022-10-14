@@ -67,6 +67,6 @@ int isABinaryOperator(Flag flag) {
     return isAnArithmeticBinaryOperator(flag) || isABooleanBinaryOperator(flag);
 }
 
-int isValue(Flag flag) {
+int isAConstant(Flag flag) {
     return flag == flag_VALUE_INT || flag == flag_VALUE_BOOL;
 }
