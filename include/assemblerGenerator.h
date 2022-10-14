@@ -1,8 +1,8 @@
 #ifndef ASSEMBLERGENERATOR_H
 #define ASSEMBLERGENERATOR_H
 
-#include "ast.h"
+#include "threeAddressCode.h"
 
-void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTable);
+void generateAssembler(ThreeAddressCode threeAddressCode);
 
 #endif
