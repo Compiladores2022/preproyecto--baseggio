@@ -56,7 +56,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 			    return getSymbol(node);
                 break;
 			case flag_IDENTIFIER:
-				assignOffset(getSymbol(node), offset);
+				//assignOffset(getSymbol(node), offset);
 			    return getSymbol(node);
                 break;
 			case flag_PARAM:
@@ -152,7 +152,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 		        expression  = generateIntermediateCode(getRSide(node), threeAddressCode, offset);
             	instruction = constructInstruction(code_ASSIGNMENT, expression, NULL, getSymbol(getLSide(node)));
 			    addInstruction(threeAddressCode, instruction);
-
+				assignOffset(getSymbol(getLSide(node)), offset);
 			    break;
 			case flag_SEMICOLON:
 				generateIntermediateCode(getLSide(node), threeAddressCode, offset);
