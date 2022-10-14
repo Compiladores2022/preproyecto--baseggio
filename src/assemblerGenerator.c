@@ -2,6 +2,103 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+char* translateOperand(Symbol operand) {
+	char* result = (char*) malloc(16 * sizeof(char));
+	if(isAConstant(getFlag(operand))) {
+		sprintf(result, "$%d", getValue(operand));
+	} else {
+		sprintf(result, "-%d(%%rbp)", getOffset(operand));
+	}
+
+	return result;
+}
+
+void translateADDITION(FILE* fp, Instruction instruction) {
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*instruction.fstOperand));
+	fprintf(fp, "\n\tadd  %s, %%r10", translateOperand(*instruction.sndOperand));
+	fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*instruction.dest));
+}
+
+void translateSUBSTRACTION(FILE* fp, Instruction instruction) {
+
+}
+
+void translateMULTIPLICATION(FILE* fp, Instruction instruction) {
+
+}
+
+void translateDIVISION(FILE* fp, Instruction instruction) {
+
+}
+
+void translateMOD(FILE* fp, Instruction instruction) {
+
+}
+
+void translateOR(FILE* fp, Instruction instruction) {
+
+}
+
+void translateAND(FILE* fp, Instruction instruction) {
+
+}
+
+void translateLT(FILE* fp, Instruction instruction) {
+
+}
+
+void translateGT(FILE* fp, Instruction instruction) {
+
+}
+
+void translateEQ(FILE* fp, Instruction instruction) {
+
+}
+
+void translateFALSE_CONDITIONAL(FILE* fp, Instruction instruction) {
+
+}
+
+void translateJMP(FILE* fp, Instruction instruction) {
+
+}
+
+void translateLABEL(FILE* fp, Instruction instruction) {
+
+}
+
+void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
+
+}
+
+void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
+
+}
+
+void translateRETURN(FILE* fp, Instruction instruction) {
+
+}
+
+void translateASSIGNMENT(FILE* fp, Instruction instruction) {
+
+}
+
+void translateMINUS(FILE* fp, Instruction instruction) {
+
+}
+
+void translateNEG(FILE* fp, Instruction instruction) {
+
+}
+
+void translateCALL(FILE* fp, Instruction instruction) {
+
+}
+
+void translateLOAD(FILE* fp, Instruction instruction) {
+
+}
+
 void translate(FILE* fp, Instruction instruction) {
 	Code iCode = instruction.code; //getICode(instruction);
 	switch (iCode) {
