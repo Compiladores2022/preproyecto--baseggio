@@ -5,6 +5,7 @@
 #include <string.h>
 #include "symbolTable.h"
 #include "threeAddressCode.h"
+#include "assemblerGenerator.h"
 #include "ast.h"
 #include "queue.h"
 
@@ -77,9 +78,18 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 
 program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
+
+        //CURRENT LVL OF SYMBOL TABLE: 1
+        Symbol* symbol = lookUpSymbol(symbolTable, "main");
+        if(!(symbol && isFunction(*symbol))) {
+            printf("main function not defined\n");
+            exit(EXIT_FAILURE);
+        }
+
         typeCheck(root);
         generateIntermediateCode(root, &threeAddressCode, &offset);
         showThreeAddressCode(threeAddressCode);
+        generateAssembler(threeAddressCode);
 } ;
 
 lDeclarations: { $$ = NULL; } 
