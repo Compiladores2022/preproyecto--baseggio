@@ -101,7 +101,7 @@ void translateNEG(FILE* fp, Instruction instruction) {
 }
 
 void translateCALL(FILE* fp, Instruction instruction) {
-	//fprintf(fp, "\n\tcall %s", getName(*(instruction.dest)));
+	fprintf(fp, "\n\tcall %s", getName(*(instruction.dest)));
 }
 
 void translateLOAD(FILE* fp, Instruction instruction) {
