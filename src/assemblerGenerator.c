@@ -87,15 +87,25 @@ void translateAND(FILE* fp, Instruction instruction, int* numberOfLabel) {
     *numberOfLabel += 3;
 }
 
-void translateLT(FILE* fp, Instruction instruction) {
+void translateLT(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tmovq %s, %%r11", translateOperand(*(instruction.sndOperand)));
+	fprintf(fp, "\n\tcmp  %%r11, %%r10");
+	fprintf(fp, "\n\tjl  .L%d", *numberOfLabel);
+	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	fprintf(fp, "\n\tjmp  .L%d", *numberOfLabel + 1);
+	fprintf(fp, "\n\n.L%d:", *numberOfLabel);
+	fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	fprintf(fp, "\n\n.L%d:", *numberOfLabel + 1);
+
+	*numberOfLabel += 2;
+}
+
+void translateGT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 
 }
 
-void translateGT(FILE* fp, Instruction instruction) {
-
-}
-
-void translateEQ(FILE* fp, Instruction instruction) {
+void translateEQ(FILE* fp, Instruction instruction, int* numberOfLabel) {
 
 }
 
@@ -179,13 +189,13 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel) {
 			translateAND(fp, instruction, numberOfLabel);
 			break;
 		case code_LT:
-			translateLT(fp, instruction);
+			translateLT(fp, instruction, numberOfLabel);
 			break;
 		case code_GT:
-			translateGT(fp, instruction);
+			translateGT(fp, instruction, numberOfLabel);
 			break;
 		case code_EQT:
-			translateEQ(fp, instruction);
+			translateEQ(fp, instruction, numberOfLabel);
 			break;
 		case code_FALSE_CONDITIONAL:
 			translateFALSE_CONDITIONAL(fp, instruction);
