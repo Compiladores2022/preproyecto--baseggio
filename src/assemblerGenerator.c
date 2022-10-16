@@ -116,8 +116,19 @@ void translateGT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	*numberOfLabel += 2;
 }
 
+// same as translateEQ
 void translateEQ(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tmovq %s, %%r11", translateOperand(*(instruction.sndOperand)));
+	fprintf(fp, "\n\tcmp  %%r11, %%r10");
+	fprintf(fp, "\n\tje  .L%d", *numberOfLabel);
+	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	fprintf(fp, "\n\tjmp  .L%d", *numberOfLabel + 1);
+	fprintf(fp, "\n\n.L%d:", *numberOfLabel);
+	fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	fprintf(fp, "\n\n.L%d:", *numberOfLabel + 1);
 
+	*numberOfLabel += 2;
 }
 
 void translateFALSE_CONDITIONAL(FILE* fp, Instruction instruction) {
