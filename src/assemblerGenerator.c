@@ -16,24 +16,28 @@ char* translateOperand(Symbol operand) {
 
 void translateADDITION(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*instruction.fstOperand));
-	fprintf(fp, "\n\tadd  %s, %%r10", translateOperand(*instruction.sndOperand));
+	fprintf(fp, "\n\taddq %s, %%r10", translateOperand(*instruction.sndOperand));
 	fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*instruction.dest));
 }
 
 void translateSUBSTRACTION(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*instruction.fstOperand));
-	fprintf(fp, "\n\tsub  %s, %%r10", translateOperand(*instruction.sndOperand));
+	fprintf(fp, "\n\tsubq %s, %%r10", translateOperand(*instruction.sndOperand));
 	fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*instruction.dest));
 }
 
 void translateMULTIPLICATION(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*instruction.fstOperand));
-	fprintf(fp, "\n\timul %s, %%r10", translateOperand(*instruction.sndOperand));
+	fprintf(fp, "\n\timulq %s, %%r10", translateOperand(*instruction.sndOperand));
 	fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*instruction.dest));
 }
 
 void translateDIVISION(FILE* fp, Instruction instruction) {
-
+	fprintf(fp, "\n\tmovq  $0, %%rdx");
+	fprintf(fp, "\n\tmovq  %s, %%rax", translateOperand(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tmovq  %s, %%r10", translateOperand(*(instruction.sndOperand)));
+	fprintf(fp, "\n\tidivq %%r10");
+	fprintf(fp, "\n\tmovq  %%rax, -%d(%%rbp)", getOffset(*(instruction.dest)));
 }
 
 void translateMOD(FILE* fp, Instruction instruction) {
