@@ -23,6 +23,10 @@ int getOffset(Symbol symbol) {
     return symbol.offset;
 }
 
+Symbol* getParams(Symbol symbol) {
+    return symbol.params;
+}
+
 void setFlag(Symbol* symbol, Flag flag) {
     symbol->flag = flag;
 }

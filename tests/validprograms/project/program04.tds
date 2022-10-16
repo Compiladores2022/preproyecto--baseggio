@@ -1,0 +1,23 @@
+Program {
+    void print_int(Int x, Int y) extern;
+    
+    void main() {
+        Int w = 0 - 1;
+        print_int(w, 0);
+        return 10;
+    }
+}
+
+/*
+
+NAME    OFFSET
+t0      0
+w       8
+t1      16
+x       24
+t2      32
+y       40
+t3      48
+z       56
+
+*/

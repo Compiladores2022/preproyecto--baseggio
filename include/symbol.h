@@ -18,6 +18,9 @@ Type getType(Symbol symbol);
 char* getName(Symbol symbol);
 int getValue(Symbol symbol);
 int getOffset(Symbol symbol);
+
+Symbol* getParams(Symbol symbol);
+
 void setFlag(Symbol* symbol, Flag flag);
 void setType(Symbol* symbol, Type type);
 void setName(Symbol* symbol, const char* name);
