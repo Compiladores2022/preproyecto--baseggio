@@ -21,8 +21,8 @@ void translateADDITION(FILE* fp, Instruction instruction) {
 }
 
 void translateSUBSTRACTION(FILE* fp, Instruction instruction) {
-	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*instruction.sndOperand));
-	fprintf(fp, "\n\tsub  %s, %%r10", translateOperand(*instruction.fstOperand));
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*instruction.fstOperand));
+	fprintf(fp, "\n\tsub  %s, %%r10", translateOperand(*instruction.sndOperand));
 	fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*instruction.dest));
 }
 
@@ -89,7 +89,12 @@ void translateRETURN(FILE* fp, Instruction instruction) {
 }
 
 void translateASSIGNMENT(FILE* fp, Instruction instruction) {
-
+	if(isAConstant(getFlag(*(instruction.fstOperand)))) {
+		fprintf(fp, "\n\tmovq $%d, -%d(%%rbp)", getValue(*(instruction.fstOperand)), getOffset(*(instruction.dest)));
+	} else {
+		fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", getOffset(*(instruction.fstOperand)));
+		fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	}
 }
 
 void translateMINUS(FILE* fp, Instruction instruction) {
@@ -105,7 +110,7 @@ void translateCALL(FILE* fp, Instruction instruction) {
 }
 
 void translateLOAD(FILE* fp, Instruction instruction) {
-	fprintf(fp, "\n\tmovq %s %%rdi", translateOperand(*(instruction.dest)));
+	fprintf(fp, "\n\tmov %s, %%edi", translateOperand(*(instruction.dest)));
 }
 
 void translate(FILE* fp, Instruction instruction) {
