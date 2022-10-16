@@ -12,7 +12,7 @@
 #define TRUE 1
 #define FALSE 0
 
-int offset;
+int offset = 8;
 SymbolTable symbolTable;
 ThreeAddressCode threeAddressCode;
 

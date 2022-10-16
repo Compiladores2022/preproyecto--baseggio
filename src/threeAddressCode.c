@@ -26,6 +26,14 @@ void loadParams(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset) 
     }
 }
 
+int params(Symbol* symbol) {
+	if(symbol) {
+		return 1 + params(symbol->params);
+	}
+
+	return 0;
+}
+
 void assignOffset(Symbol* symbol, int* offset) {
 	setOffset(symbol, *offset);
 	*offset += 8;
@@ -281,7 +289,13 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				
 		    	break;
 			case flag_METHOD_DECLARATION:
-		*offset = 0;
+				*offset = 8;
+
+				Symbol* symbol = getParams(*getSymbol(node));
+				while(symbol) {
+					assignOffset(symbol, offset);
+					symbol = getParams(*symbol);
+				}
 
                 start_of_function = constructPtrToEmptySymbol();
                 setFlag(start_of_function, flag_LABEL);
@@ -290,13 +304,18 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
                 end_of_function   = constructPtrToEmptySymbol();
                 setFlag(end_of_function,   flag_LABEL);
                 setName(end_of_function,   getName(*getSymbol(node)));
-
 			
 				label = constructInstruction(code_LABEL_START_OF_FUNCTION, getSymbol(node), NULL, start_of_function);
                 addInstruction(threeAddressCode, label);
 				generateIntermediateCode(getLSide(node), threeAddressCode, offset);
 				label = constructInstruction(code_LABEL_END_OF_FUNCTION, getSymbol(node), NULL, end_of_function);
                 addInstruction(threeAddressCode, label);
+
+				symbol = getParams(*getSymbol(node));
+				while(symbol) {
+					printf("PARAM: %s OFFSET: %d\n", getName(*symbol), getOffset(*symbol));
+					symbol = getParams(*symbol);
+				}
 
 				assignOffset(getSymbol(node), offset);
 
@@ -338,6 +357,7 @@ void printInstruction(void* i) {
 	}
 
 	printf("%s OFFSET: %d\n", getName(*instruction.dest), getOffset(*instruction.dest));
+	
 }
 
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
