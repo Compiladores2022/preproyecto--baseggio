@@ -85,7 +85,7 @@ void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
 }
 
 void translateRETURN(FILE* fp, Instruction instruction) {
-	fprintf(fp, "\n\tmov %s, %%rax", translateOperand(*(instruction.dest)));
+	fprintf(fp, "\n\tmovq %s, %%rax", translateOperand(*(instruction.dest)));
 }
 
 void translateASSIGNMENT(FILE* fp, Instruction instruction) {
@@ -101,11 +101,11 @@ void translateNEG(FILE* fp, Instruction instruction) {
 }
 
 void translateCALL(FILE* fp, Instruction instruction) {
-
+	//fprintf(fp, "\n\tcall %s", getName(*(instruction.dest)));
 }
 
 void translateLOAD(FILE* fp, Instruction instruction) {
-
+	fprintf(fp, "\n\tmovq %s %%rdi", translateOperand(*(instruction.dest)));
 }
 
 void translate(FILE* fp, Instruction instruction) {
