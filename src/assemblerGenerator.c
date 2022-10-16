@@ -1,6 +1,7 @@
 #include "assemblerGenerator.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char* translateOperand(Symbol operand) {
 	char* result = (char*) malloc(16 * sizeof(char));
@@ -70,6 +71,10 @@ void translateLABEL(FILE* fp, Instruction instruction) {
 }
 
 void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
+	if( strcmp(getName(*(instruction.fstOperand)), "main") == 0 ) {
+		fprintf(fp, "\n\n\t.globl main");
+	}
+
 	fprintf(fp, "\n%s:", getName(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tenter $(%d), $0", getOffset(*(instruction.fstOperand)));
 }
