@@ -20,7 +20,9 @@ void translateADDITION(FILE* fp, Instruction instruction) {
 }
 
 void translateSUBSTRACTION(FILE* fp, Instruction instruction) {
-
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*instruction.sndOperand));
+	fprintf(fp, "\n\tsub  %s, %%r10", translateOperand(*instruction.fstOperand));
+	fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*instruction.dest));
 }
 
 void translateMULTIPLICATION(FILE* fp, Instruction instruction) {
@@ -68,11 +70,12 @@ void translateLABEL(FILE* fp, Instruction instruction) {
 }
 
 void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
-
+	fprintf(fp, "\n%s:", getName(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tenter $(%d), $0", getOffset(*(instruction.fstOperand)));
 }
 
 void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
-
+	
 }
 
 void translateRETURN(FILE* fp, Instruction instruction) {
