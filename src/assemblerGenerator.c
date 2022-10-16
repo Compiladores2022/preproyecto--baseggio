@@ -48,8 +48,22 @@ void translateMOD(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tmovq  %%rdx, -%d(%%rbp)", getOffset(*(instruction.dest)));
 }
 
-void translateOR(FILE* fp, Instruction instruction) {
+void translateOR(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
+    fprintf(fp, "\n\tmovq $1, %%r11");
+    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tje .L%d", *numberOfLabel);
+    fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.sndOperand)));
+    fprintf(fp, "\n\tmovq $1, %%r11");
+    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tje .L%d", *numberOfLabel);
+    fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
+    fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 1);
+    fprintf(fp, "\n.L%d:", *numberOfLabel);
+    fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", getOffset(*(instruction.dest)));
+    fprintf(fp, "\n.L%d:", *numberOfLabel + 1);
 
+    *numberOfLabel += 2;
 }
 
 void translateAND(FILE* fp, Instruction instruction) {
@@ -123,7 +137,7 @@ void translateLOAD(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tmov %s, %%edi", translateOperand(*(instruction.dest)));
 }
 
-void translate(FILE* fp, Instruction instruction) {
+void translate(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	Code iCode = instruction.code; //getICode(instruction);
 	switch (iCode) {
 		case code_ADDITION:
@@ -142,7 +156,7 @@ void translate(FILE* fp, Instruction instruction) {
 			translateMOD(fp, instruction);
 			break;
 		case code_OR:
-			translateOR(fp, instruction);
+			translateOR(fp, instruction, numberOfLabel);
 			break;
 		case code_AND:
 			translateAND(fp, instruction);
@@ -203,9 +217,11 @@ void generateAssembler(ThreeAddressCode threeAddressCode) {
 		exit(EXIT_FAILURE);
 	}
 
+	int numberOfLabel = 0;
+
 	while(!isEmpty(threeAddressCode.queue)) {
 		Instruction instruction = *(Instruction*) head(threeAddressCode.queue); // getHead(threeAddressCode);
-		translate(fp, instruction);
+		translate(fp, instruction, &numberOfLabel);
 		dequeue(&(threeAddressCode.queue)); // removeHead(&threeAddressCode);
 	}
 }
