@@ -312,7 +312,6 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				if(!isExtern) {
 					Symbol* symbol = getParams(*getSymbol(node));
 					while(symbol) {
-						printf("PARAM: %s OFFSET: %d\n", getName(*symbol), getOffset(*symbol));
 						assignOffset(symbol, offset);
 						symbol = getParams(*symbol);
 					}
@@ -348,31 +347,21 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 }
 
 void printInstruction(void* i) {
-  Instruction instruction = *(Instruction*) i;
-  Code op = instruction.code;
-  char* oprnd1 = (char*) malloc(2 * sizeof(char));
-  char* oprnd2 = (char*) malloc(2 * sizeof(char));
-  char* dest;
+	Instruction instruction = *(Instruction*) i;
+	Code op = instruction.code;
+	char* oprnd1 = (char*) malloc(2 * sizeof(char));
+	char* oprnd2 = (char*) malloc(2 * sizeof(char));
+	char* dest;
 
-  strcpy(oprnd1, "-");
-  strcpy(oprnd2, "-");
+	strcpy(oprnd1, "-");
+	strcpy(oprnd2, "-");
 
-  if(instruction.fstOperand) { oprnd1 = getName(*(instruction.fstOperand)); }
-  if(instruction.sndOperand) { oprnd2 = getName(*(instruction.sndOperand)); }
-  dest = getName(*(instruction.dest));
-  printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, oprnd2, dest);
-
-  if(instruction.fstOperand) {
-	printf("%s OFFSET: %d \n", getName(*(instruction.fstOperand)), getOffset(*(instruction.fstOperand)));	
-  }
-
-  if(instruction.sndOperand) {
-	printf("%s OFFSET: %d \n", getName(*(instruction.sndOperand)), getOffset(*(instruction.sndOperand)));
-  }
-
-  printf("%s OFFSET: %d \n", getName(*(instruction.dest)), getOffset(*(instruction.dest)));
+	if(instruction.fstOperand) { oprnd1 = getName(*(instruction.fstOperand)); }
+	if(instruction.sndOperand) { oprnd2 = getName(*(instruction.sndOperand)); }
+	dest = getName(*(instruction.dest));
+	printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, oprnd2, dest);
 }
 
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
-    showQueue(threeAddressCode.queue, printInstruction);
+	showQueue(threeAddressCode.queue, printInstruction);
 }
