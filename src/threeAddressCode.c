@@ -328,16 +328,6 @@ void printInstruction(void* i) {
   if(instruction.sndOperand) { oprnd2 = getName(*(instruction.sndOperand)); }
   dest = getName(*(instruction.dest));
   printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, oprnd2, dest);
-	if(instruction.fstOperand) {
-		printf("%s OFFSET: %d\n", getName(*instruction.fstOperand), getOffset(*instruction.fstOperand));
-	}
-
-	if(instruction.sndOperand) {
-		printf("%s OFFSET: %d\n", getName(*instruction.sndOperand), getOffset(*instruction.sndOperand));
-	}
-
-	printf("%s OFFSET: %d\n", getName(*instruction.dest), getOffset(*instruction.dest));
-	
 }
 
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
