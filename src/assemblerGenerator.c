@@ -101,7 +101,6 @@ void translateLT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	*numberOfLabel += 2;
 }
 
-// same as translateLT
 void translateGT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq %s, %%r11", translateOperand(*(instruction.sndOperand)));
@@ -116,7 +115,6 @@ void translateGT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	*numberOfLabel += 2;
 }
 
-// same as translateEQ
 void translateEQ(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq %s, %%r11", translateOperand(*(instruction.sndOperand)));
@@ -182,15 +180,40 @@ void translateNEG(FILE* fp, Instruction instruction) {
 
 }
 
-void translateCALL(FILE* fp, Instruction instruction) {
+void translateCALL(FILE* fp, Instruction instruction, int* numberOfParameter) {
 	fprintf(fp, "\n\tcall %s", getName(*(instruction.dest)));
+	*numberOfParameter = 1;
 }
 
-void translateLOAD(FILE* fp, Instruction instruction) {
-	fprintf(fp, "\n\tmov %s, %%edi", translateOperand(*(instruction.dest)));
+void translateLOAD(FILE* fp, Instruction instruction, int* numberOfParameter) {
+	//fprintf(fp, "\n\tmov %s, %%edi", translateOperand(*(instruction.dest)));
+	switch (*numberOfParameter) {
+		case 1:
+			fprintf(fp, "\n\tmov %s, %%rdi", translateOperand(*(instruction.dest)));
+			break;
+		case 2:
+			fprintf(fp, "\n\tmov %s, %%rsi", translateOperand(*(instruction.dest)));
+			break;
+		case 3:
+			fprintf(fp, "\n\tmov %s, %%rdx", translateOperand(*(instruction.dest)));
+			break;
+		case 4:
+			fprintf(fp, "\n\tmov %s, %%rcx", translateOperand(*(instruction.dest)));
+			break;
+		case 5:
+			fprintf(fp, "\n\tmov %s, %%r8", translateOperand(*(instruction.dest)));
+			break;
+		case 6:
+			fprintf(fp, "\n\tmov %s, %%r9", translateOperand(*(instruction.dest)));
+			break;
+		default:
+			break;
+	}
+	*numberOfParameter += 1;
+
 }
 
-void translate(FILE* fp, Instruction instruction, int* numberOfLabel) {
+void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numberOfParameter) {
 	Code iCode = instruction.code; //getICode(instruction);
 	switch (iCode) {
 		case code_ADDITION:
@@ -251,10 +274,10 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel) {
 			translateNEG(fp, instruction);
 			break;
 		case code_CALL:
-			translateCALL(fp, instruction);
+			translateCALL(fp, instruction, numberOfParameter);
 			break;
 		case code_LOAD:
-			translateLOAD(fp, instruction);
+			translateLOAD(fp, instruction, numberOfParameter);
 			break;
 		default:
 			printf("Instruction not recognized\n");
@@ -270,11 +293,12 @@ void generateAssembler(ThreeAddressCode threeAddressCode) {
 		exit(EXIT_FAILURE);
 	}
 
-	int numberOfLabel = 0;
+	int numberOfLabel     = 0;
+	int numberOfParameter = 1;
 
 	while(!isEmpty(threeAddressCode.queue)) {
 		Instruction instruction = *(Instruction*) head(threeAddressCode.queue); // getHead(threeAddressCode);
-		translate(fp, instruction, &numberOfLabel);
+		translate(fp, instruction, &numberOfLabel, &numberOfParameter);
 		dequeue(&(threeAddressCode.queue)); // removeHead(&threeAddressCode);
 	}
 }
