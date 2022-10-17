@@ -26,6 +26,9 @@ void setType(Symbol* symbol, Type type);
 void setName(Symbol* symbol, const char* name);
 void setValue(Symbol* symbol, int value);
 void setOffset(Symbol* symbol, int offset);
+
+void setIsFunction(Symbol* symbol);
+
 Symbol* constructPtrToEmptySymbol();
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);
 Symbol* copy(Symbol* symbol);

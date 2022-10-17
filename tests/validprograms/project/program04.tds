@@ -1,13 +1,24 @@
 Program {
     void print(Int x) extern;
 
-    void print_int(Int x) {
-        
+    Int foo(Int x, Int y, Int z) {
+        return x + y - z;
     }
 
     void print_bool(Bool b) extern;
     
     void main() {
+
+        Int x = 0;
+        Int y = 1;
+        Int z = x + y;
+        print(x + y);
+        print(z);
+        print(z - z);
+        print((x + y) - z);
+        print(foo(x, y, z));
+
+        /*
         Int i = 0;
         Int x_1 = 1 + 0;
         Int x_2 = 1 - 0;
@@ -70,7 +81,7 @@ Program {
             print(i);
             i = i + 1;
         }
-
+        */
     }
 }
 

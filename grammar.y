@@ -87,8 +87,10 @@ program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations Metho
             exit(EXIT_FAILURE);
         }
 
+        //  printAST(root);
         typeCheck(root);
         generateIntermediateCode(root, &threeAddressCode, &offset, &numberOfLabel);
+        showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 } ;
 
@@ -220,7 +222,7 @@ Type : tINT  { $$ = $1; }
      ;
 
 MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-	                                   int isAFunction = getFlag(*symbol) == flag_METHOD_DECLARATION;
+	                                   int isAFunction = isFunction(*symbol);
 	                                   if(isAFunction) {
                                          symbol = copy(symbol);
                                          setFlag(symbol, flag_METHOD_CALL);

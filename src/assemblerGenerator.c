@@ -152,6 +152,35 @@ void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
 
 	fprintf(fp, "\n%s:", getName(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tenter $(%d), $0", getOffset(*(instruction.fstOperand)));
+
+	int numberOfParameter = 1;
+	Symbol* symbol = getParams(*(instruction.fstOperand));
+	while(symbol) {
+		switch (numberOfParameter) {
+		case 1:
+			fprintf(fp, "\n\tmov %%rdi, -%d(%%rbp)", getOffset(*symbol));
+			break;
+		case 2:
+			fprintf(fp, "\n\tmov %%rsi, -%d(%%rbp)", getOffset(*symbol));
+			break;
+		case 3:
+			fprintf(fp, "\n\tmov %%rdx, -%d(%%rbp)", getOffset(*symbol));
+			break;
+		case 4:
+			fprintf(fp, "\n\tmov %%rcx, -%d(%%rbp)", getOffset(*symbol));
+			break;
+		case 5:
+			fprintf(fp, "\n\tmov %%r8, -%d(%%rbp)", getOffset(*symbol));
+			break;
+		case 6:
+			fprintf(fp, "\n\tmov %%r9, -%d(%%rbp)", getOffset(*symbol));
+			break;
+		default:
+			break;
+		}
+		numberOfParameter++;
+		symbol = getParams(*symbol);
+	}
 }
 
 void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
@@ -186,25 +215,31 @@ void translateCALL(FILE* fp, Instruction instruction, int* numberOfParameter) {
 }
 
 void translateLOAD(FILE* fp, Instruction instruction, int* numberOfParameter) {
-	//fprintf(fp, "\n\tmov %s, %%edi", translateOperand(*(instruction.dest)));
+	char* from = (char*) malloc(16 * sizeof(char));
+	if(isFunction(*(instruction.dest))) {
+		sprintf(from, "%%rax");
+	} else {
+		sprintf(from, "%s", translateOperand(*(instruction.dest)));
+	}
+
 	switch (*numberOfParameter) {
 		case 1:
-			fprintf(fp, "\n\tmov %s, %%rdi", translateOperand(*(instruction.dest)));
+			fprintf(fp, "\n\tmov %s, %%rdi", from);
 			break;
 		case 2:
-			fprintf(fp, "\n\tmov %s, %%rsi", translateOperand(*(instruction.dest)));
+			fprintf(fp, "\n\tmov %s, %%rsi", from);
 			break;
 		case 3:
-			fprintf(fp, "\n\tmov %s, %%rdx", translateOperand(*(instruction.dest)));
+			fprintf(fp, "\n\tmov %s, %%rdx", from);
 			break;
 		case 4:
-			fprintf(fp, "\n\tmov %s, %%rcx", translateOperand(*(instruction.dest)));
+			fprintf(fp, "\n\tmov %s, %%rcx", from);
 			break;
 		case 5:
-			fprintf(fp, "\n\tmov %s, %%r8", translateOperand(*(instruction.dest)));
+			fprintf(fp, "\n\tmov %s, %%r8", from);
 			break;
 		case 6:
-			fprintf(fp, "\n\tmov %s, %%r9", translateOperand(*(instruction.dest)));
+			fprintf(fp, "\n\tmov %s, %%r9", from);
 			break;
 		default:
 			break;

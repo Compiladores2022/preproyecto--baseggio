@@ -47,6 +47,10 @@ void setOffset(Symbol* symbol, int offset) {
     symbol->offset = offset;
 }
 
+void setIsFunction(Symbol* symbol) {
+    symbol->isFunction = 1;
+}
+
 Symbol* constructPtrToEmptySymbol() {
     Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
     symbol->name = (char*) malloc(sizeof(char));
@@ -64,6 +68,7 @@ Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value) {
 
 Symbol* copy(Symbol* symbol) {
     Symbol* c = constructPtrToSymbol(symbol->flag, symbol->type, symbol->name, symbol->value);
+    c->isFunction = symbol->isFunction;
     if(symbol->params) {
         c->params = copy(symbol->params);
     }
