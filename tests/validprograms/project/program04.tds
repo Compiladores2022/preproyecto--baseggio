@@ -1,10 +1,72 @@
 Program {
-    void print_int(Int x, Int y) extern;
+    void print(Int x) extern;
+
+    void print_bool(Bool b) extern;
     
     void main() {
-        Int w = 0 - 1;
-        print_int(w, 0);
-        return 10;
+        Int i = 0;
+        Int x_1 = 1 + 0;
+        Int x_2 = 1 - 0;
+        Int x_3 = 0 - 1;
+        Int x_4 = 2 * 15;
+        Int x_5 = 15 * 2;
+        Int x_6 = 340 * 340;
+        Int x_7 = 4 / 2;
+        Int x_8 = 150 / 5;
+        Int x_9 = 150 % 5;
+        Int x_10 = 12345 % 7;
+        Bool b_1 = True || True;
+        Bool b_2 = True || False;
+        Bool b_3 = False || True;
+        Bool b_4 = False || False;
+        Bool b_5 = True && True;
+        Bool b_6 = True && False;
+        Bool b_7 = False && True;
+        Bool b_8 = False && False;
+
+        Bool b_9  = 0 < 1;
+        Bool b_10 = 1 < 0;
+
+        Bool b_11  = 0 > 1;
+        Bool b_12  = 1 > 0;
+
+        Bool b_13  = 0 == 1;
+        Bool b_14  = 1 == 0;
+        Bool b_15  = 1 == 1;
+
+        print(x_1);
+        print(x_2);
+        print(x_3);
+        print(x_4);
+        print(x_5);
+        print(x_6);
+        print(x_7);
+        print(x_8);
+        print(x_9);
+        print(x_10);
+
+        print_bool(b_1);
+        print_bool(b_2);
+        print_bool(b_3);
+        print_bool(b_4);
+
+        print_bool(b_5);
+        print_bool(b_6);
+        print_bool(b_7);
+        print_bool(b_8);
+
+        print_bool(b_9);
+        print_bool(b_10);
+        print_bool(b_11);
+        print_bool(b_12);
+        print_bool(b_13);
+        print_bool(b_14);
+        print_bool(b_15);
+        while (i < 10) {
+            print(i);
+            i = i + 1;
+        }
+
     }
 }
 

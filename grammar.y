@@ -13,6 +13,7 @@
 #define FALSE 0
 
 int offset = 8;
+int numberOfLabel = 0;
 SymbolTable symbolTable;
 ThreeAddressCode threeAddressCode;
 
@@ -87,7 +88,7 @@ program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations Metho
         }
 
         typeCheck(root);
-        generateIntermediateCode(root, &threeAddressCode, &offset);
+        generateIntermediateCode(root, &threeAddressCode, &offset, &numberOfLabel);
         showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 } ;

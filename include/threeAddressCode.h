@@ -19,7 +19,7 @@ typedef struct threeAddressCode {
 } ThreeAddressCode;
 
 int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode);
-Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset);
+Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset, int* numberOfLabel);
 //void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTable);
 void showThreeAddressCode(ThreeAddressCode threeAddressCode);
 #endif
