@@ -15,11 +15,9 @@ typedef struct instruction{
 
 typedef struct threeAddressCode {
     Queue queue;
-    int numberOfTemporaries; /* TODO: numberOfTemporaries changes in each level */
 } ThreeAddressCode;
 
 int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode);
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset, int* numberOfLabel);
-//void generateAssembler(ThreeAddressCode threeAddressCode, SymbolTable symbolTable);
 void showThreeAddressCode(ThreeAddressCode threeAddressCode);
 #endif
