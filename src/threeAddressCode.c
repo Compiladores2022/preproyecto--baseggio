@@ -272,7 +272,11 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				
 		    	break;
 			case flag_METHOD_DECLARATION:
-				*offset = 8;
+
+				int isExtern = getLSide(node) == NULL;
+
+				if(!isExtern) {
+					*offset = 8;
 
 				Symbol* symbol = getParams(*getSymbol(node));
 				while(symbol) {
@@ -294,6 +298,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				label = constructInstruction(code_LABEL_END_OF_FUNCTION, getSymbol(node), NULL, end_of_function);
                 addInstruction(threeAddressCode, label);
 				assignOffset(getSymbol(node), offset);
+				}
 		    	break;
 			case flag_METHOD_CALL:
 				loadParams(getLSide(node), threeAddressCode, offset, numberOfLabel);

@@ -1,6 +1,10 @@
 Program {
     void print(Int x) extern;
 
+    void print_int(Int x) {
+        
+    }
+
     void print_bool(Bool b) extern;
     
     void main() {
