@@ -131,16 +131,20 @@ void translateEQ(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	*numberOfLabel += 2;
 }
 
-void translateFALSE_CONDITIONAL(FILE* fp, Instruction instruction) {
-
+void translateFALSE_CONDITIONAL(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tmovq $1, %%r11");
+	fprintf(fp, "\n\tcmp  %%r10, %%r11");
+	fprintf(fp, "\n\tjne  .%s", getName(*(instruction.dest)));
 }
 
-void translateJMP(FILE* fp, Instruction instruction) {
-
+void translateJMP(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\tjmp .%s", getName(*(instruction.dest)));
 }
 
-void translateLABEL(FILE* fp, Instruction instruction) {
-
+void translateLABEL(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\n.%s:", getName(*(instruction.dest)));
+	*numberOfLabel += 1;
 }
 
 void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
@@ -220,13 +224,13 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel) {
 			translateEQ(fp, instruction, numberOfLabel);
 			break;
 		case code_FALSE_CONDITIONAL:
-			translateFALSE_CONDITIONAL(fp, instruction);
+			translateFALSE_CONDITIONAL(fp, instruction, numberOfLabel);
 			break;
 		case code_JMP:
-			translateJMP(fp, instruction);
+			translateJMP(fp, instruction, numberOfLabel);
 			break;
 		case code_LABEL:
-			translateLABEL(fp, instruction);
+			translateLABEL(fp, instruction, numberOfLabel);
 			break;
 		case code_LABEL_START_OF_FUNCTION:
 			translateSTART_OF_FUNCTION(fp, instruction);
