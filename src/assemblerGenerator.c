@@ -201,12 +201,8 @@ void translateASSIGNMENT(FILE* fp, Instruction instruction) {
 	}
 }
 
-void translateMINUS(FILE* fp, Instruction instruction) {
-
-}
-
 void translateNEG(FILE* fp, Instruction instruction) {
-
+	
 }
 
 void translateCALL(FILE* fp, Instruction instruction, int* numberOfParameter) {
@@ -303,7 +299,7 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numbe
 			translateASSIGNMENT(fp, instruction);
 			break;
 		case code_MINUS:
-			translateMINUS(fp, instruction);
+			translateSUBSTRACTION(fp, instruction);
 			break;
 		case code_NEG:
 			translateNEG(fp, instruction);

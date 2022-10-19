@@ -54,6 +54,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 		Instruction call;
 		Symbol* start_of_function;
 		Symbol* end_of_function;
+		Symbol* zero;
         char name[16];
 		switch (flag) {
 			case flag_VALUE_INT:
@@ -205,15 +206,16 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 			    return getSymbol(node);
                 break;
 			case flag_MINUS:
-				expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
-			    instruction = constructInstruction(code_MINUS, expression, NULL, getSymbol(node));
-			    addInstruction(threeAddressCode, instruction);
-
-				sprintf(name, "t%d", threeAddressCode->numberOfTemporaries++);
-                setName(getSymbol(node), name);
-
-				assignOffset(getSymbol(node), offset);
-			    return getSymbol(node);
+			zero = constructPtrToEmptySymbol();
+			setName(zero, "0");
+			setValue(zero, 0);
+			expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
+			instruction = constructInstruction(code_MINUS, zero, expression, getSymbol(node));
+			addInstruction(threeAddressCode, instruction);
+			sprintf(name, "t%d", threeAddressCode->numberOfTemporaries++);
+                	setName(getSymbol(node), name);
+                	assignOffset(getSymbol(node), offset);
+			return getSymbol(node);
                 break;
 			case flag_NEG:
 				expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);

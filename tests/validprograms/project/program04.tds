@@ -12,6 +12,7 @@ Program {
         Int x = 0;
         Int y = 1;
         Int z = x + y;
+        Int t_1 = -1;
         print(x + y);
         print(z);
         print(z - z);
