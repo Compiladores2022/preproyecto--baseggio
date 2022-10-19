@@ -3,6 +3,8 @@
 
 #include "threeAddressCode.h"
 
+extern char* filename;
+
 void generateAssembler(ThreeAddressCode threeAddressCode);
 
 #endif

@@ -327,7 +327,9 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numbe
 }
 
 void generateAssembler(ThreeAddressCode threeAddressCode) {
-	FILE* fp = fopen("./output/a.s", "w");
+	char* target = (char*) malloc(100 * sizeof(char));
+	sprintf(target, "./output/%s.s", filename);
+	FILE* fp = fopen(target, "w");
 	if(fp == NULL) {
 		printf("File can't be opened\n");
 		exit(EXIT_FAILURE);
@@ -341,4 +343,6 @@ void generateAssembler(ThreeAddressCode threeAddressCode) {
 		translate(fp, instruction, &numberOfLabel, &numberOfParameter);
 		dequeue(&(threeAddressCode.queue)); // removeHead(&threeAddressCode);
 	}
+	
+	free(target);
 }

@@ -4,8 +4,10 @@
 #include <string.h>
 #include <stdio.h>
 #include "type.h"
+#include "assemblerGenerator.h"
 #include "grammar.tab.h"
 
+char* filename;
 %}
 %x IN_COMMENT
 
@@ -14,7 +16,7 @@
 
 digit     [0-9]
 alpha     [a-zA-Z]
-alpha_num {alpha}|{digit}|"_"
+alpha_num {alpha}|{digit}|"_"	
 bool      "True"|"False"
 keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
@@ -88,11 +90,14 @@ void yyerror(char* s){
 
 int main(int argc,char *argv[]){
 	++argv,--argc;
-	if (argc > 0)
+	if (argc > 0) {
 		yyin = fopen(argv[0],"r");
-	else
+		filename = (char*) malloc(160 * sizeof(char));
+		strcpy(filename, strtok(argv[1], "."));
+		printf("%s\n", filename);
+	} else {
 		yyin = stdin;
-
+	}
 	yyparse();
 
 }

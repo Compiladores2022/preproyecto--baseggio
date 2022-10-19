@@ -75,14 +75,12 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
 
-        //CURRENT LVL OF SYMBOL TABLE: 1
         Symbol* symbol = lookUpSymbol(symbolTable, "main");
         if(!(symbol && isFunction(*symbol))) {
             printf("main function not defined\n");
             exit(EXIT_FAILURE);
         }
-
-        //  printAST(root);
+        
         typeCheck(root);
         generateIntermediateCode(root, &threeAddressCode, &offset, &numberOfLabel);
         showThreeAddressCode(threeAddressCode);
