@@ -151,7 +151,10 @@ void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
 	}
 
 	fprintf(fp, "\n%s:", getName(*(instruction.fstOperand)));
-	fprintf(fp, "\n\tenter $(%d), $0", getOffset(*(instruction.fstOperand)));
+	
+	int m = getOffset(*(instruction.fstOperand)) + (getOffset(*(instruction.fstOperand)) % 16);
+	
+	fprintf(fp, "\n\tenter $(%d), $0", m);
 
 	int numberOfParameter = 1;
 	Symbol* symbol = getParams(*(instruction.fstOperand));
