@@ -161,13 +161,15 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
          ;
 
 Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
-	                               if(addSymbol(&symbolTable, symbol)) {
-                                     ASTNode* lSide = node(symbol);
-                                     $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
-				                         } else {
-                                     printf("Redeclared var\n");
-                                     exit(EXIT_FAILURE);
-				                         }
+				 symbol->global = numberOfLevel(symbolTable) == 1;
+	                         if(addSymbol(&symbolTable, symbol)) {
+                                 	ASTNode* lSide = node(symbol);
+                                 	
+                                 	$$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
+				 } else {
+                                 	printf("Redeclared var\n");
+                                 	exit(EXIT_FAILURE);
+				 }
                                }
            ;
 
@@ -214,16 +216,16 @@ Type : tINT  { $$ = $1; }
      ;
 
 MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-	                                   int isAFunction = isFunction(*symbol);
-	                                   if(isAFunction) {
-                                         symbol = copy(symbol);
-                                         setFlag(symbol, flag_METHOD_CALL);
-                                         ASTNode* n = node(symbol);
-                                         setLSide(n, $3);
-                                         $$ = n;
+	                             int isAFunction = isFunction(*symbol);
+	                             if(isAFunction) {
+                                     	symbol = copy(symbol);
+                                     	setFlag(symbol, flag_METHOD_CALL);
+                                     	ASTNode* n = node(symbol);
+                                     	setLSide(n, $3);
+                                     	$$ = n;
                                      } else {
-                                         printf("%s is not a function\n", symbol->name);
-                                         exit(EXIT_FAILURE);
+                                       	printf("%s is not a function\n", symbol->name);
+                                     	exit(EXIT_FAILURE);
                                      } } ;
 
 %%

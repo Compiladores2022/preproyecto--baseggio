@@ -15,6 +15,8 @@ typedef struct {
 
 int numberOfLocals(SymbolTable symbolTable);
 
+int numberOfLevel(SymbolTable symbolTable);
+
 /* The 'constructSymbolTable' function constructs an empty 'symbolTable'. */
 void constructSymbolTable(SymbolTable* symbolTable);
 

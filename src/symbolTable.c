@@ -10,6 +10,10 @@ int numberOfLocals(SymbolTable symbolTable) {
     return length(symbolTable.peek->queue);
 }
 
+int numberOfLevel(SymbolTable symbolTable) {
+	return symbolTable.levels;
+}
+
 int compareByName(void* s, void* name) {
   Symbol* symbol = (Symbol*) s;
   return strcmp(getName(*symbol), name) == 0;

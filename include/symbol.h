@@ -11,6 +11,7 @@ typedef struct symbol {
     struct symbol* params;
     int offset;
     int isFunction;
+    int global;
 } Symbol;
 
 Flag getFlag(Symbol symbol);
