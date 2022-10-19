@@ -21,7 +21,7 @@ Program
   
   Int get_int() extern;
   
-  void print_int(Int i) extern;
+  void print(Int i) extern;
   
   void main()
   {
@@ -39,11 +39,11 @@ Program
 
       	if (0 < 1) then
         {
-       		print_int(0);
+       		print(0);
         }
       	else 
         {
-        	return print_int(inc(1));
+        	return print(inc(1));
         }
   }
 }

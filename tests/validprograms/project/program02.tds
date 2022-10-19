@@ -14,25 +14,25 @@ Program {
 
     Int get_int() extern;
 
-    void print_int(Int x) extern;
+    void print(Int x) extern;
 
 
     void foo_3() {
-    	print_int(123456789);
+    	print(123456789);
     }
 
     void main() {
         Int  y = get_int();
         Int x = 0;
-        while(True) { print_int(0); }
+        while(True) { print(0); }
         if ( y == 0 ) then {
-        	print_int(1);
+        	print(1);
         } else {
 		if ( y == 1 ) then {
-			print_int(2);
+			print(2);
 		} else {
 			if ( y == 2 ) then {
-				print_int(4);
+				print(4);
 			}
 		}
 	}

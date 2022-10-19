@@ -1,6 +1,6 @@
 Program {
     Int get_int() extern;
-    void print_int(Int x) extern;
+    void print(Int x) extern;
 
     Int gcd(Int n, Int m) {
         Int gcd = 1;
@@ -19,7 +19,7 @@ Program {
     void main() {
         Int x = get_int();
         Int y = get_int();
-        print_int(gcd(x, y));
+        print(gcd(x, y));
         if(1 < 0) then {
             Int x = get_int();
         }
