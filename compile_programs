@@ -2,6 +2,6 @@
 exe="$1"
 pathToTests="$2"
 for file in "$pathToTests"*.tds; do
-    printf "compiling: ${file}\n"	
-    "$exe" "${file}"
+    printf "compiling: $(basename ${file})\n"	
+    "$exe" "${file}" $(basename ${file})
 done
