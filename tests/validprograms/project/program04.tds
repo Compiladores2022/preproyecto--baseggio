@@ -9,15 +9,23 @@ Program {
     
     void main() {
 
-        Int x = 0;
-        Int y = 1;
-        Int z = x + y;
-        Int t_1 = -1;
-        print(x + y);
-        print(z);
-        print(z - z);
-        print((x + y) - z);
-        print(foo(x, y, z));
+//        Int x = 0;
+//        Int y = 1;
+//        Int z = x + y;
+//        Int t_1 = -1;
+        Bool b_1 = True;	// expected: 1
+        Bool b_2 = !False;	// expected: 1
+        Bool b_3 = !b_1;	// expected: 0
+        Bool b_4 = !b_3;	// expected: 1
+//        print(x + y);
+//        print(z);
+//        print(z - z);
+//        print((x + y) - z);
+//        print(foo(x, y, z));
+        print_bool(b_1);
+        print_bool(b_2);
+        print_bool(b_3);
+        print_bool(b_4);
 
         /*
         Int i = 0;

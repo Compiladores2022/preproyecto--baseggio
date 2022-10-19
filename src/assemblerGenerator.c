@@ -201,8 +201,17 @@ void translateASSIGNMENT(FILE* fp, Instruction instruction) {
 	}
 }
 
-void translateNEG(FILE* fp, Instruction instruction) {
+void translateNEG(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\tmovq $1, %%r10");
+	fprintf(fp, "\n\tcmp  %s, %%r10", translateOperand(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tje  .L%d", *numberOfLabel);
+	fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	fprintf(fp, "\n\tjmp  .L%d", *numberOfLabel + 1);
+	fprintf(fp, "\n\n.L%d:", *numberOfLabel);
+	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	fprintf(fp, "\n\n.L%d:", *numberOfLabel + 1);
 	
+	*numberOfLabel += 2;
 }
 
 void translateCALL(FILE* fp, Instruction instruction, int* numberOfParameter) {
@@ -302,7 +311,7 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numbe
 			translateSUBSTRACTION(fp, instruction);
 			break;
 		case code_NEG:
-			translateNEG(fp, instruction);
+			translateNEG(fp, instruction, numberOfLabel);
 			break;
 		case code_CALL:
 			translateCALL(fp, instruction, numberOfParameter);

@@ -55,7 +55,7 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 
 "==" { return EQT; }
 
-[+*/%=;(){}<>,]|"-" { return *yytext; }
+[+*/%=;(){}<>,!]|"-" { return *yytext; }
                                   
 "&&"     { return AND; }
        
