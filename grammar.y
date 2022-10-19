@@ -58,23 +58,18 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol);
 %type <n> V
 %type <t> Type
 
+%left OR
+%left AND
+%right '!'
+%nonassoc '<'
+%nonassoc '>'
+%nonassoc EQT
 %left '+'
 %left '-'
 %left '*'
 %left '/'
 %left '%'
 %right UMINUS
-
-%right '='
-
-%left OR
-%left AND
-%right '!'
-
-%left '<'
-%left '>'
-%left EQT
-
 %%
 
 program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
