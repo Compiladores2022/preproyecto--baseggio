@@ -83,7 +83,6 @@ program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations Metho
         
         typeCheck(root);
         generateIntermediateCode(root, &threeAddressCode, &offset, &numberOfLabel);
-        showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 } ;
 
