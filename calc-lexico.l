@@ -92,12 +92,11 @@ int main(int argc,char *argv[]){
 	++argv,--argc;
 	if (argc > 0) {
 		yyin = fopen(argv[0],"r");
-		filename = (char*) malloc(160 * sizeof(char));
+		filename = (char*) malloc(100 * sizeof(char));
 		strcpy(filename, strtok(argv[1], "."));
-		printf("%s\n", filename);
 	} else {
 		yyin = stdin;
 	}
 	yyparse();
-
+	free(filename);
 }
