@@ -58,6 +58,8 @@ char* iCodeToString(Code code) {
             return "call";
         case code_LOAD:
             return "load";
+        case code_GLOBAL_VAR_DECL:
+            return "global var declaration";
         default:
             return "NRF";
     }

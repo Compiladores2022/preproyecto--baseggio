@@ -23,6 +23,7 @@ typedef enum {
     ,code_NEG
     ,code_CALL
     ,code_LOAD
+    ,code_GLOBAL_VAR_DECL
 } Code;
 
 int iCodeIsABinaryOperator(Code code);
