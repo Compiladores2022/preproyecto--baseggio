@@ -1,0 +1,45 @@
+Program {
+
+	Int aux = 10;
+	Int x = 3 * 10 * 5;
+
+	Int f(Int x) {
+		return x;
+	}
+	
+	void print(Int x) extern;
+	
+	Int main() {
+		Int x1 = f(10) + 5;
+		Int x2 = 5 + f(10);
+		Int x3 = 5 - f(10);
+		Int x4 = f(10) - 5;
+		Int x5 = f(10) * 5;
+		Int x6 = 5 * f(10);
+		Int x7 = 5 / f(10);
+		Int x8 = f(10) / 5;
+		Int x9 = 5 % f(10);
+		Int x0 = f(10) % 5;
+		Int t1 = -f(10); // -10
+		Int t2 = -(f(10) + x1); // -25
+		
+		print(f(10)); // 10
+		print(x1); // 15
+		print(x2); // 15
+		print(x3); // -5
+		print(x4); // 5
+		print(x5); // 50
+		print(x6); // 50
+		print(x7); // 0
+		print(x8); // 2
+		print(x9); // 5
+		print(x0); // 0
+		print(t1); // -10
+		print(t2); // -25
+		print(5 + 5); // 10
+		print(f(5) + f(5)); // 10
+		print(f(0) + f(1) + f(2) + f(3) + f(4) + f(5) + f(6) + f(7) + f(8) + f(9) + f(10));
+		print(x);
+		return 0;
+	}
+}
