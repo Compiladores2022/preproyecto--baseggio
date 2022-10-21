@@ -231,11 +231,7 @@ void translateCALL(FILE* fp, Instruction instruction, int* numberOfParameter) {
 
 void translateLOAD(FILE* fp, Instruction instruction, int* numberOfParameter) {
 	char* from = (char*) malloc(16 * sizeof(char));
-	if(isFunction(*(instruction.dest))) {
-		sprintf(from, "%%rax");
-	} else {
-		sprintf(from, "%s", translateOperand(*(instruction.dest)));
-	}
+	sprintf(from, "%s", translateOperand(*(instruction.dest)));
 
 	switch (*numberOfParameter) {
 		case 1:
