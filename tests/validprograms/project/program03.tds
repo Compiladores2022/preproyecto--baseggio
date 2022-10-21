@@ -3,25 +3,16 @@ Program {
     void print(Int x) extern;
 
     Int gcd(Int n, Int m) {
-        Int gcd = 1;
-        Int d   = 2;
-        if(n == 0 || m == 0) then {
-            return 2147483647;
+        if(m == 0) then {
+        	return n;
+        } else {
+        	return gcd(m, (n % m));
         }
-
-        while((n % d) == 0 && (m % d) == 0) {
-            gcd = d;
-        }
-
-        return gcd;
     }
 
     void main() {
         Int x = get_int();
         Int y = get_int();
         print(gcd(x, y));
-        if(1 < 0) then {
-            Int x = get_int();
-        }
     }
 }
