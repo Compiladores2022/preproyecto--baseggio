@@ -26,6 +26,7 @@ typedef enum {
     ,flag_VALUE_BOOL
     ,flag_RETURN
     ,flag_LABEL
+    ,flag_GLOBAL_VAR_DECL
 } Flag;
 
 char* flagToString(Flag flag);

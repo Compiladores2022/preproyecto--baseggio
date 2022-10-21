@@ -50,6 +50,8 @@ char* flagToString(Flag flag) {
 		    return "method call";
 	    case flag_PARAM:
 		    return "param";
+	    case flag_GLOBAL_VAR_DECL:
+	    	    return "global var declaration";
 	    default:
 		    return "NRF";
 	}
