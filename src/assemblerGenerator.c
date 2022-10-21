@@ -5,7 +5,10 @@
 
 char* translateOperand(Symbol operand) {
 	char* result = (char*) malloc(16 * sizeof(char));
-	if(isAConstant(getFlag(operand))) {
+	
+	if(isFunction(operand)) {
+		sprintf(result, "%%rax");
+	} else if(isAConstant(getFlag(operand))) {
 		sprintf(result, "$%d", getValue(operand));
 	} else {
 		sprintf(result, "-%d(%%rbp)", getOffset(operand));
@@ -196,7 +199,10 @@ void translateRETURN(FILE* fp, Instruction instruction) {
 }
 
 void translateASSIGNMENT(FILE* fp, Instruction instruction) {
-	if(isAConstant(getFlag(*(instruction.fstOperand)))) {
+
+	if(isFunction(*(instruction.fstOperand))) {
+		fprintf(fp, "\n\tmovq %%rax, -%d(%%rbp)", getOffset(*(instruction.dest)));
+	} else if(isAConstant(getFlag(*(instruction.fstOperand)))) {
 		fprintf(fp, "\n\tmovq $%d, -%d(%%rbp)", getValue(*(instruction.fstOperand)), getOffset(*(instruction.dest)));
 	} else {
 		fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", getOffset(*(instruction.fstOperand)));
