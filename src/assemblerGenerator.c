@@ -45,8 +45,8 @@ void translateDIVISION(FILE* fp, Instruction instruction) {
 
 void translateMOD(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tmovq  $0, %%rdx");
-	fprintf(fp, "\n\tmovq  %s, %%rax", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq  %s, %%r10", translateOperand(*(instruction.sndOperand)));
+	fprintf(fp, "\n\tmovq  %s, %%rax", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tidivq %%r10");
 	fprintf(fp, "\n\tmovq  %%rdx, -%d(%%rbp)", getOffset(*(instruction.dest)));
 }
