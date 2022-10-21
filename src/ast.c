@@ -64,8 +64,8 @@ int thereIsAtLeastOneReturn(ASTNode* node) {
 
 void checkParams(Symbol* fParams, ASTNode* rParams, char* functionName) {
     if(fParams && rParams) {
-        Type fParamType = getType(*fParams);
-	    Type rParamType = getType(*(rParams->lSide->symbol));
+    	Type fParamType = getType(*fParams);
+	Type rParamType = getType(*(rParams->lSide->symbol));
 	if(fParamType == rParamType) {
 	    checkParams(fParams->params, rParams->rSide, functionName);
 	} else {
@@ -193,40 +193,40 @@ Type typeCheck(ASTNode* node) {
 			    typeCheckAssignment(typeCheck(node->lSide), typeCheck(node->rSide), getName(*(node->lSide->symbol)));
 			    break;
 			case flag_SEMICOLON:
-		    	typeCheck(node->lSide);
-			    typeCheck(node->rSide);
-			    break;
+			    	typeCheck(node->lSide);
+				typeCheck(node->rSide);
+				break;
 			case flag_LT:
 			    typeCheckBinaryOperation(flag_LT, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
 			    setType(node->symbol, TYPE_BOOL);
 			    return TYPE_BOOL;
 			case flag_GT:
-			    typeCheckBinaryOperation(flag_GT, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
-		    	setType(node->symbol, TYPE_BOOL);
-		    	return TYPE_BOOL;
+				typeCheckBinaryOperation(flag_GT, typeCheck(node->lSide), typeCheck(node->rSide), TYPE_INT);
+		    		setType(node->symbol, TYPE_BOOL);
+		    		return TYPE_BOOL;
 			case flag_EQT:
-			    typeCheckEqual(typeCheck(node->lSide), typeCheck(node->rSide));
-		    	setType(node->symbol, TYPE_BOOL);
-		    	return TYPE_BOOL;
+				typeCheckEqual(typeCheck(node->lSide), typeCheck(node->rSide));
+		    		setType(node->symbol, TYPE_BOOL);
+		    		return TYPE_BOOL;
 			case flag_MINUS:
-			    typeCheckUnaryOperation(flag_MINUS, typeCheck(node->lSide), TYPE_INT);
-		    	setType(node->symbol, TYPE_INT);
-		    	return TYPE_INT;
+				typeCheckUnaryOperation(flag_MINUS, typeCheck(node->lSide), TYPE_INT);
+		    		setType(node->symbol, TYPE_INT);
+		    		return TYPE_INT;
 			case flag_NEG:
-			    typeCheckUnaryOperation(flag_NEG, typeCheck(node->lSide), TYPE_BOOL);
-			    setType(node->symbol, TYPE_BOOL);
-                return TYPE_BOOL;
+			    	typeCheckUnaryOperation(flag_NEG, typeCheck(node->lSide), TYPE_BOOL);
+			    	setType(node->symbol, TYPE_BOOL);
+                		return TYPE_BOOL;
 			case flag_IF:
-		    	thenBlock = node->rSide;
-		    	checkIfIsABoolExpression(typeCheck(node->lSide));
-		    	typeCheck(thenBlock);
+		    		thenBlock = node->rSide;
+			    	checkIfIsABoolExpression(typeCheck(node->lSide));
+			    	typeCheck(thenBlock);
 		    	break;
 			case flag_IF_ELSE:
-			    thenBlock = node->mSide;
-		    	elseBlock = node->rSide;
-		    	checkIfIsABoolExpression(typeCheck(node->lSide));
-		    	typeCheck(thenBlock);
-		    	typeCheck(elseBlock);
+				thenBlock = node->mSide;
+			    	elseBlock = node->rSide;
+			    	checkIfIsABoolExpression(typeCheck(node->lSide));
+			    	typeCheck(thenBlock);
+			    	typeCheck(elseBlock);
 		    	break;
 			case flag_WHILE:
 			    block = node->rSide;
@@ -234,18 +234,19 @@ Type typeCheck(ASTNode* node) {
 			    typeCheck(block);
 		    	break;
 			case flag_METHOD_DECLARATION:
-			    block      = node->lSide;
-			    returnType = getType(*(node->symbol));
-		    	checkMethodDeclaration(block, returnType, getName(*(node->symbol)));
-		    	typeCheck(block);
-		    	break;
+				block      = node->lSide;
+				returnType = getType(*(node->symbol));
+		    		checkMethodDeclaration(block, returnType, getName(*(node->symbol)));
+		    		typeCheck(block);
+		    		break;
 			case flag_METHOD_CALL:
-			    fParams = node->symbol->params;
-		    	rParams = node->lSide;
-			    checkParams(fParams, rParams, getName(*(node->symbol)));
-			    return getType(*(node->symbol));
+				fParams = node->symbol->params;
+			    	rParams = node->lSide;
+			    	typeCheck(rParams);
+				checkParams(fParams, rParams, getName(*(node->symbol)));
+				return getType(*(node->symbol));
 			default:
-		    	break;
+		    		break;
 		}
     }
 
