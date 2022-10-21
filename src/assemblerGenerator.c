@@ -225,6 +225,7 @@ void translateNEG(FILE* fp, Instruction instruction, int* numberOfLabel) {
 
 void translateCALL(FILE* fp, Instruction instruction, int* numberOfParameter) {
 	fprintf(fp, "\n\tcall %s", getName(*(instruction.dest)));
+	fprintf(fp, "\n\tmovq %%rax, -%d(%%rbp)", getOffset(*(instruction.fstOperand)));
 	*numberOfParameter = 1;
 }
 

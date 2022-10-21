@@ -339,9 +339,13 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 		    	break;
 			case flag_METHOD_CALL:
 				loadParams(getLSide(node), threeAddressCode, offset, numberOfLabel);
-				call = constructInstruction(code_CALL, NULL, NULL, getSymbol(node));
+				
+				Symbol* temp = constructPtrToEmptySymbol();
+				assignOffset(temp, offset);
+				
+				call = constructInstruction(code_CALL, temp, NULL, getSymbol(node));
 				addInstruction(threeAddressCode, call);
-                return getSymbol(node);
+                		return temp;
                 break;
             default:
                 break;
