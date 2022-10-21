@@ -206,9 +206,12 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 			    return getSymbol(node);
                 break;
 			case flag_MINUS:
+			
 			zero = constructPtrToEmptySymbol();
 			setName(zero, "0");
 			setValue(zero, 0);
+			setFlag(zero, flag_VALUE_INT);
+			
 			expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
 			instruction = constructInstruction(code_MINUS, zero, expression, getSymbol(node));
 			addInstruction(threeAddressCode, instruction);

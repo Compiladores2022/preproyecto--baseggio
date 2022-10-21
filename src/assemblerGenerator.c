@@ -52,7 +52,7 @@ void translateMOD(FILE* fp, Instruction instruction) {
 }
 
 void translateOR(FILE* fp, Instruction instruction, int* numberOfLabel) {
-	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
+    fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
     fprintf(fp, "\n\tmovq $1, %%r11");
     fprintf(fp, "\n\tcmp %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
