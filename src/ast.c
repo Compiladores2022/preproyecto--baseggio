@@ -34,6 +34,20 @@ int isLeave(ASTNode* node) {
     return !node->lSide && !node->mSide && !node->rSide;
 }
 
+int expressionIsOnlyFormedByConstants(ASTNode* node) {
+	if(node) {
+		if(isLeave(node)) {
+			return isAConstant(getFlag(*getSymbol(node)));
+		}
+			
+		return  expressionIsOnlyFormedByConstants(getLSide(node)) &&
+			expressionIsOnlyFormedByConstants(getMSide(node)) &&
+			expressionIsOnlyFormedByConstants(getRSide(node));
+	}
+	
+	return TRUE;
+}
+
 void checkReturn(ASTNode* node, Type expected) {
     if(node) {
         Flag flag =  getFlag(*(node->symbol));

@@ -160,16 +160,22 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
          | Block                               { $$ = $1; }
          ;
 
-Declaration: Type ID '=' E ';' { Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
-				 symbol->global = numberOfLevel(symbolTable) == 1;
-	                         if(addSymbol(&symbolTable, symbol)) {
-                                 	ASTNode* lSide = node(symbol);
-                                 	
-                                 	$$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
-				 } else {
-                                 	printf("Redeclared var\n");
-                                 	exit(EXIT_FAILURE);
-				 }
+Declaration: Type ID '=' E ';' {
+				if(numberOfLevel(symbolTable) == 1 
+				&& !expressionIsOnlyFormedByConstants($4)) {
+					printf("error: initializer element is not constant\n");
+					printf("%s %s = %s\n", typeToString($1), $2, getName(*getSymbol($4)));
+					exit(EXIT_FAILURE);
+				} 
+				Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
+				symbol->global = numberOfLevel(symbolTable) == 1;
+	                        if(addSymbol(&symbolTable, symbol)) {
+                                	ASTNode* lSide = node(symbol);
+                               		$$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
+				} else {
+                                	printf("Redeclared var\n");
+                                	exit(EXIT_FAILURE);
+				}
                                }
            ;
 
