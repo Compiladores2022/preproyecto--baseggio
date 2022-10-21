@@ -11,7 +11,11 @@ char* translateOperand(Symbol operand) {
 	} else if(isAConstant(getFlag(operand))) {
 		sprintf(result, "$%d", getValue(operand));
 	} else {
-		sprintf(result, "-%d(%%rbp)", getOffset(operand));
+		if(isGlobal(operand)) {
+			sprintf(result, "%s(%%rip)", getName(operand));		
+		} else {
+			sprintf(result, "-%d(%%rbp)", getOffset(operand));
+		}
 	}
 
 	return result;
@@ -259,6 +263,11 @@ void translateLOAD(FILE* fp, Instruction instruction, int* numberOfParameter) {
 
 }
 
+void translateGLOBAL_VAR_DECL(FILE* fp, Instruction instruction) {
+	fprintf(fp, "\n%s:", getName(*(instruction.dest)));
+	fprintf(fp, "\n\t.long %d", getValue(*(instruction.fstOperand)));
+}
+
 void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numberOfParameter) {
 	Code iCode = instruction.code; //getICode(instruction);
 	switch (iCode) {
@@ -324,6 +333,9 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numbe
 			break;
 		case code_LOAD:
 			translateLOAD(fp, instruction, numberOfParameter);
+			break;
+		case code_GLOBAL_VAR_DECL:
+			translateGLOBAL_VAR_DECL(fp, instruction);
 			break;
 		default:
 			printf("Instruction not recognized\n");
