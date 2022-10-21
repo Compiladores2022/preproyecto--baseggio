@@ -80,6 +80,10 @@ int isFunction(Symbol symbol) {
     return symbol.isFunction;
 }
 
+int isGlobal(Symbol symbol) {
+	return symbol.global;
+}
+
 void showSymbol(Symbol symbol) {
     printf("FLAG: %d, NAME: %s, VALUE: %d\n", symbol.flag, symbol.name, symbol.value);
 }

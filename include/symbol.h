@@ -34,6 +34,7 @@ Symbol* constructPtrToEmptySymbol();
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);
 Symbol* copy(Symbol* symbol);
 int isFunction(Symbol symbol);
+int isGlobal(Symbol symbol);
 
 void showSymbol(Symbol symbol);
 #endif
