@@ -154,7 +154,11 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
          | IF '(' E ')' THEN Block             { $$ = composeTree(flag_IF, "if-then", $3, NULL, $6); }
          | IF '(' E ')' THEN Block ELSE Block  { $$ = composeTree(flag_IF_ELSE, "if-then-else", $3, $6, $8); }
          | WHILE E Block                       { $$ = composeTree(flag_WHILE, "while", $2, NULL, $3); }
-         | RETURN ';'                          { $$ = composeTree(flag_RETURN, "return", NULL, NULL, NULL); }
+         | RETURN ';'                          { 
+         					Symbol* symbol = constructPtrToEmptySymbol();
+         					setType(symbol, TYPE_VOID);
+         					ASTNode* lSide = node(symbol);
+         					$$ = composeTree(flag_RETURN, "return", lSide, NULL, NULL); }
          | RETURN E ';'                        { $$ = composeTree(flag_RETURN, "return", $2, NULL, NULL); }
          | ';'                                 { $$ = composeTree(flag_SEMICOLON, ";", NULL, NULL, NULL); }
          | Block                               { $$ = $1; }
