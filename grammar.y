@@ -109,9 +109,12 @@ MethodDeclaration: Method
                  ;
 
 Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, TYPE_VOID, $2, 0);
-                                 if(addSymbol(&symbolTable, symbol)) {
+                                 if (addSymbol(&symbolTable, symbol)) {
                                      symbol->isFunction = TRUE;
-                                     symbol->params = $4;
+                                     
+                                     if (strcmp(getName(*symbol), "main") != 0) {
+                                     	symbol->params = $4;
+                                     }
                                      $$ = symbol;
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
@@ -120,7 +123,10 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
       | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, $1, $2, 0);
                                  if(addSymbol(&symbolTable, symbol)) {
                                      symbol->isFunction = TRUE;
-                                     symbol->params = $4;
+                                     
+                                     if (strcmp(getName(*symbol), "main") != 0) {
+                                     	symbol->params = $4;
+                                     }
                                      $$ = symbol;
                                  } else {
                                      printf("Redeclared identifier: %s\n", $2);
