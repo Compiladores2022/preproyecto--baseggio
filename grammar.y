@@ -149,6 +149,10 @@ lStatements: { $$ = NULL; }
            ;
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
+			  if (isFunction(*symbol)) {
+			  	printf("ERROR: %s is a function.\n");
+			  	exit(EXIT_FAILURE);
+			  }
 	                  ASTNode* lSide = node(symbol);
                           $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3); }
 	 | E ';'                               { $$ = $1; }
