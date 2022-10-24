@@ -59,7 +59,7 @@ void checkReturn(ASTNode* node, Type expected) {
             }
         }
         
-	    checkReturn(node->lSide, expected);
+	checkReturn(node->lSide, expected);
         checkReturn(node->mSide, expected);
         checkReturn(node->rSide, expected);
     }
@@ -135,9 +135,9 @@ void checkMethodDeclaration(ASTNode* block, Type returnType, char* name) {
     int hasReturnType = returnType != TYPE_VOID;
     int isExtern      = block == NULL;
     if(!isExtern) {
-        if(hasReturnType && thereIsAtLeastOneReturn(block)) {
-            checkReturn(block, returnType);
-        } else if(hasReturnType) {
+    	if(thereIsAtLeastOneReturn(block)) {
+        	checkReturn(block, returnType);
+    	} else if(hasReturnType) {
             printf("return statement is missing in %s function\n", name);
 	    exit(EXIT_FAILURE);
         }

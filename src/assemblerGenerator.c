@@ -257,7 +257,6 @@ void translateGLOBAL_VAR_DECL(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\t.text");
 	fprintf(fp, "\n\t.globl %s", getName(*(instruction.dest)));
 	fprintf(fp, "\n\t.data");
-//	fprintf(fp, "\n\t.align 16");
 	fprintf(fp, "\n%s:", getName(*(instruction.dest)));
 	fprintf(fp, "\n\t.long %d", getValue(*(instruction.fstOperand)));
 }
