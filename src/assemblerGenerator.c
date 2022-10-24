@@ -201,7 +201,8 @@ void translateRETURN(FILE* fp, Instruction instruction) {
 }
 
 void translateASSIGNMENT(FILE* fp, Instruction instruction) {
-	fprintf(fp, "\n\tmovq %s, %s", translateOperand(*(instruction.fstOperand)), translateOperand(*(instruction.dest)));
+	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tmovq %%r10, %s", translateOperand(*(instruction.dest)));
 }
 
 void translateNEG(FILE* fp, Instruction instruction, int* numberOfLabel) {
