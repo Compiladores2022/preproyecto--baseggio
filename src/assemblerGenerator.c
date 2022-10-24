@@ -193,7 +193,7 @@ void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
 
 void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tleave");
-	fprintf(fp, "\n\tret\n");
+	fprintf(fp, "\n\tret");
 }
 
 void translateRETURN(FILE* fp, Instruction instruction) {
@@ -356,6 +356,8 @@ void generateAssembler(ThreeAddressCode threeAddressCode) {
 		translate(fp, instruction, &numberOfLabel, &numberOfParameter);
 		dequeue(&(threeAddressCode.queue)); // removeHead(&threeAddressCode);
 	}
+	
+	fprintf(fp, "\n");
 	
 	free(target);
 }
