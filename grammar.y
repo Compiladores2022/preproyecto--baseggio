@@ -83,6 +83,7 @@ program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations Metho
         
         typeCheck(root);
         generateIntermediateCode(root, &threeAddressCode, &offset, &numberOfLabel);
+        //showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 } ;
 
@@ -165,7 +166,6 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
          ;
 
 Declaration: Type ID '=' E ';' {
-
 				if(numberOfLevel(symbolTable) == 1 
 				&& !expressionIsOnlyFormedByConstants($4)) {
 					printf("error: initializer element is not constant\n");
@@ -193,6 +193,10 @@ Declaration: Type ID '=' E ';' {
            ;
 
 E: ID                 { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1); 
+			if(isFunction(*symbol)) {
+				printf("ERROR: %s is a function.\n", getName(*symbol));
+				exit(EXIT_FAILURE);
+			}
                         ASTNode* n = node(symbol);
                         $$ = n;  }
  | MethodCall         { $$ = $1; }
