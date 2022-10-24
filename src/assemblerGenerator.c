@@ -153,10 +153,8 @@ void translateLABEL(FILE* fp, Instruction instruction, int* numberOfLabel) {
 }
 
 void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
-	if( strcmp(getName(*(instruction.fstOperand)), "main") == 0 ) {
-		fprintf(fp, "\n\n\t.globl main");
-	}
-
+	fprintf(fp, "\n\t.text");
+	fprintf(fp, "\n\t.globl %s", getName(*(instruction.fstOperand)));
 	fprintf(fp, "\n%s:", getName(*(instruction.fstOperand)));
 	
 	int m = getOffset(*(instruction.fstOperand)) + (getOffset(*(instruction.fstOperand)) % 16);
@@ -195,7 +193,7 @@ void translateSTART_OF_FUNCTION(FILE* fp, Instruction instruction) {
 
 void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tleave");
-	fprintf(fp, "\n\tret");
+	fprintf(fp, "\n\tret\n");
 }
 
 void translateRETURN(FILE* fp, Instruction instruction) {
@@ -203,15 +201,7 @@ void translateRETURN(FILE* fp, Instruction instruction) {
 }
 
 void translateASSIGNMENT(FILE* fp, Instruction instruction) {
-
-	if(isFunction(*(instruction.fstOperand))) {
-		fprintf(fp, "\n\tmovq %%rax, -%d(%%rbp)", getOffset(*(instruction.dest)));
-	} else if(isAConstant(getFlag(*(instruction.fstOperand)))) {
-		fprintf(fp, "\n\tmovq $%d, -%d(%%rbp)", getValue(*(instruction.fstOperand)), getOffset(*(instruction.dest)));
-	} else {
-		fprintf(fp, "\n\tmovq -%d(%%rbp), %%r10", getOffset(*(instruction.fstOperand)));
-		fprintf(fp, "\n\tmovq %%r10, -%d(%%rbp)", getOffset(*(instruction.dest)));
-	}
+	fprintf(fp, "\n\tmovq %s, %s", translateOperand(*(instruction.fstOperand)), translateOperand(*(instruction.dest)));
 }
 
 void translateNEG(FILE* fp, Instruction instruction, int* numberOfLabel) {
@@ -264,6 +254,10 @@ void translateLOAD(FILE* fp, Instruction instruction, int* numberOfParameter) {
 }
 
 void translateGLOBAL_VAR_DECL(FILE* fp, Instruction instruction) {
+	fprintf(fp, "\n\t.text");
+	fprintf(fp, "\n\t.globl %s", getName(*(instruction.dest)));
+	fprintf(fp, "\n\t.data");
+//	fprintf(fp, "\n\t.align 16");
 	fprintf(fp, "\n%s:", getName(*(instruction.dest)));
 	fprintf(fp, "\n\t.long %d", getValue(*(instruction.fstOperand)));
 }
@@ -345,6 +339,7 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numbe
 }
 
 void generateAssembler(ThreeAddressCode threeAddressCode) {
+
 	char* target = (char*) malloc(100 * sizeof(char));
 	sprintf(target, "./output/%s.s", filename);
 	FILE* fp = fopen(target, "w");
