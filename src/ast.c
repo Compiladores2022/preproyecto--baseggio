@@ -48,20 +48,20 @@ int expressionIsOnlyFormedByConstants(ASTNode* node) {
 	return TRUE;
 }
 
-void checkReturn(ASTNode* node, Type expected) {
+void checkReturn(ASTNode* node, Type expected, const char* functionName) {
     if(node) {
         Flag flag =  getFlag(*(node->symbol));
         if(flag == flag_RETURN) {
             Type returnType = typeCheck(node->lSide);
             if(returnType != expected) {
-                printf("%s was expected in return statement\n", typeToString(expected));
+                printf("%s was expected in return statement in %s function\n", typeToString(expected), functionName);
 		        exit(EXIT_FAILURE);
             }
         }
         
-	checkReturn(node->lSide, expected);
-        checkReturn(node->mSide, expected);
-        checkReturn(node->rSide, expected);
+	checkReturn(node->lSide, expected, functionName);
+        checkReturn(node->mSide, expected, functionName);
+        checkReturn(node->rSide, expected, functionName);
     }
 }
 
@@ -136,7 +136,7 @@ void checkMethodDeclaration(ASTNode* block, Type returnType, char* name) {
     int isExtern      = block == NULL;
     if(!isExtern) {
     	if(thereIsAtLeastOneReturn(block)) {
-        	checkReturn(block, returnType);
+        	checkReturn(block, returnType, name);
     	} else if(hasReturnType) {
             printf("return statement is missing in %s function\n", name);
 	    exit(EXIT_FAILURE);
