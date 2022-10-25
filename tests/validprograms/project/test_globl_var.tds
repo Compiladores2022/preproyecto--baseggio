@@ -1,0 +1,9 @@
+Program {
+	Int x = 10;
+
+	void print(Int x) extern;
+
+	void main() {
+		print(x);
+	}
+}

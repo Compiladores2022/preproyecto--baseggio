@@ -1,0 +1,22 @@
+Program {
+
+void print(Int x) extern;
+
+void main() {
+	Int x1 = 0 + 1;
+	Int x2= 1 + 0;
+	Int x3 = x1 + 1;
+	Int x4 = 1 + x2;
+	Int x5 = 0 + 1 + 2 + 3;
+	Int x6 = x1 + x2 + x3 + x4;
+	Int x7 = 0 + x1 + 1 + x2;
+	print(x1); // 1
+	print(x2); // 1
+	print(x3); // 2
+	print(x4); // 2
+	print(x5); // 6
+	print(x6); // 6
+	print(x7); // 3
+}
+
+}

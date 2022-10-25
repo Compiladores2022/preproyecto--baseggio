@@ -1,0 +1,21 @@
+Program {
+	void print(Int x) extern;
+
+	void main() {
+		Int x0 = -1;
+		Int x1 = -2;
+		Int x2 = -(1 * 2);
+		Int x3 = --1;
+		Int x4 = -(-1);
+		Int x5 = -(x0 + x1);
+		Int x6 = -(x0  - x1);
+
+		print(x0); // -1
+		print(x1); // -2
+		print(x2); // -2
+		print(x3); // 1
+		print(x4); // 1
+		print(x5); // 3
+		print(x6); // -1
+	}
+}

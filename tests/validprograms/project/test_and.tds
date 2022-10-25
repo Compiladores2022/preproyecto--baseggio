@@ -1,0 +1,21 @@
+Program {
+	void print(Bool b) extern;
+
+	void main() {
+		Bool b0 = True && True;
+		Bool b1 = True && False;
+		Bool b2 = False && True;
+		Bool b3 = False && False;
+		Bool b4 = True && True && True && False;
+		Bool b5 = False && False && False && True;
+		Bool b6 = False && False && False && False;
+
+		print(b0); // 1
+		print(b1); // 0
+		print(b2); // 0
+		print(b3); // 0
+		print(b4); // 0
+		print(b5); // 0
+		print(b6); // 0
+	}
+}

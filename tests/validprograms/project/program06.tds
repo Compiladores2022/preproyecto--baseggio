@@ -10,17 +10,18 @@ Program {
 	void print(Bool b) extern;
 	
 	Int main() {
-		Bool b1 = f(True);
-		Bool b2 = f(False);
-		Bool b3 = f(b1) || f(b2);
-		Bool b4 = f(b2) && f(b3);
-		Bool b5 = !f(True);
-		print(b1); // 1
-		print(b2); // 0
-		print(b3); // 1
+		//Bool b1 = f(True);
+		//Bool b2 = f(False);
+		//Bool b3 = f(b1) || f(b2);
+		//Bool b4 = f(b2) && f(b3);
+		//Bool b5 = !f(True);
+		//print(b1); // 1
+		//print(b2); // 0
+		/*print(b3); // 1
 		print(b4); // 0
-		print(!(True));
-		print(!(False));
+		print(!(True)); // 0
+		print(!(False)); // 1 */
+		print(True);
 		return 0;
 	}
 }

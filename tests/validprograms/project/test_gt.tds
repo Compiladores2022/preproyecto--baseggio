@@ -1,0 +1,19 @@
+Program {
+	void print(Bool b) extern;
+
+	void main() {
+		Bool b0 = 1 > 0;
+		Bool b1 = 0 > 1;
+		Bool b2 = 1 > 1;
+		Bool b3 = -1 > 0;
+		Bool b4 = -2 > 1;
+		Bool b5 = 1 > -1;
+
+		print(b0); // 1
+		print(b1); // 0
+		print(b2); // 0
+		print(b3); // 0
+		print(b4); // 0
+		print(b5); // 1
+	}
+}

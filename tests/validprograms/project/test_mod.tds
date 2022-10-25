@@ -1,0 +1,22 @@
+Program {
+
+	void print(Int x) extern;
+
+	void main() {
+		Int x0 = 1 % 2;
+		Int x1 = 2 % 1;
+		Int x2 = 2 % 2;
+		Int x3 = 0 % 2;
+		Int x4 = 6 % 3 % 2;
+		Int x5 = 2 % 3 % 6;
+		Int x6 = 100 % 2 % 5 % 2 % 5;
+		print(x0); // 1
+		print(x1); // 0
+		print(x2); // 0
+		print(x3); // 0
+		print(x4); // 0
+		print(x5); // 2
+		print(x6); // 0
+	}
+
+}

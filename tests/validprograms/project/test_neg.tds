@@ -1,0 +1,19 @@
+Program {
+	void print(Bool x) extern;
+
+	void main() {
+		Bool b0 = !True;
+		Bool b1 = !False;
+		Bool b2 = !b0;
+		Bool b3 = !b1;
+		Bool b4 = !(True || False);
+		Bool b5 = !(b1 && b2);
+
+		print(b0); // 0
+		print(b1); // 1
+		print(b2); // 1
+		print(b3); // 0
+		print(b4); // 0
+		print(b5); // 0
+	}
+}
