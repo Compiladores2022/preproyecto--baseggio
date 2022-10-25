@@ -156,7 +156,7 @@ lStatements: { $$ = NULL; }
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
 			  if (isFunction(*symbol)) {
-			  	printf("ERROR: %s is a function.\n");
+			  	printf("ERROR: %s is a function.\n", getName(*symbol));
 			  	exit(EXIT_FAILURE);
 			  }
 	                  ASTNode* lSide = node(symbol);
