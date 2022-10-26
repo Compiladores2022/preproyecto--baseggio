@@ -18,11 +18,29 @@ void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction)
     enqueue(&threeAddressCode->queue, data, sizeof(instruction));
 }
 
-void loadParams(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset, int* numberOfLabel) {
-    if(node) {
-    	Instruction load = constructInstruction(code_LOAD, NULL, NULL, generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel));
+Queue generateIntermediateCodeForParameters(ASTNode* node
+					   ,ThreeAddressCode* threeAddressCode
+					   ,int* offset
+					   ,int* numberOfLabel) {
+    	Queue queue;
+    	
+    	constructQueue(&queue);
+    	
+    	ASTNode* ptr = node;
+    	while(ptr) {
+    		Symbol* param = generateIntermediateCode(getLSide(ptr), threeAddressCode, offset, numberOfLabel);
+    		enqueue(&queue, (void *) param, sizeof(Symbol*));
+    		ptr = getRSide(ptr);
+    	}
+    	
+    	return queue;
+}
+
+void loadParameters(Queue queue, ThreeAddressCode* threeAddressCode) {    
+    while(!isEmpty(queue)) {
+    	Instruction load = constructInstruction(code_LOAD, NULL, NULL, (Symbol *) head(queue));
     	addInstruction(threeAddressCode, load);
-    	loadParams(getRSide(node), threeAddressCode, offset, numberOfLabel);
+    	dequeue(&queue);
     }
 }
 
@@ -382,7 +400,11 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				}
 				break;
 			case flag_METHOD_CALL:
-				loadParams(getLSide(node), threeAddressCode, offset, numberOfLabel);
+				Queue params = generateIntermediateCodeForParameters(getLSide(node)
+										    ,threeAddressCode
+										    ,offset
+										    ,numberOfLabel);
+				loadParameters(params, threeAddressCode);
 
 				Symbol* temp = constructPtrToEmptySymbol();
 				assignOffset(temp, offset);
