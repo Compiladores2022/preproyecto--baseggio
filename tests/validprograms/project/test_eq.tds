@@ -11,17 +11,17 @@ Program {
 		Bool b4 = -2 == 1;
 		Bool b5 =  1 == -1;
 
-		print_bool(b0); // 0
+		print_bool(b0); // False
 		newline();
-		print_bool(b1); // 0
+		print_bool(b1); // False
 		newline();
-		print_bool(b2); // 1
+		print_bool(b2); // True
 		newline();
-		print_bool(b3); // 0
+		print_bool(b3); // False
 		newline();
-		print_bool(b4); // 0
+		print_bool(b4); // False
 		newline();
-		print_bool(b5); // 0
+		print_bool(b5); // False
 		newline();
 	}
 }

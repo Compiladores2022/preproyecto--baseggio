@@ -1,5 +1,7 @@
 Program {
-	void print(Bool b) extern;
+	void newline() extern;
+
+	void print_bool(Bool b) extern;
 
 	void main() {
 		Bool b0 = True || True;
@@ -10,12 +12,19 @@ Program {
 		Bool b5 = False || False || False || True;
 		Bool b6 = False || False || False || False;
 
-		print(b0); // 1
-		print(b1); // 1
-		print(b2); // 1
-		print(b3); // 0
-		print(b4); // 1
-		print(b5); // 1
-		print(b6); // 0
+		print_bool(b0); // True
+		newline();
+		print_bool(b1); // True
+		newline();
+		print_bool(b2); // True
+		newline();
+		print_bool(b3); // False
+		newline();
+		print_bool(b4); // True
+		newline();
+		print_bool(b5); // True
+		newline();
+		print_bool(b6); // False
+		newline();
 	}
 }
