@@ -36,11 +36,9 @@ int isLeave(ASTNode* node) {
 
 int expressionIsOnlyFormedByConstants(ASTNode* node) {
 	if(node) {
-		if(isLeave(node)) {
-			return isAConstant(getFlag(*getSymbol(node)));
-		}
 			
-		return  expressionIsOnlyFormedByConstants(getLSide(node)) &&
+		return  isAConstant(getFlag(*getSymbol(node))) 		  &&
+			expressionIsOnlyFormedByConstants(getLSide(node)) &&
 			expressionIsOnlyFormedByConstants(getMSide(node)) &&
 			expressionIsOnlyFormedByConstants(getRSide(node));
 	}
