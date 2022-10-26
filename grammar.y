@@ -20,6 +20,7 @@ ThreeAddressCode threeAddressCode;
 int yylex();
 void yyerror(const char* s);
 void addAll(SymbolTable* symbolTable, Symbol* symbol);
+ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide);
 %}
 
 %union { int i; char* s; struct astNode* n; enum type t; struct symbol* sb; }
@@ -211,18 +212,18 @@ E: ID                 { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, 
                         $$ = n;  }
  | MethodCall         { $$ = $1; }
  | V                  { $$ = $1; }
- | E '+' E            { $$ = composeTree(flag_ADDITION,       "+",  $1, NULL, $3);   }
- | E '-' E            { $$ = composeTree(flag_SUBSTRACTION,   "-",  $1, NULL, $3);   }
- | E '*' E            { $$ = composeTree(flag_MULTIPLICATION, "*",  $1, NULL, $3);   }
- | E '/' E            { $$ = composeTree(flag_DIVISION,       "/",  $1, NULL, $3);   }
- | E '%' E            { $$ = composeTree(flag_MOD,            "%",  $1, NULL, $3);   }
- | E '<' E            { $$ = composeTree(flag_LT,             "<",  $1, NULL, $3);   }
- | E '>' E            { $$ = composeTree(flag_GT,             ">",  $1, NULL, $3);   }
- | E EQT E            { $$ = composeTree(flag_EQT,            "==", $1, NULL, $3);   }
- | E OR  E            { $$ = composeTree(flag_OR,             "||", $1, NULL, $3);   }
- | E AND E            { $$ = composeTree(flag_AND,            "&&", $1, NULL, $3);   }
- | '-' E %prec UMINUS { $$ = composeTree(flag_MINUS,          "-",  $2, NULL, NULL); }
- | '!' E              { $$ = composeTree(flag_NEG,            "!",  $2, NULL, NULL); }
+ | E '+' E            { $$ = propagationOfConstants(flag_ADDITION,       flag_VALUE_INT,  TYPE_INT,  "+",  $1, $3); }
+ | E '-' E            { $$ = propagationOfConstants(flag_SUBSTRACTION,   flag_VALUE_INT,  TYPE_INT,  "-",  $1, $3); }
+ | E '*' E            { $$ = propagationOfConstants(flag_MULTIPLICATION, flag_VALUE_INT,  TYPE_INT,  "*",  $1, $3); }
+ | E '/' E            { $$ = propagationOfConstants(flag_DIVISION,       flag_VALUE_INT,  TYPE_INT,  "/",  $1, $3); }
+ | E '%' E            { $$ = propagationOfConstants(flag_MOD,            flag_VALUE_INT,  TYPE_INT,  "%",  $1, $3); }
+ | E '<' E            { $$ = propagationOfConstants(flag_LT,             flag_VALUE_BOOL, TYPE_BOOL, "<",  $1, $3); }
+ | E '>' E            { $$ = propagationOfConstants(flag_GT,             flag_VALUE_BOOL, TYPE_BOOL, ">",  $1, $3); }
+ | E EQT E            { $$ = propagationOfConstants(flag_EQT,            flag_VALUE_BOOL, TYPE_BOOL, "==", $1, $3); }
+ | E OR  E            { $$ = propagationOfConstants(flag_OR,             flag_VALUE_BOOL, TYPE_BOOL, "||", $1, $3); }
+ | E AND E            { $$ = propagationOfConstants(flag_AND,            flag_VALUE_BOOL, TYPE_BOOL, "&&", $1, $3); }
+ | '-' E %prec UMINUS { $$ = propagationOfConstants(flag_MINUS,          flag_VALUE_INT,  TYPE_INT,  "-",  $2, NULL); }
+ | '!' E              { $$ = propagationOfConstants(flag_NEG,            flag_VALUE_BOOL, TYPE_BOOL, "!",  $2, NULL); }
  | '(' E ')'          { $$ = $2; }
  ;
 
@@ -268,4 +269,30 @@ void addAll(SymbolTable* symbolTable, Symbol* symbol) {
         addSymbol(symbolTable, symbol);
         addAll(symbolTable, symbol->params);
     }
+}
+
+ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide) {
+	int lSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(lSide);
+	int rSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(rSide);
+	if (lSide && lSideIsOnlyFormedByConstants) {
+		setFlag(getSymbol(lSide), constantFlag);
+		setValue(getSymbol(lSide), evaluate(lSide));
+	}
+	
+	if (rSide && rSideIsOnlyFormedByConstants) {
+		setFlag(getSymbol(rSide), constantFlag);
+		setValue(getSymbol(rSide), evaluate(rSide));
+	}
+	
+	ASTNode* result = composeTree(operation, name, lSide, NULL, rSide);
+	
+	if(lSideIsOnlyFormedByConstants && rSideIsOnlyFormedByConstants) {
+		Symbol* expression = constructPtrToEmptySymbol();
+		setFlag(expression, constantFlag);
+		setType(expression, type);
+		setValue(expression, evaluate(result));
+		result = node(expression);
+	}
+	
+	return result;
 }
