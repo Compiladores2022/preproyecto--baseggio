@@ -1,10 +1,10 @@
 Program {
 	Int f(Int x, Int y) {
-		return x * y;
+		return x + y;
 	}
 	
 	Int fact(Int x) {
-		if (x < 1 || x == 1) then {
+		if (x <= 1) then {
 			return 1;
 		} else {
 			return x * fact(x - 1);
@@ -15,8 +15,5 @@ Program {
 	
 	void main() {
 		print(f(fact(3), fact(4)));
-		print(f(1, 2));
-		print(fact(3));
-		print(fact(4));
 	}
 }

@@ -1,5 +1,7 @@
 Program {
-	void print(Bool b) extern;
+	void print_bool(Bool b) extern;
+	
+	void newline() extern;
 
 	void main() {
 		Bool b0 =  1 == 0;
@@ -9,11 +11,17 @@ Program {
 		Bool b4 = -2 == 1;
 		Bool b5 =  1 == -1;
 
-		print(b0); // 0
-		print(b1); // 0
-		print(b2); // 1
-		print(b3); // 0
-		print(b4); // 0
-		print(b5); // 0
+		print_bool(b0); // 0
+		newline();
+		print_bool(b1); // 0
+		newline();
+		print_bool(b2); // 1
+		newline();
+		print_bool(b3); // 0
+		newline();
+		print_bool(b4); // 0
+		newline();
+		print_bool(b5); // 0
+		newline();
 	}
 }

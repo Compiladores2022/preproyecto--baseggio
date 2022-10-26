@@ -22,9 +22,9 @@ Program {
     }
 
     void main() {
-        Int  y = get_int();
+        Int y = get_int();
         Int x = 0;
-        while(True) { print(0); }
+        //while(True) { print(0); }
         if ( y == 0 ) then {
         	print(1);
         } else {

@@ -2,8 +2,24 @@ Program {
 	Int x = 10;
 
 	void print(Int x) extern;
+	
+	Int inc(Int x) {
+		return x + 1;
+	}
+	
+	Int fact(Int n) {
+		if(n == 0 || n == 1) then {
+			return 1;
+		} else {
+			return n * fact(n - 1);
+		}
+	}
 
 	void main() {
-		print(x);
+		print(x); // 10
+		x = inc(inc(inc(inc(inc(x)))));
+		print(x); // 15
+		x = 5;
+		print(fact(x) * fact(inc(x)));
 	}
 }
