@@ -275,17 +275,19 @@ ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, co
 	int lSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(lSide);
 	int rSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(rSide);
 	if (lSide && lSideIsOnlyFormedByConstants) {
+		typeCheck(lSide);
 		setFlag(getSymbol(lSide), constantFlag);
 		setValue(getSymbol(lSide), evaluate(lSide));
 	}
 	
 	if (rSide && rSideIsOnlyFormedByConstants) {
+		typeCheck(rSide);
 		setFlag(getSymbol(rSide), constantFlag);
 		setValue(getSymbol(rSide), evaluate(rSide));
 	}
 	
 	ASTNode* result = composeTree(operation, name, lSide, NULL, rSide);
-	
+	typeCheck(result);
 	if(lSideIsOnlyFormedByConstants && rSideIsOnlyFormedByConstants) {
 		Symbol* expression = constructPtrToEmptySymbol();
 		setFlag(expression, constantFlag);
