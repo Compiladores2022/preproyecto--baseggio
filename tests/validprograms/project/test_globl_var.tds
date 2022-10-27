@@ -14,12 +14,27 @@ Program {
 			return n * fact(n - 1);
 		}
 	}
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testGlobalVar_1() {
+		assertTrue(x == 10);
+	}
+	
+	void testGlobalVar_2() {
+		x = inc(inc(inc(inc(inc(x)))));
+		assertTrue(x == 15);
+	}
+	
+	void testGlobalVar_3() {
+		x = 5;
+		x = fact(x) * fact(inc(x));
+		assertTrue(x == 86400);
+	}
 
 	void main() {
-		print(x); // 10
-		x = inc(inc(inc(inc(inc(x)))));
-		print(x); // 15
-		x = 5;
-		print(fact(x) * fact(inc(x)));
+		testGlobalVar_1();
+		testGlobalVar_2();
+		testGlobalVar_3();
 	}
 }
