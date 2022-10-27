@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <assert.h>
+
+#define RESET   "\033[0m"
+#define GREEN   "\033[32m"      /* Green */
 
 void newline() {
 	putchar('\n');
@@ -20,4 +24,9 @@ int get_int() {
 	int input;
 	scanf("%d", &input);
 	return input;
+}
+
+void assertTrue(int expression) {
+	assert(expression);
+	printf(GREEN "PASSED\n" RESET);
 }

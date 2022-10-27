@@ -2,21 +2,59 @@ Program {
 
 void print(Int x) extern;
 
-void main() {
+void assertTrue(Bool expression) extern;
+
+void testAddition_1() {
 	Int x1 = 0 + 1;
-	Int x2= 1 + 0;
+	assertTrue(x1 == 1);
+}
+
+void testAddition_2() {
+	Int x1 = 1 + 0;
+	assertTrue(x1 == 1);
+}
+
+void testAddition_3() {
+	Int x1 = 0 + 1;
+	Int x2 = x1 + 1;
+	assertTrue(x2 == 2);
+}
+
+void testAddition_4() {
+	Int x1 = 1 + 0;
+	Int x2 = 1 + x1;
+	assertTrue(x2 == 2);
+}
+
+void testAddition_5() {
+	Int x1 = 0 + 1 + 2 + 3;
+	assertTrue(x1 == 6);
+}
+
+void testAddition_6() {
+	Int x1 = 0 + 1;
+	Int x2 = 1 + 0;
 	Int x3 = x1 + 1;
 	Int x4 = 1 + x2;
-	Int x5 = 0 + 1 + 2 + 3;
-	Int x6 = x1 + x2 + x3 + x4;
-	Int x7 = 0 + x1 + 1 + x2;
-	print(x1); // 1
-	print(x2); // 1
-	print(x3); // 2
-	print(x4); // 2
-	print(x5); // 6
-	print(x6); // 6
-	print(x7); // 3
+	Int x5 = x1 + x2 + x3 + x4;
+	assertTrue(x5 == 6);
+}
+
+void testAddition_7() {
+	Int x1 = 0 + 1;
+	Int x2 = 1 + 0;
+	Int x3 = 0 + x1 + 1 + x2;
+	assertTrue(x3 == 3);
+}
+
+void main() {
+	testAddition_1();
+	testAddition_2();
+	testAddition_3();
+	testAddition_4();
+	testAddition_5();
+	testAddition_6();
+	testAddition_7();
 }
 
 }
