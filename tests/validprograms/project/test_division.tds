@@ -1,42 +1,40 @@
 Program {
-
-	void print(Int x) extern;
 	
-	void assertTrue(Bool expression) extern;
+	void assertEquals(Int expected, Int value) extern;
 	
 	void testDivision_1() {
 		Int x = 1 / 2;
-		assertTrue(x == 0);
+		assertEquals(0, x);
 	}
 	
 	void testDivision_2() {
 		Int x = 2 / 1;
-		assertTrue(x == 2);
+		assertEquals(2, x);
 	}
 	
 	void testDivision_3() {
 		Int x = 2 / 2;
-		assertTrue(x == 1);
+		assertEquals(1, x);
 	}
 	
 	void testDivision_4() {
 		Int x = 0 / 2;
-		assertTrue(x == 0);
+		assertEquals(0, x);
 	}
 	
 	void testDivision_5() {
 		Int x = 6 / 3 / 2;
-		assertTrue(x == 1);
+		assertEquals(1, x);
 	}
 	
 	void testDivision_6() {
 		Int x = 2 / 3 / 6;
-		assertTrue(x == 0);
+		assertEquals(0, x);
 	}
 	
 	void testDivision_7() {
 		Int x = 100 / 2 / 5 / 2 / 5;
-		assertTrue(x == 1);
+		assertEquals(1, x);
 	}
 
 	void main() {
