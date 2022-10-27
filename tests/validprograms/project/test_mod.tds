@@ -1,22 +1,52 @@
 Program {
 
 	void print(Int x) extern;
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testMod_1() {
+		Int x = 1 % 2;
+		assertTrue(x == 1);
+	}
+	
+	void testMod_2() {
+		Int x = 2 % 1;
+		assertTrue(x == 0);
+	}
+	
+	void testMod_3() {
+		Int x = 2 % 2;
+		assertTrue(x == 0);
+	}
+	
+	void testMod_4() {
+		Int x = 0 % 2;
+		assertTrue(x == 0);
+	}
+	
+	void testMod_5() {
+		Int x = 6 % 3 % 2;
+		assertTrue(x == 0);
+	}
+	
+	void testMod_6() {
+		Int x = 2 % 3 % 6;
+		assertTrue(x == 2);
+	}
+	
+	void testMod_7() {
+		Int x = 100 % 2 % 5 % 2 % 5;
+		assertTrue(x == 0);
+	}
 
 	void main() {
-		Int x0 = 1 % 2;
-		Int x1 = 2 % 1;
-		Int x2 = 2 % 2;
-		Int x3 = 0 % 2;
-		Int x4 = 6 % 3 % 2;
-		Int x5 = 2 % 3 % 6;
-		Int x6 = 100 % 2 % 5 % 2 % 5;
-		print(x0); // 1
-		print(x1); // 0
-		print(x2); // 0
-		print(x3); // 0
-		print(x4); // 0
-		print(x5); // 2
-		print(x6); // 0
+		testMod_1();
+		testMod_2();
+		testMod_3();
+		testMod_4();
+		testMod_5();
+		testMod_6();
+		testMod_7();
 	}
 
 }
