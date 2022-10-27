@@ -2,26 +2,45 @@ Program {
 	void print_bool(Bool b) extern;
 	
 	void newline() extern;
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testEQ_1() {
+		Bool b = 1 == 0;
+		assertTrue(b == False);
+	}
+	
+	void testEQ_2() {
+		Bool b = 0 == 1;
+		assertTrue(b == False);
+	}
+	
+	void testEQ_3() {
+		Bool b = 1 == 1;
+		assertTrue(b);
+	}
+	
+	void testEQ_4() {
+		Bool b = -1 == 0;
+		assertTrue(b == False);
+	}
+	
+	void testEQ_5() {
+		Bool b = -2 == 1;
+		assertTrue(b == False);
+	}
+	
+	void testEQ_6() {
+		Bool b = 1 == -1;
+		assertTrue(b == False);
+	}
 
 	void main() {
-		Bool b0 =  1 == 0;
-		Bool b1 =  0 == 1;
-		Bool b2 =  1 == 1;
-		Bool b3 = -1 == 0;
-		Bool b4 = -2 == 1;
-		Bool b5 =  1 == -1;
-
-		print_bool(b0); // False
-		newline();
-		print_bool(b1); // False
-		newline();
-		print_bool(b2); // True
-		newline();
-		print_bool(b3); // False
-		newline();
-		print_bool(b4); // False
-		newline();
-		print_bool(b5); // False
-		newline();
+		testEQ_1();
+		testEQ_2();
+		testEQ_3();
+		testEQ_4();
+		testEQ_5();
+		testEQ_6();
 	}
 }
