@@ -3,6 +3,8 @@ Program {
 	
 	void assertTrue(Bool expression) extern;
 	
+	void assertFalse(Bool expression) extern;
+	
 	void testAnd_1() {
 		Bool b = True && True;
 		assertTrue(b);
@@ -10,32 +12,32 @@ Program {
 	
 	void testAnd_2() {
 		Bool b = True && False;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testAnd_3() {
 		Bool b = False && True;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testAnd_4() {
 		Bool b = False && False;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testAnd_5() {
 		Bool b = True && True && True && False;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testAnd_6() {
 		Bool b = False && False && False && True;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testAnd_7() {
 		Bool b = False && False && False && False;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 
 	void main() {
