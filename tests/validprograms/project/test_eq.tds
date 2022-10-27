@@ -1,7 +1,4 @@
 Program {
-	void print_bool(Bool b) extern;
-	
-	void newline() extern;
 	
 	void assertTrue(Bool expression) extern;
 	
