@@ -2,40 +2,42 @@ Program {
 
 void assertTrue(Bool expression) extern;
 
+void assertEquals(Int expected, Int value) extern;
+
 void print(Int x) extern;
 
 void testSubstraction_1() {
 	Int x1 = 1 - 0;
-	assertTrue(x1 == 1);
+	assertEquals(1, x1);
 }
 
 void testSubstraction_2() {
 	Int x1 = 0 - 1;
-	assertTrue(x1 == -1);
+	assertEquals(-1, x1);
 }
 
 void testSubstraction_3() {
 	Int x1 = 1 - 0;
 	Int x2 = 0 - 1;
 	Int x3 = x1 - x2;
-	assertTrue(x3 == 2);
+	assertEquals(2, x3);
 }
 
 void testSubstraction_4() {
 	Int x1 = 1 - 0;
 	Int x2 = 0 - 1;
 	Int x3 = x2 - x1;
-	assertTrue(x3 == -2);
+	assertEquals(-2, x3);
 }
 
 void testSubstraction_5() {
 	Int x5 = ((((5 - 4) - 3) - 2) - 1);
-	assertTrue(x5 == -5);
+	assertEquals(-5, x5);
 }
 
 void testSubstraction_6() {
 	Int x6 = ((((1 - 2) - 3) - 4) - 5);
-	assertTrue(x6 == -13);
+	assertEquals(-13, x6);
 }
 
 void testSubstraction_7() {
@@ -47,7 +49,7 @@ void testSubstraction_7() {
 	Int x5 = ((((5 - 4) - 3) - 2) - 1);
 	Int x6 = ((((1 - 2) - 3) - 4) - 5);
 	Int x7 = ((((x1 - x2) - x3) - x4) - x5) - x6;
-	assertTrue(x7 == 20);
+	assertEquals(20, x7);
 }
 
 void testSubstraction_8() {
@@ -59,7 +61,7 @@ void testSubstraction_8() {
 	Int x5 = ((((5 - 4) - 3) - 2) - 1);
 	Int x6 = ((((1 - 2) - 3) - 4) - 5);
 	Int x7 = ((((x6 - x5) - x4) - x3) - x2) - x1;
-	assertTrue(x7 == -8);
+	assertEquals(-8, x7);
 }
 
 void main() {
