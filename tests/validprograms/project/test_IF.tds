@@ -1,0 +1,42 @@
+Program {
+	Int abs(Int x) {
+		if(x < 0) then {
+			return -x;
+		}
+	}
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testAbs_1() {
+		Int x = abs(0);
+		assertTrue(x == 0 || x > 0);
+	}
+	
+	void testAbs_2() {
+		Int x = abs(-1);
+		assertTrue(x == 0 || x > 0);
+	}
+	
+	void testAbs_3() {
+		Int x = abs(-1);
+		assertTrue(x == 0 || x > 0);
+	}
+	
+	void testAbs_4() {
+		Int x = abs(-2);
+		assertTrue(x == 0 || x > 0);
+	}
+	
+	void testAbs_5() {
+		Int x = abs(-3);
+		assertTrue(x == 0 || x > 0);
+	}
+	
+	void main() {
+		testAbs_1();
+		testAbs_2();
+		testAbs_3();
+		testAbs_4();
+		testAbs_5();
+	}
+}
