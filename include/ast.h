@@ -41,4 +41,6 @@ int isLeave(ASTNode* node);
 
 // in the near future this function will belong to a Utils module
 int expressionIsOnlyFormedByConstants(ASTNode* node);
+
+int evaluate(ASTNode* node);
 #endif
