@@ -1,26 +1,79 @@
 Program {
 
 	void print(Int x) extern;
-
-	void main() {
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testMultiplication_1() {
 		Int x0 = 0 * 1;
+		assertTrue(x0 == 0);
+	}
+	
+	void testMultiplication_2() {
+		Int x0 = 1 * 2;
+		assertTrue(x0 == 2);
+	}
+	
+	void testMultiplication_3() {
+		Int x0 = 2 * 1;
+		assertTrue(x0 == 2);
+	}
+	
+	void testMultiplication_4() {
+		Int x1 = 1 * 2;
+		Int x2 = 2 * 1;
+		Int x3 = x1 * x2;
+		assertTrue(x3 == 4);
+	}
+	
+	void testMultiplication_5() {
+		Int x1 = 1 * 2;
+		Int x2 = 2 * 1;
+		Int x3 = x2 * x1;
+		assertTrue(x3 == 4);
+	}
+	
+	void testMultiplication_6() {
+		Int x = ((((5 * 4) * 3) * 2) * 1);
+		assertTrue(x == 120);
+	}
+	
+	void testMultiplication_7() {
+		Int x = ((((1 * 2) * 3) * 4) * 5);
+		assertTrue(x == 120);
+	}
+	
+	void testMultiplication_8() {
 		Int x1 = 1 * 2;
 		Int x2 = 2 * 1;
 		Int x3 = x1 * x2;
 		Int x4 = x2 * x1;
 		Int x5 = ((((5 * 4) * 3) * 2) * 1);
-		Int x6 = ((((1 * 2) * 3) * 4) *5);
-		Int x7 = (((1 * x2) * x3) * x4) * x5;
-		Int x8 = ((((x6 * x5) * x4) * x3) * x2) * 1;
-		print(x0); // 0
-		print(x1); // 2
-		print(x2); // 2
-		print(x3); // 4
-		print(x4); // 4
-		print(x5); // 120
-		print(x6); // 120
-		print(x7); // 3840
-		print(x8); // 460800
+		Int x6 = (((1 * x2) * x3) * x4) * x5;
+		assertTrue(x6 == 3840);
+	}
+	
+	void testMultiplication_9() {
+		Int x1 = 1 * 2;
+		Int x2 = 2 * 1;
+		Int x3 = x1 * x2;
+		Int x4 = x2 * x1;
+		Int x5 = ((((5 * 4) * 3) * 2) * 1);
+		Int x6 = ((((1 * 2) * 3) * 4) * 5);
+		Int x7 = ((((x6 * x5) * x4) * x3) * x2) * 1;
+		assertTrue(x7 == 460800);
+	}
+
+	void main() {
+		testMultiplication_1();
+		testMultiplication_2();
+		testMultiplication_3();
+		testMultiplication_4();
+		testMultiplication_5();
+		testMultiplication_6();
+		testMultiplication_7();
+		testMultiplication_8();
+		testMultiplication_9();
 	}
 
 }
