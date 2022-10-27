@@ -15,24 +15,26 @@ Program {
 	
 	void assertTrue(Bool expression) extern;
 	
+	void assertEquals(Int expected, Int value) extern;
+	
 	void test_1() {
 		Int x = f(fact(3), fact(4));
-		assertTrue(x == 144);
+		assertEquals(144, x);
 	}
 	
 	void test_2() {
 		Int x = f(1, 2);
-		assertTrue(x == 2);
+		assertEquals(2, x);
 	}
 	
 	void test_3() {
 		Int x = fact(3);
-		assertTrue(x == 6);
+		assertEquals(6, x);
 	}
 	
 	void test_4() {
 		Int x = fact(4);
-		assertTrue(x == 24);
+		assertEquals(24, x);
 	}
 	
 	void main() {
