@@ -57,43 +57,6 @@ void assignOffset(Symbol* symbol, int* offset) {
 	*offset += 8;
 }
 
-int evaluate(ASTNode* node) {
-	if(node) {
-		if(isLeave(node)) { return getValue(*getSymbol(node)); }
-		Flag flag = getFlag(*getSymbol(node));
-		switch (flag) {
-			case flag_ADDITION:
-				return evaluate(getLSide(node)) + evaluate(getRSide(node));
-			case flag_SUBSTRACTION:
-				return evaluate(getLSide(node)) - evaluate(getRSide(node));
-			case flag_MULTIPLICATION:
-				return evaluate(getLSide(node)) * evaluate(getRSide(node));
-			case flag_DIVISION:
-				return evaluate(getLSide(node)) / evaluate(getRSide(node));
-			case flag_MOD:
-				return evaluate(getLSide(node)) % evaluate(getRSide(node));
-			case flag_OR:
-				return evaluate(getLSide(node)) || evaluate(getRSide(node));
-			case flag_AND:
-				return evaluate(getLSide(node)) && evaluate(getRSide(node));
-			case flag_LT:
-				return evaluate(getLSide(node)) < evaluate(getRSide(node));
-			case flag_GT:
-				return evaluate(getLSide(node)) > evaluate(getRSide(node));
-			case flag_EQT:
-				return evaluate(getLSide(node)) == evaluate(getRSide(node));
-			case flag_MINUS:
-				return -evaluate(getLSide(node));
-			case flag_NEG:
-				return !evaluate(getLSide(node));
-			default:
-				break;
-		}
-	}
-	
-	return 0;
-}
-
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset, int* numberOfLabel) {
 	if(node) {
 		Flag flag = getFlag(*(node->symbol));
