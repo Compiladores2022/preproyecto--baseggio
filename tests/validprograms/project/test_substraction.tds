@@ -1,24 +1,76 @@
 Program {
 
-	void print(Int x) extern;
+void assertTrue(Bool expression) extern;
 
-	void main() {
-		Int x1 = 1 - 0;
-		Int x2 = 0 - 1;
-		Int x3 = x1 - x2;
-		Int x4 = x2 - x1;
-		Int x5 = ((((5 - 4) - 3) - 2) - 1);
-		Int x6 = ((((1 - 2) - 3) - 4) - 5);
-		Int x7 = ((((x1 - x2) - x3) - x4) - x5) - x6;
-		Int x8 = ((((x6 - x5) - x4) - x3) - x2) - x1;
-		print(x1); // 1
-		print(x2); // -1
-		print(x3); // 2
-		print(x4); // -2
-		print(x5); // -5
-		print(x6); // -13
-		print(x7); // 20
-		print(x8); // -8
-	}
+void print(Int x) extern;
+
+void testSubstraction_1() {
+	Int x1 = 1 - 0;
+	assertTrue(x1 == 1);
+}
+
+void testSubstraction_2() {
+	Int x1 = 0 - 1;
+	assertTrue(x1 == -1);
+}
+
+void testSubstraction_3() {
+	Int x1 = 1 - 0;
+	Int x2 = 0 - 1;
+	Int x3 = x1 - x2;
+	assertTrue(x3 == 2);
+}
+
+void testSubstraction_4() {
+	Int x1 = 1 - 0;
+	Int x2 = 0 - 1;
+	Int x3 = x2 - x1;
+	assertTrue(x3 == -2);
+}
+
+void testSubstraction_5() {
+	Int x5 = ((((5 - 4) - 3) - 2) - 1);
+	assertTrue(x5 == -5);
+}
+
+void testSubstraction_6() {
+	Int x6 = ((((1 - 2) - 3) - 4) - 5);
+	assertTrue(x6 == -13);
+}
+
+void testSubstraction_7() {
+	Int x1 = 1 - 0;
+	Int x2 = 0 - 1;
+	Int x3 = x1 - x2;
+
+	Int x4 = x2 - x1;
+	Int x5 = ((((5 - 4) - 3) - 2) - 1);
+	Int x6 = ((((1 - 2) - 3) - 4) - 5);
+	Int x7 = ((((x1 - x2) - x3) - x4) - x5) - x6;
+	assertTrue(x7 == 20);
+}
+
+void testSubstraction_8() {
+	Int x1 = 1 - 0;
+	Int x2 = 0 - 1;
+	Int x3 = x1 - x2;
+
+	Int x4 = x2 - x1;
+	Int x5 = ((((5 - 4) - 3) - 2) - 1);
+	Int x6 = ((((1 - 2) - 3) - 4) - 5);
+	Int x7 = ((((x6 - x5) - x4) - x3) - x2) - x1;
+	assertTrue(x7 == -8);
+}
+
+void main() {
+	testSubstraction_1();
+	testSubstraction_2();
+	testSubstraction_3();
+	testSubstraction_4();
+	testSubstraction_5();
+	testSubstraction_6();
+	testSubstraction_7();
+	testSubstraction_8();
+}
 
 }
