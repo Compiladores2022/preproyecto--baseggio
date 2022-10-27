@@ -1,21 +1,50 @@
 Program {
 	void print(Bool b) extern;
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testAnd_1() {
+		Bool b = True && True;
+		assertTrue(b);
+	}
+	
+	void testAnd_2() {
+		Bool b = True && False;
+		assertTrue(b == False);
+	}
+	
+	void testAnd_3() {
+		Bool b = False && True;
+		assertTrue(b == False);
+	}
+	
+	void testAnd_4() {
+		Bool b = False && False;
+		assertTrue(b == False);
+	}
+	
+	void testAnd_5() {
+		Bool b = True && True && True && False;
+		assertTrue(b == False);
+	}
+	
+	void testAnd_6() {
+		Bool b = False && False && False && True;
+		assertTrue(b == False);
+	}
+	
+	void testAnd_7() {
+		Bool b = False && False && False && False;
+		assertTrue(b == False);
+	}
 
 	void main() {
-		Bool b0 = True && True;
-		Bool b1 = True && False;
-		Bool b2 = False && True;
-		Bool b3 = False && False;
-		Bool b4 = True && True && True && False;
-		Bool b5 = False && False && False && True;
-		Bool b6 = False && False && False && False;
-
-		print(b0); // 1
-		print(b1); // 0
-		print(b2); // 0
-		print(b3); // 0
-		print(b4); // 0
-		print(b5); // 0
-		print(b6); // 0
+		testAnd_1();
+		testAnd_2();
+		testAnd_3();
+		testAnd_4();
+		testAnd_5();
+		testAnd_6();
+		testAnd_7();
 	}
 }
