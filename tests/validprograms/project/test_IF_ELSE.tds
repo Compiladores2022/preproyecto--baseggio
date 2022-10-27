@@ -1,6 +1,8 @@
 Program {
 	void assertTrue(Bool expression) extern;
 	
+	void assertEquals(Int expected, Int value) extern;
+	
 	Int fact(Int n) {
 		if(n == 0 || n == 1) then {
 			return 1;
@@ -11,37 +13,37 @@ Program {
 	
 	void testFact_1() {
 		Int x = fact(0);
-		assertTrue(x == 1);
+		assertEquals(1, x);
 	}
 	
 	void testFact_2() {
 		Int x = fact(1);
-		assertTrue(x == 1);
+		assertEquals(1, x);
 	}
 	
 	void testFact_3() {
 		Int x = fact(2);
-		assertTrue(x == 2);
+		assertEquals(2, x);
 	}
 	
 	void testFact_4() {
 		Int x = fact(3);
-		assertTrue(x == 6);
+		assertEquals(6, x);
 	}
 	
 	void testFact_5() {
 		Int x = fact(4);
-		assertTrue(x == 24);
+		assertEquals(24, x);
 	}
 	
 	void testFact_6() {
 		Int x = fact(5);
-		assertTrue(x == 120);
+		assertEquals(120, x);
 	}
 	
 	void testFact_7() {
 		Int x = fact(6);
-		assertTrue(x == 720);
+		assertEquals(720, x);
 	}
 	
 	void main() {
