@@ -1,27 +1,42 @@
-Program {
-	void print_bool(Bool b) extern;
+Program {	
+	void assertTrue(Bool expression) extern;
 	
-	void newline() extern;
+	void testGT_1() {
+		Bool b = 1 > 0;
+		assertTrue(b);
+	}
+	
+	void testGT_2() {
+		Bool b = 0 > 1;
+		assertTrue(b == False);
+	}
+	
+	void testGT_3() {
+		Bool b = 1 > 1;
+		assertTrue(b == False);
+	}
+	
+	void testGT_4() {
+		Bool b = -1 > 0;
+		assertTrue(b == False);
+	}
+	
+	void testGT_5() {
+		Bool b = -2 > 1;
+		assertTrue(b == False);
+	}
+	
+	void testGT_6() {
+		Bool b = 1 > -1;
+		assertTrue(b);
+	}
 
 	void main() {
-		Bool b0 = 1 > 0;
-		Bool b1 = 0 > 1;
-		Bool b2 = 1 > 1;
-		Bool b3 = -1 > 0;
-		Bool b4 = -2 > 1;
-		Bool b5 = 1 > -1;
-
-		print_bool(b0); // True
-		newline();
-		print_bool(b1); // False
-		newline();
-		print_bool(b2); // False
-		newline();
-		print_bool(b3); // False
-		newline();
-		print_bool(b4); // False
-		newline();
-		print_bool(b5); // True
-		newline();
+		testGT_1();
+		testGT_2();
+		testGT_3();
+		testGT_4();
+		testGT_5();
+		testGT_6();
 	}
 }
