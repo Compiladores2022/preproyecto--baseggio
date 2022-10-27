@@ -5,9 +5,11 @@ Program {
 	
 	void assertTrue(Bool expression) extern;
 	
+	void assertEquals(Int expected, Int value) extern;
+	
 	void testGloblVar_1() {
 		x = 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1;
-		assertTrue(x == 3628800);
+		assertEquals(3628800, x);
 	}
 
 	void main() {
