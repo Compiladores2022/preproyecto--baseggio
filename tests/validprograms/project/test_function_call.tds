@@ -1,0 +1,44 @@
+Program {
+	Int f(Int x, Int y) {
+		return x * y;
+	}
+	
+	Int fact(Int x) {
+		if (x < 1 || x == 1) then {
+			return 1;
+		} else {
+			return x * fact(x - 1);
+		}
+	}
+	
+	void print(Int x) extern;
+	
+	void assertTrue(Bool expression) extern;
+	
+	void test_1() {
+		Int x = f(fact(3), fact(4));
+		assertTrue(x == 144);
+	}
+	
+	void test_2() {
+		Int x = f(1, 2);
+		assertTrue(x == 2);
+	}
+	
+	void test_3() {
+		Int x = fact(3);
+		assertTrue(x == 6);
+	}
+	
+	void test_4() {
+		Int x = fact(4);
+		assertTrue(x == 24);
+	}
+	
+	void main() {
+		test_1();
+		test_2();
+		test_3();
+		test_4();
+	}
+}
