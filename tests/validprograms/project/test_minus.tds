@@ -1,21 +1,54 @@
 Program {
 	void print(Int x) extern;
-
-	void main() {
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testMinus_1() {
+		Int x = -1;
+		assertTrue(x == -1);
+	}
+	
+	void testMinus_2() {
+		Int x = -2;
+		assertTrue(x == -2);
+	}
+	
+	void testMinus_3() {
+		Int x = -(1 * 2);
+		assertTrue(x == -2);
+	}
+	
+	void testMinus_4() {
+		Int x = --1;
+		assertTrue(x == 1);
+	}
+	
+	void testMinus_5() {
+		Int x = -(-1);
+		assertTrue(x == 1);
+	}
+	
+	void testMinus_6() {
 		Int x0 = -1;
 		Int x1 = -2;
-		Int x2 = -(1 * 2);
-		Int x3 = --1;
-		Int x4 = -(-1);
-		Int x5 = -(x0 + x1);
-		Int x6 = -(x0  - x1);
+		Int x2 = -(x0 + x1);
+		assertTrue(x2 == 3);
+	}
+	
+	void testMinus_7() {
+		Int x0 = -1;
+		Int x1 = -2;
+		Int x2 = -(x0 - x1);
+		assertTrue(x2 == -1);
+	}
 
-		print(x0); // -1
-		print(x1); // -2
-		print(x2); // -2
-		print(x3); // 1
-		print(x4); // 1
-		print(x5); // 3
-		print(x6); // -1
+	void main() {
+		testMinus_1();
+		testMinus_2();
+		testMinus_3();
+		testMinus_4();
+		testMinus_5();
+		testMinus_6();
+		testMinus_7();
 	}
 }
