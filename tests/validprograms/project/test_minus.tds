@@ -3,43 +3,45 @@ Program {
 	
 	void assertTrue(Bool expression) extern;
 	
+	void assertEquals(Int expected, Int value) extern;
+	
 	void testMinus_1() {
 		Int x = -1;
-		assertTrue(x == -1);
+		assertEquals(-1, x);
 	}
 	
 	void testMinus_2() {
 		Int x = -2;
-		assertTrue(x == -2);
+		assertEquals(-2, x);
 	}
 	
 	void testMinus_3() {
 		Int x = -(1 * 2);
-		assertTrue(x == -2);
+		assertEquals(-2, x);
 	}
 	
 	void testMinus_4() {
 		Int x = --1;
-		assertTrue(x == 1);
+		assertEquals(1, x);
 	}
 	
 	void testMinus_5() {
 		Int x = -(-1);
-		assertTrue(x == 1);
+		assertEquals(1, x);
 	}
 	
 	void testMinus_6() {
 		Int x0 = -1;
 		Int x1 = -2;
 		Int x2 = -(x0 + x1);
-		assertTrue(x2 == 3);
+		assertEquals(3, x2);
 	}
 	
 	void testMinus_7() {
 		Int x0 = -1;
 		Int x1 = -2;
 		Int x2 = -(x0 - x1);
-		assertTrue(x2 == -1);
+		assertEquals(-1, x2);
 	}
 
 	void main() {
