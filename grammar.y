@@ -222,7 +222,9 @@ E: ID                 { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, 
  | E EQT E            { $$ = propagationOfConstants(flag_EQT,            flag_VALUE_BOOL, TYPE_BOOL, "==", $1, $3); }
  | E OR  E            { $$ = propagationOfConstants(flag_OR,             flag_VALUE_BOOL, TYPE_BOOL, "||", $1, $3); }
  | E AND E            { $$ = propagationOfConstants(flag_AND,            flag_VALUE_BOOL, TYPE_BOOL, "&&", $1, $3); }
- | '-' E %prec UMINUS { $$ = propagationOfConstants(flag_MINUS,          flag_VALUE_INT,  TYPE_INT,  "-",  $2, NULL); }
+ | '-' E %prec UMINUS { Symbol* zero = constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, "0", 0);
+ 			ASTNode* lSide = node(zero);
+ 			$$ = propagationOfConstants(flag_SUBSTRACTION,   flag_VALUE_INT,  TYPE_INT,  "-",  lSide, $2); }
  | '!' E              { $$ = propagationOfConstants(flag_NEG,            flag_VALUE_BOOL, TYPE_BOOL, "!",  $2, NULL); }
  | '(' E ')'          { $$ = $2; }
  ;
