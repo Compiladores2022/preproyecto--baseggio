@@ -1,8 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 
 #define RESET   "\033[0m"
 #define GREEN   "\033[32m"      /* Green */
+#define RED     "\033[31m"      /* Red */
+#define MAGENTA "\033[35m"      /* Magenta */
 
 void newline() {
 	putchar('\n');
@@ -29,4 +32,18 @@ int get_int() {
 void assertTrue(int expression) {
 	assert(expression);
 	printf(GREEN "PASSED\n" RESET);
+}
+
+void assertEquals(int expected, int value) {
+	if(expected == value) {
+		printf(GREEN "PASSED\n" RESET);
+	} else {
+		printf(RED "FAILED\n" RESET);
+		printf(MAGENTA "expected: " RESET);
+		printf("%d ", expected);
+		printf(MAGENTA "but " RESET);
+		printf("%d ", value);
+		printf(MAGENTA "was found\n" RESET);
+		exit(EXIT_FAILURE);
+	}
 }
