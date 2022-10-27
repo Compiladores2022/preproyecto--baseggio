@@ -2,14 +2,16 @@ Program {
 	
 	void assertTrue(Bool expression) extern;
 	
+	void assertFalse(Bool expression) extern;
+	
 	void testEQ_1() {
 		Bool b = 1 == 0;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testEQ_2() {
 		Bool b = 0 == 1;
-		assertTrue(b == False);
+		assertFalse(!b);
 	}
 	
 	void testEQ_3() {
@@ -19,17 +21,17 @@ Program {
 	
 	void testEQ_4() {
 		Bool b = -1 == 0;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testEQ_5() {
 		Bool b = -2 == 1;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testEQ_6() {
 		Bool b = 1 == -1;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 
 	void main() {
