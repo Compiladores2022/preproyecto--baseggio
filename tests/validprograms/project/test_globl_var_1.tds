@@ -2,9 +2,17 @@ Program {
 	Int x = 0;
 
 	void print(Int x) extern;
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testGloblVar_1() {
+		x = 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1;
+		assertTrue(x == 3628800);
+	}
 
 	void main() {
-		x = 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1;
+		print(x);
+		testGloblVar_1();
 		print(x);
 	}
 }
