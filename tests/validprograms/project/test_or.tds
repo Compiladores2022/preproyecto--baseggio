@@ -1,30 +1,48 @@
-Program {
-	void newline() extern;
-
-	void print_bool(Bool b) extern;
+Program {	
+	void assertTrue(Bool expression) extern;
+	
+	void testOr_1() {
+		Bool b = True || True;
+		assertTrue(b);
+	}
+	
+	void testOr_2() {
+		Bool b = True || False;
+		assertTrue(b);
+	}
+	
+	void testOr_3() {
+		Bool b = False || True;
+		assertTrue(b);
+	}
+	
+	void testOr_4() {
+		Bool b = False || False;
+		assertTrue(b == False);
+	}
+	
+	void testOr_5() {
+		Bool b = True || True || True || False;
+		assertTrue(b);
+	}
+	
+	void testOr_6() {
+		Bool b = False || False || False || True;
+		assertTrue(b);
+	}
+	
+	void testOr_7() {
+		Bool b = False || False || False || False;
+		assertTrue(b == False);
+	}
 
 	void main() {
-		Bool b0 = True || True;
-		Bool b1 = True || False;
-		Bool b2 = False || True;
-		Bool b3 = False || False;
-		Bool b4 = True || True || True || False;
-		Bool b5 = False || False || False || True;
-		Bool b6 = False || False || False || False;
-
-		print_bool(b0); // True
-		newline();
-		print_bool(b1); // True
-		newline();
-		print_bool(b2); // True
-		newline();
-		print_bool(b3); // False
-		newline();
-		print_bool(b4); // True
-		newline();
-		print_bool(b5); // True
-		newline();
-		print_bool(b6); // False
-		newline();
+		testOr_1();
+		testOr_2();
+		testOr_3();
+		testOr_4();
+		testOr_5();
+		testOr_6();
+		testOr_7();
 	}
 }
