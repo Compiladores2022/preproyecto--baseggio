@@ -1,6 +1,8 @@
 Program {	
 	void assertTrue(Bool expression) extern;
 	
+	void assertFalse(Bool expression) extern;
+	
 	void testOr_1() {
 		Bool b = True || True;
 		assertTrue(b);
@@ -18,7 +20,7 @@ Program {
 	
 	void testOr_4() {
 		Bool b = False || False;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testOr_5() {
@@ -33,7 +35,7 @@ Program {
 	
 	void testOr_7() {
 		Bool b = False || False || False || False;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 
 	void main() {
