@@ -34,6 +34,20 @@ void assertTrue(int expression) {
 	printf(GREEN "PASSED\n" RESET);
 }
 
+void assertFalse(int expression) {
+	if(!expression) {
+		printf(GREEN "PASSED\n" RESET);
+	} else {
+		printf(RED "FAILED\n" RESET);
+		printf(MAGENTA "expected: " RESET);
+		printf(RED "False " RESET);
+		printf(MAGENTA "but " RESET);
+		printf(GREEN "True " RESET);
+		printf(MAGENTA "was found\n" RESET);
+		exit(EXIT_FAILURE);
+	}
+}
+
 void assertEquals(int expected, int value) {
 	if(expected == value) {
 		printf(GREEN "PASSED\n" RESET);
