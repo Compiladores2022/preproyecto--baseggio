@@ -6,9 +6,11 @@ Program {
 	
 	void assertTrue(Bool expression) extern;
 	
+	void assertFalse(Bool expression) extern;
+	
 	void testNeg_1() {
 		Bool b = !True;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testNeg_2() {
@@ -25,12 +27,12 @@ Program {
 	void testNeg_4() {
 		Bool b1 = !False;
 		Bool b2 = !b1;
-		assertTrue(b2 == False);
+		assertFalse(b2);
 	}
 	
 	void testNeg_5() {
 		Bool b = !(True || False);
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testNeg_6() {
@@ -38,7 +40,7 @@ Program {
 		Bool b1 = !False;
 		Bool b2 = !b0;
 		Bool b3 = !(b1 && b2);
-		assertTrue(b3 == False);
+		assertFalse(b3);
 	}
 
 	void main() {
