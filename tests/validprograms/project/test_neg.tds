@@ -3,26 +3,50 @@ Program {
 	void newline() extern;
 
 	void print_bool(Bool b) extern;
-
-	void main() {
+	
+	void assertTrue(Bool expression) extern;
+	
+	void testNeg_1() {
+		Bool b = !True;
+		assertTrue(b == False);
+	}
+	
+	void testNeg_2() {
+		Bool b = !False;
+		assertTrue(b);
+	}
+	
+	void testNeg_3() {
+		Bool b1 = !True;
+		Bool b2 = !b1;
+		assertTrue(b2);
+	}
+	
+	void testNeg_4() {
+		Bool b1 = !False;
+		Bool b2 = !b1;
+		assertTrue(b2 == False);
+	}
+	
+	void testNeg_5() {
+		Bool b = !(True || False);
+		assertTrue(b == False);
+	}
+	
+	void testNeg_6() {
 		Bool b0 = !True;
 		Bool b1 = !False;
 		Bool b2 = !b0;
-		Bool b3 = !b1;
-		Bool b4 = !(True || False);
-		Bool b5 = !(b1 && b2);
+		Bool b3 = !(b1 && b2);
+		assertTrue(b3 == False);
+	}
 
-		print_bool(b0); // False
-		newline();
-		print_bool(b1); // True
-		newline();
-		print_bool(b2); // True
-		newline();
-		print_bool(b3); // False
-		newline();
-		print_bool(b4); // False
-		newline();
-		print_bool(b5); // False
-		newline();
+	void main() {
+		testNeg_1();
+		testNeg_2();
+		testNeg_3();
+		testNeg_4();
+		testNeg_5();
+		testNeg_6();
 	}
 }
