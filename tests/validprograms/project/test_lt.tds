@@ -1,9 +1,11 @@
 Program {
 	void assertTrue(Bool expression) extern;
 	
+	void assertFalse(Bool expression) extern;
+	
 	void testLT_1() {
 		Bool b = 1 < 0;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 	
 	void testLT_2() {
@@ -13,7 +15,7 @@ Program {
 	
 	void testLT_3() {
 		Bool b = 1 < 1;
-		assertTrue(b == False); 
+		assertFalse(b); 
 	}
 	
 	void testLT_4() {
@@ -28,7 +30,7 @@ Program {
 	
 	void testLT_6() {
 		Bool b = 1 < -1;
-		assertTrue(b == False);
+		assertFalse(b);
 	}
 
 	void main() {
