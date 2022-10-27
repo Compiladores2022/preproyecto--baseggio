@@ -1,0 +1,56 @@
+Program {
+	void assertTrue(Bool expression) extern;
+	
+	Int fact(Int n) {
+		if(n == 0 || n == 1) then {
+			return 1;
+		} else {
+			return n * fact(n - 1);
+		}
+	}
+	
+	void testFact_1() {
+		Int x = fact(0);
+		assertTrue(x == 1);
+	}
+	
+	void testFact_2() {
+		Int x = fact(1);
+		assertTrue(x == 1);
+	}
+	
+	void testFact_3() {
+		Int x = fact(2);
+		assertTrue(x == 2);
+	}
+	
+	void testFact_4() {
+		Int x = fact(3);
+		assertTrue(x == 6);
+	}
+	
+	void testFact_5() {
+		Int x = fact(4);
+		assertTrue(x == 24);
+	}
+	
+	void testFact_6() {
+		Int x = fact(5);
+		assertTrue(x == 120);
+	}
+	
+	void testFact_7() {
+		Int x = fact(6);
+		assertTrue(x == 720);
+	}
+	
+	void main() {
+		testFact_1();
+		testFact_2();
+		testFact_3();
+		testFact_4();
+		testFact_5();
+		testFact_6();
+		testFact_7();
+	}
+}
