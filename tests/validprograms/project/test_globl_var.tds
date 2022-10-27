@@ -17,19 +17,21 @@ Program {
 	
 	void assertTrue(Bool expression) extern;
 	
+	void assertEquals(Int expected, Int value) extern;
+	
 	void testGlobalVar_1() {
-		assertTrue(x == 10);
+		assertEquals(10, x);
 	}
 	
 	void testGlobalVar_2() {
 		x = inc(inc(inc(inc(inc(x)))));
-		assertTrue(x == 15);
+		assertEquals(15, x);
 	}
 	
 	void testGlobalVar_3() {
 		x = 5;
 		x = fact(x) * fact(inc(x));
-		assertTrue(x == 86400);
+		assertEquals(86400, x);
 	}
 
 	void main() {
