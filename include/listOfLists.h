@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include "queue.h"
 
-typedef struct level {
+typedef struct list {
 	Queue queue;
-	struct level *next;
-} Level;
+	struct list *next;
+} List;
 
 typedef struct {
-	Level* peek;
-	int levels;
+	List* peek;
+	int lists;
 } ListOfLists;
 
 int numberOfLevels(ListOfLists listOfLists);

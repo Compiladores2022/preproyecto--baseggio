@@ -6,34 +6,34 @@
 #define TRUE  1
 #define FALSE 0
 
-int numberOfLevels(ListOfLists listOfLists) {
-	return listOfLists.levels;
+int numberOfLists(ListOfLists listOfLists) {
+	return listOfLists.lists;
 }
 
-Level* constructList() {
-	Level* level = (Level*) malloc(sizeof(Level));
-	if(level == NULL) { exit(EXIT_FAILURE); }
-	constructQueue(&(level->queue));
-	return level;
+List* constructList() {
+	List* list = (List*) malloc(sizeof(List));
+	if(list == NULL) { exit(EXIT_FAILURE); }
+	constructQueue(&(list->queue));
+	return list;
 }
 
 void constructListOfLists(ListOfLists* listOfLists) {
 	listOfLists->peek   = constructList();
-	listOfLists->levels = 1;
+	listOfLists->lists = 1;
 }
 
 void addList(ListOfLists* listOfLists) {
-	Level* level = constructList();
-	level->next  = listOfLists->peek;
-	listOfLists->peek = level;
-	listOfLists->levels++;
+	List* List = constructList();
+	List->next  = listOfLists->peek;
+	listOfLists->peek = List;
+	listOfLists->lists++;
 }
 
 void removeList(ListOfLists* listOfLists) {
-	Level* level = listOfLists->peek;
+	List* List = listOfLists->peek;
 	listOfLists->peek = listOfLists->peek->next;
-	free(level);
-	listOfLists->levels--;
+	free(List);
+	listOfLists->lists--;
 }
 
 int add(ListOfLists* listOfLists, void* data, size_t dataSize) {
@@ -42,12 +42,12 @@ int add(ListOfLists* listOfLists, void* data, size_t dataSize) {
 }
 
 void printListOfLists(ListOfLists listOfLists, void (*f) (void*)) {
-	Level* level = listOfLists.peek;
+	List* list = listOfLists.peek;
 	int i = 0;
-	while(level) {
-	    printf("\nLevel %d: \n", listOfLists.levels - i);
-	    showQueue(level->queue, f);
-	    level = level->next;
+	while(list) {
+	    printf("\nList %d: \n", listOfLists.lists - i);
+	    showQueue(list->queue, f);
+	    list = list->next;
 	    i++;
 	}
 }

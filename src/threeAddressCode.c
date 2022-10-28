@@ -19,16 +19,14 @@ void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction)
 }
 
 Queue generateIntermediateCodeForParameters(ASTNode* node
-					   ,ThreeAddressCode* threeAddressCode
-					   ,int* offset
-					   ,int* numberOfLabel) {
+					   ,ThreeAddressCode* threeAddressCode) {
     	Queue queue;
     	
     	constructQueue(&queue);
     	
     	ASTNode* ptr = node;
     	while(ptr) {
-    		Symbol* param = generateIntermediateCode(getLSide(ptr), threeAddressCode, offset, numberOfLabel);
+    		Symbol* param = generateIntermediateCode(getLSide(ptr), threeAddressCode);
     		enqueue(&queue, (void *) param, sizeof(Symbol*));
     		ptr = getRSide(ptr);
     	}
@@ -52,46 +50,40 @@ int params(Symbol* symbol) {
 	return 0;
 }
 
-void assignOffset(Symbol* symbol, int* offset) {
-	setOffset(symbol, *offset);
-	*offset += 8;
+void assignOffset(Symbol* symbol, ThreeAddressCode* threeAddressCode) {
+	setOffset(symbol, threeAddressCode->offset);
+	threeAddressCode->offset += 8;
 }
 
 Symbol* generateIntermediateCodeForBinaryOperation(Code iCode
 						  ,ASTNode* node
-						  ,ThreeAddressCode* threeAddressCode
-						  ,int* offset
-						  ,int* numberOfLabel) {
+						  ,ThreeAddressCode* threeAddressCode) {
 	Symbol* fstOperand;
 	Symbol* sndOperand;
 	Instruction instruction;
-	fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
-	sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode, offset, numberOfLabel);
+	fstOperand  = generateIntermediateCode(getLSide(node), threeAddressCode);
+	sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode);
 	instruction = constructInstruction(iCode, fstOperand, sndOperand, getSymbol(node));
 	addInstruction(threeAddressCode, instruction);
-	assignOffset(getSymbol(node), offset);
+	assignOffset(getSymbol(node), threeAddressCode);
 	
 	return getSymbol(node);
 }
 
 Symbol* generateIntermediateCodeForNeg(ASTNode* node
-				      ,ThreeAddressCode* threeAddressCode
-				      ,int* offset
-				      ,int* numberOfLabel) {
+				      ,ThreeAddressCode* threeAddressCode) {
 				      
 	Symbol* expression;
 	Instruction instruction;
-	expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
+	expression  = generateIntermediateCode(getLSide(node), threeAddressCode);
 	instruction = constructInstruction(code_NEG, expression, NULL, getSymbol(node));
 	addInstruction(threeAddressCode, instruction);
-	assignOffset(getSymbol(node), offset);
+	assignOffset(getSymbol(node), threeAddressCode);
 	return getSymbol(node);	      
 }
 
 void generateIntermediateCodeForIF(ASTNode* node
-				  ,ThreeAddressCode* threeAddressCode
-				  ,int* offset
-				  ,int* numberOfLabel) {
+				  ,ThreeAddressCode* threeAddressCode) {
 				  
 	Symbol* expression;
 	Symbol* end_label;
@@ -99,23 +91,21 @@ void generateIntermediateCodeForIF(ASTNode* node
 	Instruction instruction;
 	Instruction label;
 				  
-	expression = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
+	expression = generateIntermediateCode(getLSide(node), threeAddressCode);
 	end_label  = constructPtrToEmptySymbol();
 	setFlag(end_label, flag_LABEL);
-	sprintf(name, "end_label%d", *numberOfLabel);
+	sprintf(name, "end_label%d", threeAddressCode->numberOfLabel);
 	setName(end_label, name);
-	*numberOfLabel += 1;
+	threeAddressCode->numberOfLabel += 1;
 	instruction = constructInstruction(code_FALSE_CONDITIONAL, expression, NULL, end_label);
 	addInstruction(threeAddressCode, instruction);
-	generateIntermediateCode(getRSide(node), threeAddressCode, offset, numberOfLabel);
+	generateIntermediateCode(getRSide(node), threeAddressCode);
 	label = constructInstruction(code_LABEL, NULL, NULL, end_label);
 	addInstruction(threeAddressCode, label);  
 }
 
 void generateIntermediateCodeForIF_ELSE(ASTNode* node
-				  ,ThreeAddressCode* threeAddressCode
-				  ,int* offset
-				  ,int* numberOfLabel) {
+				  ,ThreeAddressCode* threeAddressCode) {
 	Symbol* expression;
 	Symbol* else_label;
 	Symbol* end_label;
@@ -123,39 +113,37 @@ void generateIntermediateCodeForIF_ELSE(ASTNode* node
 	Instruction jmp;
 	Instruction label;
 	Instruction instruction;
-	expression = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
+	expression = generateIntermediateCode(getLSide(node), threeAddressCode);
 	else_label = constructPtrToEmptySymbol();
 	setFlag(else_label, flag_LABEL);
-	sprintf(name, "else_label%d", *numberOfLabel);
+	sprintf(name, "else_label%d", threeAddressCode->numberOfLabel);
 	setName(else_label, name);
 
 	end_label = constructPtrToEmptySymbol();
 	setFlag(end_label, flag_LABEL);
-	sprintf(name, "end_label%d", *numberOfLabel);
+	sprintf(name, "end_label%d", threeAddressCode->numberOfLabel);
 	setName(end_label, name);
 
-	*numberOfLabel += 1;
+	threeAddressCode->numberOfLabel += 1;
 
 	instruction = constructInstruction(code_FALSE_CONDITIONAL, expression, NULL, else_label);
 	addInstruction(threeAddressCode, instruction);
 
-	generateIntermediateCode(getMSide(node), threeAddressCode, offset, numberOfLabel);
+	generateIntermediateCode(getMSide(node), threeAddressCode);
 
 	jmp = constructInstruction(code_JMP, NULL, NULL, end_label);
 	addInstruction(threeAddressCode, jmp);				
 	label = constructInstruction(code_LABEL, NULL, NULL, else_label);
 	addInstruction(threeAddressCode, label);
 
-	generateIntermediateCode(getRSide(node), threeAddressCode, offset, numberOfLabel);
+	generateIntermediateCode(getRSide(node), threeAddressCode);
 
 	label = constructInstruction(code_LABEL, NULL, NULL, end_label);
 	addInstruction(threeAddressCode, label);		  
 }
 
 void generateIntermediateCodeForWHILE(ASTNode* node
-				  ,ThreeAddressCode* threeAddressCode
-				  ,int* offset
-				  ,int* numberOfLabel) {
+				  ,ThreeAddressCode* threeAddressCode) {
 				  
 	Symbol* expression;
 	Symbol* while_label;
@@ -167,25 +155,25 @@ void generateIntermediateCodeForWHILE(ASTNode* node
 				  
 	while_label = constructPtrToEmptySymbol();
 	setFlag(while_label, flag_LABEL);
-	sprintf(name, "while_label%d", *numberOfLabel);
+	sprintf(name, "while_label%d", threeAddressCode->numberOfLabel);
 	setName(while_label, name);
 
 	end_label = constructPtrToEmptySymbol();
 	setFlag(end_label, flag_LABEL);
-	sprintf(name, "end_label%d", *numberOfLabel);
+	sprintf(name, "end_label%d", threeAddressCode->numberOfLabel);
 	setName(end_label, name);
 
-	*numberOfLabel += 1;
+	threeAddressCode->numberOfLabel += 1;
 
 	label = constructInstruction(code_LABEL, NULL, NULL, while_label);
 	addInstruction(threeAddressCode, label);
 
-	expression = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
+	expression = generateIntermediateCode(getLSide(node), threeAddressCode);
 
 	instruction = constructInstruction(code_FALSE_CONDITIONAL, expression, NULL, end_label);
 	addInstruction(threeAddressCode, instruction);
 
-	generateIntermediateCode(getRSide(node), threeAddressCode, offset, numberOfLabel);
+	generateIntermediateCode(getRSide(node), threeAddressCode);
 
 	jmp = constructInstruction(code_JMP, NULL, NULL, while_label);
 	addInstruction(threeAddressCode, jmp);
@@ -195,10 +183,8 @@ void generateIntermediateCodeForWHILE(ASTNode* node
 }
 
 void generateIntermediateCodeForMethodDeclaration(ASTNode* node
-				  ,ThreeAddressCode* threeAddressCode
-				  ,int* offset
-				  ,int* numberOfLabel) {
-	*offset = 8;
+				  ,ThreeAddressCode* threeAddressCode) {
+	threeAddressCode->offset = 8;
 	int isExtern = getLSide(node) == NULL;
 	if(!isExtern) {
 		Symbol* start_of_function;
@@ -206,7 +192,7 @@ void generateIntermediateCodeForMethodDeclaration(ASTNode* node
 		Instruction label;
 		Symbol* symbol = getParams(*getSymbol(node));
 		while(symbol) {
-			assignOffset(symbol, offset);
+			assignOffset(symbol, threeAddressCode);
 			symbol = getParams(*symbol);
 		}
 
@@ -214,38 +200,34 @@ void generateIntermediateCodeForMethodDeclaration(ASTNode* node
 		setFlag(start_of_function, flag_LABEL);
 		setName(start_of_function, getName(*getSymbol(node)));
 
-		end_of_function   = constructPtrToEmptySymbol();
-		setFlag(end_of_function,   flag_LABEL);
-		setName(end_of_function,   getName(*getSymbol(node)));
+		end_of_function = constructPtrToEmptySymbol();
+		setFlag(end_of_function, flag_LABEL);
+		setName(end_of_function, getName(*getSymbol(node)));
 
 		label = constructInstruction(code_LABEL_START_OF_FUNCTION, getSymbol(node), NULL, start_of_function);
 		addInstruction(threeAddressCode, label);
-		generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
+		generateIntermediateCode(getLSide(node), threeAddressCode);
 		label = constructInstruction(code_LABEL_END_OF_FUNCTION, getSymbol(node), NULL, end_of_function);
 		addInstruction(threeAddressCode, label);
-		assignOffset(getSymbol(node), offset);
+		assignOffset(getSymbol(node), threeAddressCode);
 	}
 }
 
 Symbol* generateIntermediateCodeForMethodCall(ASTNode* node
-				  ,ThreeAddressCode* threeAddressCode
-				  ,int* offset
-				  ,int* numberOfLabel) {
+				  ,ThreeAddressCode* threeAddressCode) {
 	Instruction call;
 				  
 	Queue params = generateIntermediateCodeForParameters(getLSide(node)
-										    ,threeAddressCode
-										    ,offset
-										    ,numberOfLabel);
+										    ,threeAddressCode);
 	loadParameters(params, threeAddressCode);
 	Symbol* temp = constructPtrToEmptySymbol();
-	assignOffset(temp, offset);
+	assignOffset(temp, threeAddressCode);
 	call = constructInstruction(code_CALL, temp, NULL, getSymbol(node));
 	addInstruction(threeAddressCode, call);
 	return temp;
 }
 
-Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode, int* offset, int* numberOfLabel) {
+Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode) {
 	if(node) {
 		Flag flag = getFlag(*(node->symbol));
 		Symbol* expression;
@@ -267,62 +249,48 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 			case flag_ADDITION:
 				return generateIntermediateCodeForBinaryOperation(code_ADDITION
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_SUBSTRACTION:
 				return generateIntermediateCodeForBinaryOperation(code_SUBSTRACTION
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_MULTIPLICATION:
 				return generateIntermediateCodeForBinaryOperation(code_MULTIPLICATION
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_DIVISION:
 				return generateIntermediateCodeForBinaryOperation(code_DIVISION
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_MOD:
 				return generateIntermediateCodeForBinaryOperation(code_MOD
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_OR:
 				return generateIntermediateCodeForBinaryOperation(code_OR
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_AND:
 				return generateIntermediateCodeForBinaryOperation(code_AND
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_RETURN:
-				expression  = generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
+				expression  = generateIntermediateCode(getLSide(node), threeAddressCode);
 				instruction = constructInstruction(code_RETURN, NULL, NULL, expression);
 				addInstruction(threeAddressCode, instruction);
 				break;
 			case flag_ASSIGNMENT:
-				expression  = generateIntermediateCode(getRSide(node), threeAddressCode, offset, numberOfLabel);
+				expression  = generateIntermediateCode(getRSide(node), threeAddressCode);
 				instruction = constructInstruction(code_ASSIGNMENT, expression, NULL, getSymbol(getLSide(node)));
 				addInstruction(threeAddressCode, instruction);
-				assignOffset(getSymbol(getLSide(node)), offset);
+				assignOffset(getSymbol(getLSide(node)), threeAddressCode);
 				break;
 			case flag_GLOBAL_VAR_DECL:
 				expression = constructPtrToEmptySymbol();
@@ -334,65 +302,41 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				addInstruction(threeAddressCode, instruction);
 				break;
 			case flag_SEMICOLON:
-				generateIntermediateCode(getLSide(node), threeAddressCode, offset, numberOfLabel);
-				generateIntermediateCode(getRSide(node), threeAddressCode, offset, numberOfLabel);
+				generateIntermediateCode(getLSide(node), threeAddressCode);
+				generateIntermediateCode(getRSide(node), threeAddressCode);
 				break;
 			case flag_LT:
 				return generateIntermediateCodeForBinaryOperation(code_LT
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_GT:
 				return generateIntermediateCodeForBinaryOperation(code_GT
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_EQT:
 				return generateIntermediateCodeForBinaryOperation(code_EQT
 										 ,node
-										 ,threeAddressCode
-										 ,offset
-										 ,numberOfLabel);
+										 ,threeAddressCode);
 				break;
 			case flag_NEG:
-				return generateIntermediateCodeForNeg(node
-								     ,threeAddressCode
-								     ,offset
-								     ,numberOfLabel);
+				return generateIntermediateCodeForNeg(node, threeAddressCode);
 				break;
 			case flag_IF:
-				generateIntermediateCodeForIF(node
-							     ,threeAddressCode
-							     ,offset
-							     ,numberOfLabel);
+				generateIntermediateCodeForIF(node, threeAddressCode);
 				break;
 			case flag_IF_ELSE:
-				generateIntermediateCodeForIF_ELSE(node
-								  ,threeAddressCode
-								  ,offset
-								  ,numberOfLabel);
+				generateIntermediateCodeForIF_ELSE(node, threeAddressCode);
 				break;
 			case flag_WHILE:
-				generateIntermediateCodeForWHILE(node
-								,threeAddressCode
-								,offset
-								,numberOfLabel);
+				generateIntermediateCodeForWHILE(node, threeAddressCode);
 				break;
 			case flag_METHOD_DECLARATION:
-				generateIntermediateCodeForMethodDeclaration(node
-									    ,threeAddressCode
-									    ,offset
-									    ,numberOfLabel);
+				generateIntermediateCodeForMethodDeclaration(node, threeAddressCode);
 				break;
 			case flag_METHOD_CALL:
-				return generateIntermediateCodeForMethodCall(node
-									    ,threeAddressCode
-									    ,offset
-									    ,numberOfLabel);
+				return generateIntermediateCodeForMethodCall(node, threeAddressCode);
 				break;
 			default:
 				break;
