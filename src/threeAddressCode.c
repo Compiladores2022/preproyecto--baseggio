@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include "threeAddressCode.h"
 
+#define TRUE  1
+#define FALSE 0
+
 Instruction constructInstruction(Code code, Symbol* fstOperand, Symbol* sndOperand, Symbol* dest) {
     Instruction i;
     i.code = code;
@@ -15,30 +18,30 @@ Instruction constructInstruction(Code code, Symbol* fstOperand, Symbol* sndOpera
 void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction) {
     void* data = malloc(sizeof(Instruction));
     (*(Instruction*) data) = instruction;
-    enqueue(&threeAddressCode->queue, data, sizeof(instruction));
+    add(&threeAddressCode->list, data, sizeof(instruction), FALSE);
 }
 
-Queue generateIntermediateCodeForParameters(ASTNode* node
-					   ,ThreeAddressCode* threeAddressCode) {
-    	Queue queue;
+List generateIntermediateCodeForParameters(ASTNode* node
+					  ,ThreeAddressCode* threeAddressCode) {
+    	List list;
     	
-    	constructQueue(&queue);
+    	constructList(&list);
     	
     	ASTNode* ptr = node;
     	while(ptr) {
     		Symbol* param = generateIntermediateCode(getLSide(ptr), threeAddressCode);
-    		enqueue(&queue, (void *) param, sizeof(Symbol*));
+    		add(&list, (void *) param, sizeof(Symbol*), TRUE);
     		ptr = getRSide(ptr);
     	}
     	
-    	return queue;
+    	return list;
 }
 
-void loadParameters(Queue queue, ThreeAddressCode* threeAddressCode) {    
-    while(!isEmpty(queue)) {
-    	Instruction load = constructInstruction(code_LOAD, NULL, NULL, (Symbol *) head(queue));
+void loadParameters(List list, ThreeAddressCode* threeAddressCode) {    
+    while(!isEmpty(list)) {
+    	Instruction load = constructInstruction(code_LOAD, NULL, NULL, (Symbol *) head(list));
     	addInstruction(threeAddressCode, load);
-    	dequeue(&queue);
+    	removeFirst(&list);
     }
 }
 
@@ -217,8 +220,7 @@ Symbol* generateIntermediateCodeForMethodCall(ASTNode* node
 				  ,ThreeAddressCode* threeAddressCode) {
 	Instruction call;
 				  
-	Queue params = generateIntermediateCodeForParameters(getLSide(node)
-										    ,threeAddressCode);
+	List params = generateIntermediateCodeForParameters(getLSide(node), threeAddressCode);
 	loadParameters(params, threeAddressCode);
 	Symbol* temp = constructPtrToEmptySymbol();
 	assignOffset(temp, threeAddressCode);
@@ -346,6 +348,12 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 	return NULL;
 }
 
+void ThreeAddressCode_construct(ThreeAddressCode* threeAddressCode) {
+	constructList(&threeAddressCode->list);
+	threeAddressCode->offset = 8;
+	threeAddressCode->numberOfLabel = 0;
+}
+
 void printInstruction(void* i) {
 	Instruction instruction = *(Instruction*) i;
 	Code op = instruction.code;
@@ -363,5 +371,5 @@ void printInstruction(void* i) {
 }
 
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
-	showQueue(threeAddressCode.queue, printInstruction);
+	print(threeAddressCode.list, printInstruction);
 }

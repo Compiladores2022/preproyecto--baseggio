@@ -6,80 +6,77 @@
 #define TRUE  1
 #define FALSE 0
 
-int numberOfLocals(SymbolTable symbolTable) {
-    return length(symbolTable.peek->queue);
-}
-
-int numberOfLevel(SymbolTable symbolTable) {
+int SymbolTable_levels(SymbolTable symbolTable) {
 	return symbolTable.levels;
 }
 
 int compareByName(void* s, void* name) {
   Symbol* symbol = (Symbol*) s;
-  return strcmp(getName(*symbol), name) == 0;
+  return strcmp(getName(*symbol), (char*) name) == 0;
 }
 
 void printData(void* data) {
-  Symbol* symbol = (Symbol*) data;
-  printf("%s ", getName(*symbol));
+  printf("%s", getName(*((Symbol*) data)));
 }
 
-int addSymbol(SymbolTable* symbolTable, Symbol* symbol) {
-    int found = lookUp(symbolTable->peek->queue, compareByName, getName(*symbol)) != NULL;
+int SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol) {
+    int found = lookUp(symbolTable->peek->list, compareByName, getName(*symbol)) != NULL;
     if(!found) {
-      enqueue(&(symbolTable->peek->queue), (void*) symbol, sizeof(Symbol*));
+      add(&symbolTable->peek->list, symbol, sizeof(Symbol*), TRUE);
       return TRUE;
     }
 
     return FALSE;
 }
 
-Level* constructLevel() {
-    Level* level = (Level*) malloc(sizeof(Level));
+SymbolTable_Level* Level_construct() {
+    SymbolTable_Level* level = (SymbolTable_Level*) malloc(sizeof(SymbolTable_Level));
     if(level == NULL) { exit(EXIT_FAILURE); }
-    constructQueue(&level->queue);
+    constructList(&level->list);
     return level;
 }
 
-void constructSymbolTable(SymbolTable* symbolTable) {
-    symbolTable->peek   = constructLevel();
+void SymbolTable_construct(SymbolTable* symbolTable) {
+    symbolTable->peek = Level_construct();
+    symbolTable->peek->next = NULL;
     symbolTable->levels = 1;
 }
 
-void openLevel(SymbolTable* symbolTable) {
-    Level* level = constructLevel();
-    level->next  = symbolTable->peek;
+void SymbolTable_openLevel(SymbolTable* symbolTable) {
+    SymbolTable_Level* level = Level_construct();
+    level->next = symbolTable->peek;
     symbolTable->peek = level;
     symbolTable->levels++;
 }
 
-void closeLevel(SymbolTable* symbolTable) {
-    Level* level = symbolTable->peek;
+void SymbolTable_closeLevel(SymbolTable* symbolTable) {
+    SymbolTable_Level* level = symbolTable->peek;
     symbolTable->peek = symbolTable->peek->next;
     free(level);
     symbolTable->levels--;
 }
 
-void printSymbolTable(SymbolTable symbolTable) {
-    Level* level = symbolTable.peek;
+void SymbolTable_print(SymbolTable symbolTable) {
+    SymbolTable_Level* level = symbolTable.peek;
     int i = 0;
     printf("\n--- SYMBOL TABLE ---\n");
     while(level) {
-	    printf("\nLevel %d: \n", symbolTable.levels - i);
-        showQueue(level->queue, printData);
-	    level = level->next;
-	    i++;
+		printf("\nLevel %d: \n", symbolTable.levels - i);
+        	print(level->list, printData);
+	    	level = level->next;
+	    	i++;
     }
 
     printf("\n--- SYMBOL TABLE ---\n");
 }
 
-Symbol* lookUpSymbol(SymbolTable symbolTable, char* name) {
-    Level* level = symbolTable.peek;
+Symbol* SymbolTable_lookUp(SymbolTable symbolTable, char* name) {
+    SymbolTable_Level* level = symbolTable.peek;
     Symbol* symbol;
     while(level) {
-	if((symbol = lookUp(level->queue, compareByName, name)))
-	    return symbol;
+	if((symbol = lookUp(level->list, compareByName, name))) {
+		return symbol;
+	}
 	level = level->next;
     }
 
@@ -88,7 +85,7 @@ Symbol* lookUpSymbol(SymbolTable symbolTable, char* name) {
 
 Symbol* checkIdentifierIsDeclared(SymbolTable symbolTable, char* name) {
     Symbol* symbol;
-    if(!(symbol = lookUpSymbol(symbolTable, name))) {
+    if(!(symbol = SymbolTable_lookUp(symbolTable, name))) {
         printf("Undeclared identifier: %s\n", name);
 	exit(EXIT_FAILURE);
     }

@@ -353,10 +353,10 @@ void generateAssembler(ThreeAddressCode threeAddressCode) {
 	int numberOfLabel     = 0;
 	int numberOfParameter = 1;
 
-	while(!isEmpty(threeAddressCode.queue)) {
-		Instruction instruction = *(Instruction*) head(threeAddressCode.queue); // getHead(threeAddressCode);
+	while(!isEmpty(threeAddressCode.list)) {
+		Instruction instruction = *(Instruction*) head(threeAddressCode.list); // getHead(threeAddressCode);
 		translate(fp, instruction, &numberOfLabel, &numberOfParameter);
-		dequeue(&(threeAddressCode.queue)); // removeHead(&threeAddressCode);
+		removeFirst(&(threeAddressCode.list)); // removeHead(&threeAddressCode);
 	}
 	
 	fprintf(fp, "\n");

@@ -1,41 +1,39 @@
 #ifndef SYMBOLTABLE_H
 #define SYMBOLTABLE_H
-#include "queue.h"
 #include "symbol.h"
+#include "list.h"
 
-typedef struct level {
-    Queue queue;
-    struct level* next;
-} Level;
+typedef struct SymbolTable_level {
+	List list;
+	struct SymbolTable_level* next;
+} SymbolTable_Level;
 
 typedef struct {
-    Level* peek;
+    SymbolTable_Level* peek;
     int levels;
 } SymbolTable;
 
-int numberOfLocals(SymbolTable symbolTable);
-
-int numberOfLevel(SymbolTable symbolTable);
+int     SymbolTable_levels(SymbolTable symbolTable);
 
 /* The 'constructSymbolTable' function constructs an empty 'symbolTable'. */
-void constructSymbolTable(SymbolTable* symbolTable);
+void    SymbolTable_construct(SymbolTable* symbolTable);
 
 /* The 'openLevel' function adds a new level to the 'symbolTable'. */
-void openLevel(SymbolTable* symbolTable);
+void    SymbolTable_openLevel(SymbolTable* symbolTable);
 
 /* The 'closeLevel' function closes the most recently opened level in the 'symbolTable'. 
  * It is assumed that the 'symbolTable' has at least one level. */
-void closeLevel(SymbolTable* symbolTable);
+void    SymbolTable_closeLevel(SymbolTable* symbolTable);
 
 /* The 'addSymbol' function adds a new reference to a symbol in the 'symbolTable'. */
-int addSymbol(SymbolTable* symbolTable, Symbol* symbol);
+int     SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol);
 
 /* The 'printSymbolTable' function prints the elements in the 'symbolTable' to the stdout. */
-void printSymbolTable(SymbolTable symbolTable);
+void    SymbolTable_print(SymbolTable symbolTable);
 
 /* The 'lookUpSymbol' function look for a symbol by its name in the 'symbolTable'. 
  * It returns a reference to the symbol if it is found otherwise returns NULL. */
-Symbol* lookUpSymbol(SymbolTable symbolTable, char* name);
+Symbol* SymbolTable_lookUp(SymbolTable symbolTable, char* name);
 
 Symbol* checkIdentifierIsDeclared(SymbolTable symbolTable, char* name);
 #endif

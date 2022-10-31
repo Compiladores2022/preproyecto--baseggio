@@ -3,9 +3,8 @@
 #include "ast.h"
 #include "symbol.h"
 #include "symbolTable.h"
-#include "listOfLists.h"
 #include "code.h"
-#include "queue.h"
+#include "list.h"
 
 typedef struct instruction{
     Code code;
@@ -15,8 +14,8 @@ typedef struct instruction{
 } Instruction;
 
 typedef struct threeAddressCode {
-    Queue queue;
-    ListOfLists freeOffsets;
+    List list;
+    //ListOfLists freeOffsets;
     int numberOfTemporaries;
     int offset;
     int numberOfLabel;
@@ -24,5 +23,6 @@ typedef struct threeAddressCode {
 
 int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode);
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode);
+void ThreeAddressCode_construct(ThreeAddressCode* threeAddressCode);
 void showThreeAddressCode(ThreeAddressCode threeAddressCode);
 #endif

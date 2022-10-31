@@ -51,6 +51,10 @@ void setIsFunction(Symbol* symbol) {
     symbol->isFunction = 1;
 }
 
+void setIsTemporal(Symbol* symbol) {
+	symbol->isTemporal = 1;
+}
+
 Symbol* constructPtrToEmptySymbol() {
     Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
     symbol->name = (char*) malloc(sizeof(char));
@@ -82,6 +86,10 @@ int isFunction(Symbol symbol) {
 
 int isGlobal(Symbol symbol) {
 	return symbol.global;
+}
+
+int isTemporal(Symbol symbol) {
+	return symbol.isTemporal;
 }
 
 void showSymbol(Symbol symbol) {

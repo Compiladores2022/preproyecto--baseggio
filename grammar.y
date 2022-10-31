@@ -7,7 +7,7 @@
 #include "threeAddressCode.h"
 #include "assemblerGenerator.h"
 #include "ast.h"
-#include "queue.h"
+#include "list.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -71,16 +71,17 @@ ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, co
 %right UMINUS
 %%
 
-program:{ constructSymbolTable(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
+program:{ SymbolTable_construct(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
 
-        Symbol* symbol = lookUpSymbol(symbolTable, "main");
+        Symbol* symbol = SymbolTable_lookUp(symbolTable, "main");
         if(!(symbol && isFunction(*symbol))) {
             printf("main function not defined\n");
             exit(EXIT_FAILURE);
         }
         
         typeCheck(root);
+	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
         //showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
@@ -95,11 +96,11 @@ MethodDeclarations: { $$ = NULL; }
                   ;
 
 MethodDeclaration: Method 
-                   { openLevel(&symbolTable); 
+                   { SymbolTable_openLevel(&symbolTable); 
                      Symbol* symbol = $1;
                      addAll(&symbolTable, symbol->params); }
                    Block  
-                   { closeLevel(&symbolTable);
+                   { SymbolTable_closeLevel(&symbolTable);
                      ASTNode* n = node($1);
                      setLSide(n, $3);
                      $$ = n; }
@@ -108,7 +109,7 @@ MethodDeclaration: Method
                  ;
 
 Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, TYPE_VOID, $2, 0);
-                                 if (addSymbol(&symbolTable, symbol)) {
+                                 if (SymbolTable_add(&symbolTable, symbol)) {
                                      symbol->isFunction = TRUE;
                                      
                                      if (strcmp(getName(*symbol), "main") != 0) {
@@ -120,7 +121,7 @@ Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METH
                                      exit(EXIT_FAILURE);
                                  } }
       | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, $1, $2, 0);
-                                 if(addSymbol(&symbolTable, symbol)) {
+                                 if(SymbolTable_add(&symbolTable, symbol)) {
                                      symbol->isFunction = TRUE;
                                      
                                      if (strcmp(getName(*symbol), "main") != 0) {
@@ -146,8 +147,8 @@ OneOrMoreParams : Param                     { $$ = $1; }
 Param: Type ID { Symbol* symbol = constructPtrToSymbol(flag_PARAM, $1, $2, 0);
                  $$ = symbol; } ;
 
-Block: { openLevel(&symbolTable); } '{' lDeclarations lStatements '}' 
-       { closeLevel(&symbolTable); $$ = composeTree(flag_SEMICOLON, ";", $3, NULL, $4); } ;
+Block: { SymbolTable_openLevel(&symbolTable); } '{' lDeclarations lStatements '}' 
+       { SymbolTable_closeLevel(&symbolTable); $$ = composeTree(flag_SEMICOLON, ";", $3, NULL, $4); } ;
 
 lStatements: { $$ = NULL; }
 	         | lStatements Statement { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
@@ -175,7 +176,7 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
          ;
 
 Declaration: Type ID '=' E ';' {
-				if(numberOfLevel(symbolTable) == 1 
+				if(SymbolTable_levels(symbolTable) == 1 
 				&& !expressionIsOnlyFormedByConstants($4)) {
 					printf("error: initializer element is not constant\n");
 					printf("%s %s = %s\n", typeToString($1), $2, getName(*getSymbol($4)));
@@ -183,9 +184,9 @@ Declaration: Type ID '=' E ';' {
 				} 
 				
 				Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
-				symbol->global = numberOfLevel(symbolTable) == 1;
+				symbol->global = SymbolTable_levels(symbolTable) == 1;
 				
-	                        if(addSymbol(&symbolTable, symbol)) {
+	                        if(SymbolTable_add(&symbolTable, symbol)) {
                                 	ASTNode* lSide = node(symbol);
                                 	
                                 	if(isGlobal(*symbol)) {
@@ -266,7 +267,7 @@ MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(
 
 void addAll(SymbolTable* symbolTable, Symbol* symbol) {
     if(symbol) {
-        addSymbol(symbolTable, symbol);
+        SymbolTable_add(symbolTable, symbol);
         addAll(symbolTable, symbol->params);
     }
 }

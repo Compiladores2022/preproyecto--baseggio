@@ -12,6 +12,7 @@ typedef struct symbol {
     int offset;
     int isFunction;
     int global;
+    int isTemporal;
 } Symbol;
 
 Flag getFlag(Symbol symbol);
@@ -29,12 +30,14 @@ void setValue(Symbol* symbol, int value);
 void setOffset(Symbol* symbol, int offset);
 
 void setIsFunction(Symbol* symbol);
+void setIsTemporal(Symbol* symbol);
 
 Symbol* constructPtrToEmptySymbol();
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value);
 Symbol* copy(Symbol* symbol);
 int isFunction(Symbol symbol);
 int isGlobal(Symbol symbol);
+int isTemporal(Symbol symbol);
 
 void showSymbol(Symbol symbol);
 #endif
