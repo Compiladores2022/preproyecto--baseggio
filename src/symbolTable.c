@@ -22,7 +22,7 @@ void printData(void* data) {
 int SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol) {
     int found = lookUp(symbolTable->peek->list, compareByName, getName(*symbol)) != NULL;
     if(!found) {
-      add(&symbolTable->peek->list, symbol, sizeof(Symbol*), TRUE);
+      add(&symbolTable->peek->list, (void*) symbol, sizeof(Symbol*), TRUE);
       return TRUE;
     }
 

@@ -529,12 +529,13 @@ char *yytext;
 #include <stdio.h>
 #include "type.h"
 #include "assemblerGenerator.h"
+#include "utils.h"
 #include "grammar.tab.h"
 
 char* filename;
-#line 536 "lex.yy.c"
+#line 537 "lex.yy.c"
 
-#line 538 "lex.yy.c"
+#line 539 "lex.yy.c"
 
 #define INITIAL 0
 #define IN_COMMENT 1
@@ -752,10 +753,10 @@ YY_DECL
 		}
 
 	{
-#line 23 "calc-lexico.l"
+#line 24 "calc-lexico.l"
 
 
-#line 759 "lex.yy.c"
+#line 760 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -824,141 +825,141 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 25 "calc-lexico.l"
+#line 26 "calc-lexico.l"
 { return PROGRAM; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 27 "calc-lexico.l"
+#line 28 "calc-lexico.l"
 { return IF; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 29 "calc-lexico.l"
+#line 30 "calc-lexico.l"
 { return THEN; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 31 "calc-lexico.l"
+#line 32 "calc-lexico.l"
 { return ELSE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 33 "calc-lexico.l"
+#line 34 "calc-lexico.l"
 { return EXTERN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "calc-lexico.l"
+#line 36 "calc-lexico.l"
 { return VOID; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 37 "calc-lexico.l"
+#line 38 "calc-lexico.l"
 { return WHILE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 39 "calc-lexico.l"
+#line 40 "calc-lexico.l"
 { return RETURN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 41 "calc-lexico.l"
+#line 42 "calc-lexico.l"
 { yylval.t = TYPE_INT;
             return tINT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 44 "calc-lexico.l"
+#line 45 "calc-lexico.l"
 { yylval.t = TYPE_BOOL;
             return tBOOL; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 47 "calc-lexico.l"
+#line 48 "calc-lexico.l"
 { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
             return vBOOL; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 50 "calc-lexico.l"
-{ yylval.s = (char*) malloc(sizeof(char));
+#line 51 "calc-lexico.l"
+{ yylval.s = (char*) malloc(32 * sizeof(char));
                       strcpy(yylval.s, yytext);
                       return ID; 
                     }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 55 "calc-lexico.l"
+#line 56 "calc-lexico.l"
 { yylval.i = atoi(yytext);
                return vINT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 58 "calc-lexico.l"
+#line 59 "calc-lexico.l"
 { return EQT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 60 "calc-lexico.l"
+#line 61 "calc-lexico.l"
 { return *yytext; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 62 "calc-lexico.l"
+#line 63 "calc-lexico.l"
 { return AND; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 64 "calc-lexico.l"
+#line 65 "calc-lexico.l"
 { return OR; }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 66 "calc-lexico.l"
+#line 67 "calc-lexico.l"
 
 	YY_BREAK
 
 case 19:
 YY_RULE_SETUP
-#line 69 "calc-lexico.l"
+#line 70 "calc-lexico.l"
 BEGIN(IN_COMMENT);
 	YY_BREAK
 
 
 case 20:
 YY_RULE_SETUP
-#line 72 "calc-lexico.l"
+#line 73 "calc-lexico.l"
 BEGIN(INITIAL);
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 73 "calc-lexico.l"
+#line 74 "calc-lexico.l"
 // eat comment in chunks
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 74 "calc-lexico.l"
+#line 75 "calc-lexico.l"
 // eat the lone star
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 75 "calc-lexico.l"
+#line 76 "calc-lexico.l"
 yylineno++;
 	YY_BREAK
 
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 78 "calc-lexico.l"
+#line 79 "calc-lexico.l"
 
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 80 "calc-lexico.l"
+#line 81 "calc-lexico.l"
 { printf("%s%d\n", "-> Lexical ERROR on line: ", yylineno);
     printf("%s%s\n", "unexpected character: ", yytext);
     exit(0);
@@ -966,10 +967,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 85 "calc-lexico.l"
+#line 86 "calc-lexico.l"
 ECHO;
 	YY_BREAK
-#line 973 "lex.yy.c"
+#line 974 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_COMMENT):
 	yyterminate();
@@ -1987,7 +1988,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 85 "calc-lexico.l"
+#line 86 "calc-lexico.l"
 
 
 void yyerror(char* s){
@@ -1998,7 +1999,7 @@ int main(int argc,char *argv[]){
 	++argv,--argc;
 	if (argc > 0) {
 		yyin = fopen(argv[0],"r");
-		filename = (char*) malloc(100 * sizeof(char));
+		filename = allocateChar(32);
 		strcpy(filename, strtok(argv[1], "."));
 	} else {
 		yyin = stdin;

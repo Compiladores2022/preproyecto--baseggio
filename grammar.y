@@ -8,6 +8,7 @@
 #include "assemblerGenerator.h"
 #include "ast.h"
 #include "list.h"
+#include "utils.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -79,11 +80,10 @@ program:{ SymbolTable_construct(&symbolTable); }  PROGRAM '{' lDeclarations Meth
             printf("main function not defined\n");
             exit(EXIT_FAILURE);
         }
-        
-        typeCheck(root);
+	typeCheck(root);
 	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
-        //showThreeAddressCode(threeAddressCode);
+        showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 } ;
 
@@ -175,8 +175,7 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
          | Block                               { $$ = $1; }
          ;
 
-Declaration: Type ID '=' E ';' {
-				if(SymbolTable_levels(symbolTable) == 1 
+Declaration: Type ID '=' E ';' { if(SymbolTable_levels(symbolTable) == 1 
 				&& !expressionIsOnlyFormedByConstants($4)) {
 					printf("error: initializer element is not constant\n");
 					printf("%s %s = %s\n", typeToString($1), $2, getName(*getSymbol($4)));
@@ -228,11 +227,11 @@ E: ID                 { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, 
  | '(' E ')'          { $$ = $2; }
  ;
 
-V: vINT {  char* name = (char*) malloc(sizeof(char));
+V: vINT {  char* name = allocateChar(32);
            snprintf(name, sizeof(int), "%d", $1);
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, $1));
            $$ = n; }
- | vBOOL { char* name = (char*) malloc(sizeof(char));
+ | vBOOL { char* name = allocateChar(32);
            snprintf(name, sizeof(int), "%d", $1);
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, $1));
            $$ = n; }

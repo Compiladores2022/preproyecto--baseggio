@@ -1,4 +1,5 @@
 #include "symbol.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,7 +58,7 @@ void setIsTemporal(Symbol* symbol) {
 
 Symbol* constructPtrToEmptySymbol() {
     Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-    symbol->name = (char*) malloc(sizeof(char));
+    symbol->name = allocateChar(32);
     return symbol;
 }
 

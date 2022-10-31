@@ -23,15 +23,15 @@ ASTNode* composeTree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide
 	setName(symbol, name);
 	setFlag(symbol, flag);
 
-    ASTNode* root = node(symbol);
-    root->lSide = lSide;
-    root->mSide = mSide;
-    root->rSide = rSide;
-    return root;
+	ASTNode* root = node(symbol);
+	root->lSide = lSide;
+	root->mSide = mSide;
+	root->rSide = rSide;
+	return root;
 }
 
 int isLeave(ASTNode* node) {
-    return !node->lSide && !node->mSide && !node->rSide;
+	return !node->lSide && !node->mSide && !node->rSide;
 }
 
 int expressionIsOnlyFormedByConstants(ASTNode* node) {

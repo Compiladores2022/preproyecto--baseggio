@@ -82,7 +82,7 @@ void addByIndex(List* list, void* data, size_t dataSize, int index, int isPtr) {
 		if(index == 0) {
 			if(isEmpty(*list)) {
 				list->head = node;
-				list->last    = node;
+				list->last = node;
 			} else {
 				node->next = list->head;
 				list->head = node;

@@ -73,6 +73,7 @@
 #include "assemblerGenerator.h"
 #include "ast.h"
 #include "list.h"
+#include "utils.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -85,7 +86,7 @@ void yyerror(const char* s);
 void addAll(SymbolTable* symbolTable, Symbol* symbol);
 ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide);
 
-#line 89 "grammar.tab.c" /* yacc.c:339  */
+#line 90 "grammar.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -145,10 +146,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 24 "grammar.y" /* yacc.c:355  */
+#line 25 "grammar.y" /* yacc.c:355  */
  int i; char* s; struct astNode* n; enum type t; struct symbol* sb; 
 
-#line 152 "grammar.tab.c" /* yacc.c:355  */
+#line 153 "grammar.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -165,7 +166,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 169 "grammar.tab.c" /* yacc.c:358  */
+#line 170 "grammar.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -464,12 +465,12 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    74,    74,    74,    90,    91,    94,    95,    99,    98,
+       0,    75,    75,    75,    90,    91,    94,    95,    99,    98,
      107,   111,   123,   137,   138,   141,   142,   147,   150,   150,
      153,   154,   157,   164,   165,   166,   167,   168,   173,   174,
-     175,   178,   205,   212,   213,   214,   215,   216,   217,   218,
-     219,   220,   221,   222,   223,   224,   227,   228,   231,   235,
-     241,   242,   245,   246,   249,   250,   253
+     175,   178,   204,   211,   212,   213,   214,   215,   216,   217,
+     218,   219,   220,   221,   222,   223,   226,   227,   230,   234,
+     240,   241,   244,   245,   248,   249,   252
 };
 #endif
 
@@ -1334,13 +1335,13 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 74 "grammar.y" /* yacc.c:1646  */
+#line 75 "grammar.y" /* yacc.c:1646  */
     { SymbolTable_construct(&symbolTable); }
-#line 1340 "grammar.tab.c" /* yacc.c:1646  */
+#line 1341 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 74 "grammar.y" /* yacc.c:1646  */
+#line 75 "grammar.y" /* yacc.c:1646  */
     { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[-1].n));
 
@@ -1349,11 +1350,10 @@ yyreduce:
             printf("main function not defined\n");
             exit(EXIT_FAILURE);
         }
-        
-        typeCheck(root);
+	typeCheck(root);
 	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
-        //showThreeAddressCode(threeAddressCode);
+        showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 }
 #line 1360 "grammar.tab.c" /* yacc.c:1646  */
@@ -1564,8 +1564,7 @@ yyreduce:
 
   case 31:
 #line 178 "grammar.y" /* yacc.c:1646  */
-    {
-				if(SymbolTable_levels(symbolTable) == 1 
+    { if(SymbolTable_levels(symbolTable) == 1 
 				&& !expressionIsOnlyFormedByConstants((yyvsp[-1].n))) {
 					printf("error: initializer element is not constant\n");
 					printf("%s %s = %s\n", typeToString((yyvsp[-4].t)), (yyvsp[-3].s), getName(*getSymbol((yyvsp[-1].n))));
@@ -1589,11 +1588,11 @@ yyreduce:
                                 	exit(EXIT_FAILURE);
 				}
                                }
-#line 1593 "grammar.tab.c" /* yacc.c:1646  */
+#line 1592 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 205 "grammar.y" /* yacc.c:1646  */
+#line 204 "grammar.y" /* yacc.c:1646  */
     { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[0].s)); 
 			if(isFunction(*symbol)) {
 				printf("ERROR: %s is a function.\n", getName(*symbol));
@@ -1601,157 +1600,157 @@ yyreduce:
 			}
                         ASTNode* n = node(symbol);
                         (yyval.n) = n;  }
-#line 1605 "grammar.tab.c" /* yacc.c:1646  */
+#line 1604 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 212 "grammar.y" /* yacc.c:1646  */
+#line 211 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[0].n); }
-#line 1611 "grammar.tab.c" /* yacc.c:1646  */
+#line 1610 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 213 "grammar.y" /* yacc.c:1646  */
+#line 212 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[0].n); }
-#line 1617 "grammar.tab.c" /* yacc.c:1646  */
+#line 1616 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 214 "grammar.y" /* yacc.c:1646  */
+#line 213 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_ADDITION,       flag_VALUE_INT,  TYPE_INT,  "+",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1623 "grammar.tab.c" /* yacc.c:1646  */
+#line 1622 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 215 "grammar.y" /* yacc.c:1646  */
+#line 214 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_SUBSTRACTION,   flag_VALUE_INT,  TYPE_INT,  "-",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1629 "grammar.tab.c" /* yacc.c:1646  */
+#line 1628 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 216 "grammar.y" /* yacc.c:1646  */
+#line 215 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_MULTIPLICATION, flag_VALUE_INT,  TYPE_INT,  "*",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1635 "grammar.tab.c" /* yacc.c:1646  */
+#line 1634 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 217 "grammar.y" /* yacc.c:1646  */
+#line 216 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_DIVISION,       flag_VALUE_INT,  TYPE_INT,  "/",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1641 "grammar.tab.c" /* yacc.c:1646  */
+#line 1640 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 218 "grammar.y" /* yacc.c:1646  */
+#line 217 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_MOD,            flag_VALUE_INT,  TYPE_INT,  "%",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1647 "grammar.tab.c" /* yacc.c:1646  */
+#line 1646 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 219 "grammar.y" /* yacc.c:1646  */
+#line 218 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_LT,             flag_VALUE_BOOL, TYPE_BOOL, "<",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1653 "grammar.tab.c" /* yacc.c:1646  */
+#line 1652 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 220 "grammar.y" /* yacc.c:1646  */
+#line 219 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_GT,             flag_VALUE_BOOL, TYPE_BOOL, ">",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1659 "grammar.tab.c" /* yacc.c:1646  */
+#line 1658 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 221 "grammar.y" /* yacc.c:1646  */
+#line 220 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_EQT,            flag_VALUE_BOOL, TYPE_BOOL, "==", (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1665 "grammar.tab.c" /* yacc.c:1646  */
+#line 1664 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 222 "grammar.y" /* yacc.c:1646  */
+#line 221 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_OR,             flag_VALUE_BOOL, TYPE_BOOL, "||", (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1671 "grammar.tab.c" /* yacc.c:1646  */
+#line 1670 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 223 "grammar.y" /* yacc.c:1646  */
+#line 222 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_AND,            flag_VALUE_BOOL, TYPE_BOOL, "&&", (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1677 "grammar.tab.c" /* yacc.c:1646  */
+#line 1676 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 224 "grammar.y" /* yacc.c:1646  */
+#line 223 "grammar.y" /* yacc.c:1646  */
     { Symbol* zero = constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, "0", 0);
  			ASTNode* lSide = node(zero);
  			(yyval.n) = propagationOfConstants(flag_SUBSTRACTION,   flag_VALUE_INT,  TYPE_INT,  "-",  lSide, (yyvsp[0].n)); }
-#line 1685 "grammar.tab.c" /* yacc.c:1646  */
+#line 1684 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 227 "grammar.y" /* yacc.c:1646  */
+#line 226 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = propagationOfConstants(flag_NEG,            flag_VALUE_BOOL, TYPE_BOOL, "!",  (yyvsp[0].n), NULL); }
-#line 1691 "grammar.tab.c" /* yacc.c:1646  */
+#line 1690 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 228 "grammar.y" /* yacc.c:1646  */
+#line 227 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1697 "grammar.tab.c" /* yacc.c:1646  */
+#line 1696 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 231 "grammar.y" /* yacc.c:1646  */
-    {  char* name = (char*) malloc(sizeof(char));
+#line 230 "grammar.y" /* yacc.c:1646  */
+    {  char* name = allocateChar(32);
            snprintf(name, sizeof(int), "%d", (yyvsp[0].i));
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, (yyvsp[0].i)));
            (yyval.n) = n; }
-#line 1706 "grammar.tab.c" /* yacc.c:1646  */
+#line 1705 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 235 "grammar.y" /* yacc.c:1646  */
-    { char* name = (char*) malloc(sizeof(char));
+#line 234 "grammar.y" /* yacc.c:1646  */
+    { char* name = allocateChar(32);
            snprintf(name, sizeof(int), "%d", (yyvsp[0].i));
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, (yyvsp[0].i)));
            (yyval.n) = n; }
-#line 1715 "grammar.tab.c" /* yacc.c:1646  */
+#line 1714 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 241 "grammar.y" /* yacc.c:1646  */
+#line 240 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = NULL; }
-#line 1721 "grammar.tab.c" /* yacc.c:1646  */
+#line 1720 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 242 "grammar.y" /* yacc.c:1646  */
+#line 241 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[0].n); }
-#line 1727 "grammar.tab.c" /* yacc.c:1646  */
+#line 1726 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 245 "grammar.y" /* yacc.c:1646  */
+#line 244 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[0].n), NULL, NULL); }
-#line 1733 "grammar.tab.c" /* yacc.c:1646  */
+#line 1732 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 246 "grammar.y" /* yacc.c:1646  */
+#line 245 "grammar.y" /* yacc.c:1646  */
     { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1739 "grammar.tab.c" /* yacc.c:1646  */
+#line 1738 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 249 "grammar.y" /* yacc.c:1646  */
+#line 248 "grammar.y" /* yacc.c:1646  */
     { (yyval.t) = (yyvsp[0].t); }
-#line 1745 "grammar.tab.c" /* yacc.c:1646  */
+#line 1744 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 250 "grammar.y" /* yacc.c:1646  */
+#line 249 "grammar.y" /* yacc.c:1646  */
     { (yyval.t) = (yyvsp[0].t); }
-#line 1751 "grammar.tab.c" /* yacc.c:1646  */
+#line 1750 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 253 "grammar.y" /* yacc.c:1646  */
+#line 252 "grammar.y" /* yacc.c:1646  */
     { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
 	                             int isAFunction = isFunction(*symbol);
 	                             if(isAFunction) {
@@ -1764,11 +1763,11 @@ yyreduce:
                                        	printf("%s is not a function\n", symbol->name);
                                      	exit(EXIT_FAILURE);
                                      } }
-#line 1768 "grammar.tab.c" /* yacc.c:1646  */
+#line 1767 "grammar.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1772 "grammar.tab.c" /* yacc.c:1646  */
+#line 1771 "grammar.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1996,7 +1995,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 266 "grammar.y" /* yacc.c:1906  */
+#line 265 "grammar.y" /* yacc.c:1906  */
 
 
 void addAll(SymbolTable* symbolTable, Symbol* symbol) {

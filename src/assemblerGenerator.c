@@ -1,4 +1,5 @@
 #include "assemblerGenerator.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -341,8 +342,7 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numbe
 }
 
 void generateAssembler(ThreeAddressCode threeAddressCode) {
-
-	char* target = (char*) malloc(100 * sizeof(char));
+	char* target = allocateChar(32);
 	sprintf(target, "./output/%s.s", filename);
 	FILE* fp = fopen(target, "w");
 	if(fp == NULL) {

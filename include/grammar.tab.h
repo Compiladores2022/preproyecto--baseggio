@@ -70,7 +70,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 24 "grammar.y" /* yacc.c:1909  */
+#line 25 "grammar.y" /* yacc.c:1909  */
  int i; char* s; struct astNode* n; enum type t; struct symbol* sb; 
 
 #line 77 "grammar.tab.h" /* yacc.c:1909  */

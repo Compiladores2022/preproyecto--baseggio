@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "type.h"
 #include "assemblerGenerator.h"
+#include "utils.h"
 #include "grammar.tab.h"
 
 char* filename;
@@ -47,7 +48,7 @@ keyword   "Program"|"if"|"then"|"else"|"extern"|"void"|"while"
 {bool}    { yylval.i = strcmp(yytext, "True") == 0? 1 : 0;
             return vBOOL; }
 
-{alpha}{alpha_num}* { yylval.s = (char*) malloc(sizeof(char));
+{alpha}{alpha_num}* { yylval.s = (char*) malloc(32 * sizeof(char));
                       strcpy(yylval.s, yytext);
                       return ID; 
                     }
@@ -92,7 +93,7 @@ int main(int argc,char *argv[]){
 	++argv,--argc;
 	if (argc > 0) {
 		yyin = fopen(argv[0],"r");
-		filename = (char*) malloc(100 * sizeof(char));
+		filename = allocateChar(32);
 		strcpy(filename, strtok(argv[1], "."));
 	} else {
 		yyin = stdin;

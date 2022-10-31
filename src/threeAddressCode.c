@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "threeAddressCode.h"
+#include "utils.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -357,8 +358,8 @@ void ThreeAddressCode_construct(ThreeAddressCode* threeAddressCode) {
 void printInstruction(void* i) {
 	Instruction instruction = *(Instruction*) i;
 	Code op = instruction.code;
-	char* oprnd1 = (char*) malloc(2 * sizeof(char));
-	char* oprnd2 = (char*) malloc(2 * sizeof(char));
+	char* oprnd1 = allocateChar(32);
+	char* oprnd2 = allocateChar(32);
 	char* dest;
 
 	strcpy(oprnd1, "-");
