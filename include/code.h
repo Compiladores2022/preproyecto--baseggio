@@ -26,7 +26,10 @@ typedef enum {
     ,code_GLOBAL_VAR_DECL
 } Code;
 
-int iCodeIsABinaryOperator(Code code);
-char* iCodeToString(Code code);
+/* The 'iCodeIsABinaryOperator' function returns TRUE iff the instruction code corresponds to a binary operator. */
+int	iCodeIsABinaryOperator(Code code);
+
+/* The 'iCodeToString' returns a string representing the instruction code. */
+char*	iCodeToString(Code code);
 
 #endif
