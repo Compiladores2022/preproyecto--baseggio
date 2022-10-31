@@ -7,5 +7,6 @@ typedef enum type {
     TYPE_VOID
 } Type;
 
+/* The 'typeToString' function returns a string representing the type. */
 char* typeToString(Type type);
 #endif
