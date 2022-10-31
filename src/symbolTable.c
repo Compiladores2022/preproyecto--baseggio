@@ -19,14 +19,14 @@ void printData(void* data) {
   printf("%s", getName(*((Symbol*) data)));
 }
 
-int SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol) {
-    int found = lookUp(symbolTable->peek->list, compareByName, getName(*symbol)) != NULL;
-    if(!found) {
-      add(&symbolTable->peek->list, (void*) symbol, sizeof(Symbol*), TRUE);
-      return TRUE;
-    }
-
-    return FALSE;
+void SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol) {
+	int found = lookUp(symbolTable->peek->list, compareByName, getName(*symbol)) != NULL;
+	if(!found) {
+		add(&symbolTable->peek->list, (void*) symbol, sizeof(Symbol*), TRUE);
+	} else {
+		printf("Redeclared identifier: %s\n", getName(*symbol));
+		exit(EXIT_FAILURE);
+	}
 }
 
 SymbolTable_Level* SymbolTable_levelConstruct() {

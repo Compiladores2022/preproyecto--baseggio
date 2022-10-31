@@ -1,0 +1,18 @@
+Program {
+	void print(Int x) extern;
+	
+	void foo(Int x, Int x) {
+		return ;
+	}
+
+	Int main() {
+		Int x = 10;
+		{
+			Int x = 5;
+			print(x);
+		}
+		
+		print(x);
+		return 0;
+	}
+}

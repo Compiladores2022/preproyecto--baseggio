@@ -26,7 +26,7 @@ void    SymbolTable_openLevel(SymbolTable* symbolTable);
 void    SymbolTable_closeLevel(SymbolTable* symbolTable);
 
 /* The 'addSymbol' function adds a new reference to a symbol in the 'symbolTable'. */
-int     SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol);
+void	SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol);
 
 /* The 'printSymbolTable' function prints the elements in the 'symbolTable' to the stdout. */
 void    SymbolTable_print(SymbolTable symbolTable);

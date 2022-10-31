@@ -97,7 +97,8 @@ MethodDeclarations: { $$ = NULL; }
 MethodDeclaration: Method 
                    { SymbolTable_openLevel(&symbolTable); 
                      Symbol* symbol = $1;
-                     addAll(&symbolTable, symbol->params); }
+                     addAll(&symbolTable, symbol->params);
+                     SymbolTable_print(symbolTable); }
                    Block  
                    { SymbolTable_closeLevel(&symbolTable);
                      ASTNode* n = node($1);
@@ -108,29 +109,23 @@ MethodDeclaration: Method
                  ;
 
 Method: VOID ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, TYPE_VOID, $2, 0);
-                                 if (SymbolTable_add(&symbolTable, symbol)) {
-                                     symbol->isFunction = TRUE;
+				 SymbolTable_add(&symbolTable, symbol);
+				 symbol->isFunction = TRUE;
                                      
-                                     if (strcmp(getName(*symbol), "main") != 0) {
-                                     	symbol->params = $4;
-                                     }
-                                     $$ = symbol;
-                                 } else {
-                                     printf("Redeclared identifier: %s\n", $2);
-                                     exit(EXIT_FAILURE);
-                                 } }
+				if (strcmp(getName(*symbol), "main") != 0) {
+					symbol->params = $4;
+				}
+				$$ = symbol;
+                               }
       | Type ID '(' Params ')' { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, $1, $2, 0);
-                                 if(SymbolTable_add(&symbolTable, symbol)) {
-                                     symbol->isFunction = TRUE;
+      				 SymbolTable_add(&symbolTable, symbol);
+      				 symbol->isFunction = TRUE;
                                      
-                                     if (strcmp(getName(*symbol), "main") != 0) {
-                                     	symbol->params = $4;
-                                     }
-                                     $$ = symbol;
-                                 } else {
-                                     printf("Redeclared identifier: %s\n", $2);
-                                     exit(EXIT_FAILURE);
-                                 } }
+				 if (strcmp(getName(*symbol), "main") != 0) {
+					 symbol->params = $4;
+				 }
+				 $$ = symbol;
+      				}
       ;
 
 Params:                 { $$ = NULL; }
@@ -138,7 +133,7 @@ Params:                 { $$ = NULL; }
       ;
 
 OneOrMoreParams : Param                     { $$ = $1; }
-		            | Param ',' OneOrMoreParams { Symbol* symbol = $1;
+		| Param ',' OneOrMoreParams { Symbol* symbol = $1;
                                               symbol->params = $3;
                                               $$ = symbol; }
                 ;
@@ -183,19 +178,12 @@ Declaration: Type ID '=' E ';' { if(SymbolTable_levels(symbolTable) == 1
 				
 				Symbol* symbol = constructPtrToSymbol(flag_IDENTIFIER, $1, $2, 0); 
 				symbol->global = SymbolTable_levels(symbolTable) == 1;
-				
-	                        if(SymbolTable_add(&symbolTable, symbol)) {
-                                	ASTNode* lSide = node(symbol);
-                                	
-                                	if(isGlobal(*symbol)) {
-        					$$ = composeTree(flag_GLOBAL_VAR_DECL, "=", lSide, NULL, $4);                        	
-                                	} else {
-	                               		$$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
-                                	}
-                                	
+				SymbolTable_add(&symbolTable, symbol);
+				ASTNode* lSide = node(symbol);	
+				if(isGlobal(*symbol)) {
+					$$ = composeTree(flag_GLOBAL_VAR_DECL, "=", lSide, NULL, $4);                        	
 				} else {
-                                	printf("Redeclared var\n");
-                                	exit(EXIT_FAILURE);
+					$$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
 				}
                                }
            ;
