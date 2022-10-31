@@ -29,9 +29,18 @@ typedef enum {
     ,flag_GLOBAL_VAR_DECL
 } Flag;
 
+/* The 'flagToString' function returns a string representing the flag. */
 char* flagToString(Flag flag);
+
+/* The 'isAnArithmeticBinaryOperator' function returns TRUE iff the flag corresponds to an arithmetic binary operator. */
 int isAnArithmeticBinaryOperator(Flag flag);
+
+/* The 'isABooleanBinaryOperator' function returns TRUE iff the flag corresponds to a boolean binary operator. */
 int isABooleanBinaryOperator(Flag flag);
+
+/* The 'isABinaryOperator' function returns TRUE iff the flag corresponds to a binary operator. */
 int isABinaryOperator(Flag flag);
+
+/* The 'isAConstant' function returns TRUE iff the flag corresponds to a constant. */
 int isAConstant(Flag flag);
 #endif
