@@ -8,18 +8,18 @@
 #define FALSE 0
 
 Instruction constructInstruction(Code code, Symbol* fstOperand, Symbol* sndOperand, Symbol* dest) {
-    Instruction i;
-    i.code = code;
-    i.fstOperand = fstOperand;
-    i.sndOperand = sndOperand;
-    i.dest = dest;
-    return i;
+	Instruction i;
+	i.code = code;
+	i.fstOperand = fstOperand;
+	i.sndOperand = sndOperand;
+	i.dest = dest;
+	return i;
 }
 
 void addInstruction(ThreeAddressCode* threeAddressCode, Instruction instruction) {
-    void* data = malloc(sizeof(Instruction));
-    (*(Instruction*) data) = instruction;
-    add(&threeAddressCode->list, data, sizeof(instruction), FALSE);
+	void* data = malloc(sizeof(Instruction));
+	(*(Instruction*) data) = instruction;
+	add(&threeAddressCode->list, data, sizeof(instruction), FALSE);
 }
 
 List generateIntermediateCodeForParameters(ASTNode* node
@@ -39,11 +39,11 @@ List generateIntermediateCodeForParameters(ASTNode* node
 }
 
 void loadParameters(List list, ThreeAddressCode* threeAddressCode) {    
-    while(!isEmpty(list)) {
-    	Instruction load = constructInstruction(code_LOAD, NULL, NULL, (Symbol *) head(list));
-    	addInstruction(threeAddressCode, load);
-    	removeFirst(&list);
-    }
+	while(!isEmpty(list)) {
+		Instruction load = constructInstruction(code_LOAD, NULL, NULL, (Symbol *) head(list));
+		addInstruction(threeAddressCode, load);
+		removeFirst(&list);
+	}
 }
 
 int params(Symbol* symbol) {
