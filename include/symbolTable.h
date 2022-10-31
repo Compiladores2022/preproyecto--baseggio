@@ -13,27 +13,30 @@ typedef struct {
     int levels;
 } SymbolTable;
 
+/* The 'SymbolTable_levels' returns the levels of 'symbolTable' */
 int     SymbolTable_levels(SymbolTable symbolTable);
 
-/* The 'constructSymbolTable' function constructs an empty 'symbolTable'. */
+/* The 'SymbolTable_construct' function constructs an empty 'symbolTable'. */
 void    SymbolTable_construct(SymbolTable* symbolTable);
 
-/* The 'openLevel' function adds a new level to the 'symbolTable'. */
+/* The 'SymbolTable_openLevel' function adds a new level to the 'symbolTable'. */
 void    SymbolTable_openLevel(SymbolTable* symbolTable);
 
-/* The 'closeLevel' function closes the most recently opened level in the 'symbolTable'. 
+/* The 'SymbolTable_closeLevel' function closes the most recently opened level in the 'symbolTable'. 
  * It is assumed that the 'symbolTable' has at least one level. */
 void    SymbolTable_closeLevel(SymbolTable* symbolTable);
 
-/* The 'addSymbol' function adds a new reference to a symbol in the 'symbolTable'. */
+/* The 'SymbolTable_add' function adds a new reference to a symbol in the 'symbolTable'. */
 void	SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol);
 
-/* The 'printSymbolTable' function prints the elements in the 'symbolTable' to the stdout. */
+/* The 'SymbolTable_print' function prints the elements in the 'symbolTable' to the stdout. */
 void    SymbolTable_print(SymbolTable symbolTable);
 
-/* The 'lookUpSymbol' function look for a symbol by its name in the 'symbolTable'. 
+/* The 'SymbolTable_lookUp' function look for a symbol by its name in the 'symbolTable'. 
  * It returns a reference to the symbol if it is found otherwise returns NULL. */
 Symbol* SymbolTable_lookUp(SymbolTable symbolTable, char* name);
 
+/* The 'checkIdentifierIsDeclared' function look for a symbol by its name in the 'symbolTable'. 
+ * It returns a reference to the symbol if it is found otherwise the program ends with an EXIT_FAILURE. */
 Symbol* checkIdentifierIsDeclared(SymbolTable symbolTable, char* name);
 #endif
