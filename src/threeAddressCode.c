@@ -55,13 +55,15 @@ int params(Symbol* symbol) {
 }
 
 void assignOffset(Symbol* symbol, ThreeAddressCode* threeAddressCode) {
-	int* offset = (int *) head(threeAddressCode->freeOffsets);
-	if(offset) {
-		setOffset(symbol, *offset);
-		removeFirst(&threeAddressCode->freeOffsets);
-	} else {
-		setOffset(symbol, threeAddressCode->offset);
-		threeAddressCode->offset += 8;
+	if(!hasOffset(*symbol)) {
+		int* offset = (int *) head(threeAddressCode->freeOffsets);
+		if(offset) {
+			setOffset(symbol, *offset);
+			removeFirst(&threeAddressCode->freeOffsets);
+		} else {
+			setOffset(symbol, threeAddressCode->offset);
+			threeAddressCode->offset += 8;
+		}
 	}
 }
 
@@ -393,6 +395,15 @@ void printInstruction(void* i) {
 	if(instruction.sndOperand) { oprnd2 = getName(*(instruction.sndOperand)); }
 	dest = getName(*(instruction.dest));
 	printf("%-18s %-10s %-10s %-18s\n", iCodeToString(op), oprnd1, oprnd2, dest);
+	if(instruction.fstOperand) {
+		printf("%s OFFSET: %d\n", oprnd1, getOffset(*instruction.fstOperand));
+	}
+	
+	if(instruction.sndOperand) {
+		printf("%s OFFSET: %d\n", oprnd2, getOffset(*instruction.sndOperand));
+	}
+	
+	printf("%s OFFSET: %d\n", dest, getOffset(*(instruction.dest)));
 }
 
 void showThreeAddressCode(ThreeAddressCode threeAddressCode) {

@@ -1240,7 +1240,7 @@ yyreduce:
 	typeCheck(root);
 	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
-        //showThreeAddressCode(threeAddressCode);
+        showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 }
 #line 1247 "grammar.tab.c"

@@ -5,35 +5,35 @@
 #include <string.h>
 
 Flag getFlag(Symbol symbol) {
-    return symbol.flag;
+	return symbol.flag;
 }
 
 Type getType(Symbol symbol) {
-    return symbol.type;
+	return symbol.type;
 }
 
 char* getName(Symbol symbol) {
-    return symbol.name;
+	return symbol.name;
 }
 
 int getValue(Symbol symbol) {
-    return symbol.value;
+	return symbol.value;
 }
 
 int getOffset(Symbol symbol) {
-    return symbol.offset;
+	return symbol.offset;
 }
 
 Symbol* getParams(Symbol symbol) {
-    return symbol.params;
+	return symbol.params;
 }
 
 void setFlag(Symbol* symbol, Flag flag) {
-    symbol->flag = flag;
+	symbol->flag = flag;
 }
 
 void setType(Symbol* symbol, Type type) {
-    symbol->type = type;
+	symbol->type = type;
 }
 
 void setName(Symbol* symbol, const char* name) {
@@ -41,15 +41,16 @@ void setName(Symbol* symbol, const char* name) {
 }
 
 void setValue(Symbol* symbol, int value) {
-    symbol->value = value;
+	symbol->value = value;
 }
 
 void setOffset(Symbol* symbol, int offset) {
-    symbol->offset = offset;
+	symbol->offset = offset;
+	symbol->hasOffset = 1;
 }
 
 void setIsFunction(Symbol* symbol) {
-    symbol->isFunction = 1;
+	symbol->isFunction = 1;
 }
 
 void setIsTemporal(Symbol* symbol) {
@@ -57,32 +58,35 @@ void setIsTemporal(Symbol* symbol) {
 }
 
 Symbol* constructPtrToEmptySymbol() {
-    Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
-    symbol->name = allocateChar(32);
-    return symbol;
+	Symbol* symbol = (Symbol*) malloc(sizeof(Symbol));
+	symbol->name = allocateChar(32);
+	return symbol;
 }
 
 Symbol* constructPtrToSymbol(Flag flag, Type type, char* name, int value) {
-    Symbol* symbol = constructPtrToEmptySymbol();
-    symbol->flag = flag;
-    symbol->type = type;
-    strcpy(symbol->name, name);
-    symbol->value = value;
-    return symbol;
+	Symbol* symbol = constructPtrToEmptySymbol();
+	symbol->flag = flag;
+	symbol->type = type;
+	strcpy(symbol->name, name);
+	symbol->value = value;
+	return symbol;
 }
 
 Symbol* copy(Symbol* symbol) {
-    Symbol* c = constructPtrToSymbol(symbol->flag, symbol->type, symbol->name, symbol->value);
-    c->isFunction = symbol->isFunction;
-    if(symbol->params) {
-        c->params = copy(symbol->params);
-    }
+	Symbol* c = constructPtrToSymbol(symbol->flag, symbol->type, symbol->name, symbol->value);
+	c->isFunction = symbol->isFunction;
+	c->isTemporal = symbol->isTemporal;
+	c->hasOffset  = symbol->hasOffset;
+	c->global   = symbol->global;
+	if(symbol->params) {
+		c->params = copy(symbol->params);
+	}
 
-    return c;
+	return c;
 }
 
 int isFunction(Symbol symbol) {
-    return symbol.isFunction;
+	return symbol.isFunction;
 }
 
 int isGlobal(Symbol symbol) {
@@ -93,6 +97,10 @@ int isTemporal(Symbol symbol) {
 	return symbol.isTemporal;
 }
 
+int hasOffset(Symbol symbol) {
+	return symbol.hasOffset;
+}
+
 void showSymbol(Symbol symbol) {
-    printf("FLAG: %d, NAME: %s, VALUE: %d\n", symbol.flag, symbol.name, symbol.value);
+	printf("FLAG: %d, NAME: %s, VALUE: %d\n", symbol.flag, symbol.name, symbol.value);
 }
