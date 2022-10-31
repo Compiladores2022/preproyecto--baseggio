@@ -24,23 +24,36 @@ ASTNode* composeTree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide
 /* The 'typeCheck' function performs the type check of the AST. */
 Type typeCheck(ASTNode* node);
 
+/* The 'evaluate' functions evaluates the AST. */
 int evaluate(ASTNode* node);
 
+/* The 'getSymbol' function returns the Symbol associated with this node. */
 Symbol* getSymbol(ASTNode* node);
+
+/* The 'getLSide' function returns the Left Side associated with this node. */
 ASTNode* getLSide(ASTNode* node);
+
+/* The 'getLSide' function returns the Middle Side associated with this node. */
 ASTNode* getMSide(ASTNode* node);
+
+/* The 'getLSide' function returns the Right Side associated with this node. */
 ASTNode* getRSide(ASTNode* node);
+
+/* The 'setLSide' function associates an AST to the node as the Left Side */
 void setLSide(ASTNode* node, ASTNode* lSide);
+
+/* The 'setLSide' function associates an AST to the node as the Middle Side */
 void setMSide(ASTNode* node, ASTNode* mSide);
+
+/* The 'setLSide' function associates an AST to the node as the Right Side */
 void setRSide(ASTNode* node, ASTNode* rSide);
 
 /* The 'printAST' function prints the elements of the AST to the stdout. */
 void printAST(ASTNode* root);
 
+/* The 'isLeave' function return TRUE iff the node has no children. */
 int isLeave(ASTNode* node);
 
-// in the near future this function will belong to a Utils module
+/* The 'expressionIsOnlyFormedByConstants' returns TRUE iff the AST is only formed by constants in its base nodes. */
 int expressionIsOnlyFormedByConstants(ASTNode* node);
-
-int evaluate(ASTNode* node);
 #endif
