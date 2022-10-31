@@ -17,14 +17,17 @@ typedef struct instruction{
 typedef struct threeAddressCode {
     List list;
     List freeOffsets;
-    //ListOfLists freeOffsets;
     int numberOfTemporaries;
     int offset;
     int numberOfLabel;
 } ThreeAddressCode;
 
-int isEmptyThreeAddressCode(ThreeAddressCode threeAddressCode);
+/* The 'generateIntermediateCode' function generates the three address code from the AST. */
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode);
+
+/* The 'ThreeAddressCode_construct' function initializes the ThreeAddressCode */
 void ThreeAddressCode_construct(ThreeAddressCode* threeAddressCode);
-void showThreeAddressCode(ThreeAddressCode threeAddressCode);
+
+/* The 'ThreeAddressCode_print' function prints the ThreeAddressCode */
+void ThreeAddressCode_print(ThreeAddressCode threeAddressCode);
 #endif
