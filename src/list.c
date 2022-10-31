@@ -4,11 +4,11 @@
 #include <string.h>
 
 int length(List list) {
-  return list.length;
+	return list.length;
 }
 
 int isEmpty(List list) {
-  return length(list) == 0;
+	return length(list) == 0;
 }
 
 void* head(List list) {
@@ -32,51 +32,51 @@ void* getByIndex(List list, int index) {
 }
 
 void* lookUp(List list, int (*f) (void*, void*), void* e) {
-  TNode* node = list.head;
-  while(node) {
-    if((*f) (node->data, e)) {
-      return node->data;
-    }
-    node = node->next;
-  }
+	TNode* node = list.head;
+	while(node) {
+		if((*f) (node->data, e)) {
+			return node->data;
+		}
+		node = node->next;
+	}
 
-  return NULL;
+	return NULL;
 }
 
 TNode* constructNode(void* data, size_t dataSize, int isPtr) {
-  TNode* node = (TNode*) malloc(sizeof(TNode));
-  if(node == NULL) {
-    printf("Error allocating memory for TNode\n");
-    exit(EXIT_FAILURE);
-  }
+	TNode* node = (TNode*) malloc(sizeof(TNode));
+	if(node == NULL) {
+		printf("Error allocating memory for TNode\n");
+		exit(EXIT_FAILURE);
+	}
 
-  node->data = malloc(dataSize);
+	node->data = malloc(dataSize);
 
-  if(node->data == NULL) {
-    printf("Error allocating memory for data");
-    exit(EXIT_FAILURE);
-  }
+	if(node->data == NULL) {
+		printf("Error allocating memory for data");
+		exit(EXIT_FAILURE);
+	}
 
-  if(isPtr) {
-  	node->data = data;
-  } else {
-  	memcpy(node->data, data, dataSize);
-  }
+	if(isPtr) {
+		node->data = data;
+	} else {
+		memcpy(node->data, data, dataSize);
+	}
 
-  return node;
+	return node;
 }
 
 void add(List* list, void* data, size_t dataSize, int isPtr) {
-  TNode* node = constructNode(data, dataSize, isPtr);
-  if(isEmpty(*list)) {
-    list->head = node;
-    list->last = node;
-  } else {
-    list->last->next = node;
-    list->last       = node;
-  }
+	TNode* node = constructNode(data, dataSize, isPtr);
+	if(isEmpty(*list)) {
+		list->head = node;
+		list->last = node;
+	} else {
+		list->last->next = node;
+		list->last       = node;
+	}
 
-  list->length++;
+	list->length++;
 }
 
 void addByIndex(List* list, void* data, size_t dataSize, int index, int isPtr) {
@@ -123,6 +123,6 @@ void print(List list, void (*f) (void*)) {
 }
 
 void constructList(List* list) {
-  list->head = list->last = NULL;
-  list->length = 0;
+	list->head = list->last = NULL;
+	list->length = 0;
 }
