@@ -69,6 +69,9 @@ void setValue(Symbol* symbol, int value);
 /* The 'setOffset' function associates the symbol with a given offset. */
 void setOffset(Symbol* symbol, int offset);
 
+/* The 'setParams' functions sets 'parameters' as the first parameter of the symbol */
+void setParams(Symbol* symbol, Symbol* parameters);
+
 /* The 'setIsGlobal' function sets the symbol with a global scope. */
 void setIsGlobal(Symbol* symbol);
 

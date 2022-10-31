@@ -83,6 +83,39 @@ int evaluate(ASTNode* node) {
 	return 0;
 }
 
+ASTNode* propagationOfConstants(Flag operation
+			       ,Flag constantFlag
+			       ,Type type
+			       ,const char* name
+			       ,ASTNode* lSide
+			       ,ASTNode* rSide) {
+	int lSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(lSide);
+	int rSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(rSide);
+	if (lSide && lSideIsOnlyFormedByConstants) {
+		typeCheck(lSide);
+		setFlag(getSymbol(lSide), constantFlag);
+		setValue(getSymbol(lSide), evaluate(lSide));
+	}
+	
+	if (rSide && rSideIsOnlyFormedByConstants) {
+		typeCheck(rSide);
+		setFlag(getSymbol(rSide), constantFlag);
+		setValue(getSymbol(rSide), evaluate(rSide));
+	}
+	
+	ASTNode* result = composeTree(operation, name, lSide, NULL, rSide);
+	typeCheck(result);
+	if(lSideIsOnlyFormedByConstants && rSideIsOnlyFormedByConstants) {
+		Symbol* expression = constructPtrToEmptySymbol();
+		setFlag(expression, constantFlag);
+		setType(expression, type);
+		setValue(expression, evaluate(result));
+		result = node(expression);
+	}
+	
+	return result;
+}
+
 void checkReturn(ASTNode* node, Type expected, const char* functionName) {
 	if(node) {
 		Flag flag =  getFlag(*(node->symbol));

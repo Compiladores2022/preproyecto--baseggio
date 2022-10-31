@@ -18,8 +18,7 @@ ThreeAddressCode threeAddressCode;
 
 int yylex();
 void yyerror(const char* s);
-void addAll(SymbolTable* symbolTable, Symbol* symbol);
-ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide);
+void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol);
 %}
 
 %union { int i; char* s; struct astNode* n; enum type t; struct symbol* sb; }
@@ -91,7 +90,7 @@ MethodDeclarations: { $$ = NULL; }
 MethodDeclaration: Method 
                    { SymbolTable_openLevel(&symbolTable); 
                      Symbol* symbol = $1;
-                     addAll(&symbolTable, symbol->params);
+                     addParametersToSymbolTable(&symbolTable, symbol->params);
                    }
                    Block  
                    { SymbolTable_closeLevel(&symbolTable);
@@ -128,7 +127,7 @@ Params:                 { $$ = NULL; }
 
 OneOrMoreParams : Param                     { $$ = $1; }
 		| Param ',' OneOrMoreParams { Symbol* symbol = $1;
-                                              symbol->params = $3;
+                                              setParams(symbol, $3);
                                               $$ = symbol; }
                 ;
 
@@ -245,37 +244,9 @@ MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(
 
 %%
 
-void addAll(SymbolTable* symbolTable, Symbol* symbol) {
+void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol) {
     if(symbol) {
         SymbolTable_add(symbolTable, symbol);
-        addAll(symbolTable, symbol->params);
+        addParametersToSymbolTable(symbolTable, getParams(*symbol));
     }
-}
-
-ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide) {
-	int lSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(lSide);
-	int rSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(rSide);
-	if (lSide && lSideIsOnlyFormedByConstants) {
-		typeCheck(lSide);
-		setFlag(getSymbol(lSide), constantFlag);
-		setValue(getSymbol(lSide), evaluate(lSide));
-	}
-	
-	if (rSide && rSideIsOnlyFormedByConstants) {
-		typeCheck(rSide);
-		setFlag(getSymbol(rSide), constantFlag);
-		setValue(getSymbol(rSide), evaluate(rSide));
-	}
-	
-	ASTNode* result = composeTree(operation, name, lSide, NULL, rSide);
-	typeCheck(result);
-	if(lSideIsOnlyFormedByConstants && rSideIsOnlyFormedByConstants) {
-		Symbol* expression = constructPtrToEmptySymbol();
-		setFlag(expression, constantFlag);
-		setType(expression, type);
-		setValue(expression, evaluate(result));
-		result = node(expression);
-	}
-	
-	return result;
 }

@@ -60,4 +60,7 @@ int isLeave(ASTNode* node);
 
 /* The 'expressionIsOnlyFormedByConstants' returns TRUE iff the AST is only formed by constants in its base nodes. */
 int expressionIsOnlyFormedByConstants(ASTNode* node);
+
+/* The 'propagationOfConstants' functions performs constant propagation on the AST if possible */
+ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide);
 #endif

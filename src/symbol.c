@@ -49,6 +49,10 @@ void setOffset(Symbol* symbol, int offset) {
 	symbol->hasOffset = 1;
 }
 
+void setParams(Symbol* symbol, Symbol* parameters) {
+	symbol->params = parameters;
+}
+
 void setIsFunction(Symbol* symbol) {
 	symbol->isFunction = 1;
 }
