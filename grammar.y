@@ -88,11 +88,11 @@ program:{ SymbolTable_construct(&symbolTable); }  PROGRAM '{' lDeclarations Meth
 } ;
 
 lDeclarations: { $$ = NULL; } 
-	           | lDeclarations Declaration { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
+	     | lDeclarations Declaration { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
              ;
 
 MethodDeclarations: { $$ = NULL; }
-		              | MethodDeclaration MethodDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
+		  | MethodDeclaration MethodDeclarations { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
                   ;
 
 MethodDeclaration: Method 

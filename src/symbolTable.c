@@ -29,7 +29,7 @@ int SymbolTable_add(SymbolTable* symbolTable, Symbol* symbol) {
     return FALSE;
 }
 
-SymbolTable_Level* Level_construct() {
+SymbolTable_Level* SymbolTable_levelConstruct() {
     SymbolTable_Level* level = (SymbolTable_Level*) malloc(sizeof(SymbolTable_Level));
     if(level == NULL) { exit(EXIT_FAILURE); }
     constructList(&level->list);
@@ -37,13 +37,13 @@ SymbolTable_Level* Level_construct() {
 }
 
 void SymbolTable_construct(SymbolTable* symbolTable) {
-    symbolTable->peek = Level_construct();
+    symbolTable->peek = SymbolTable_levelConstruct();
     symbolTable->peek->next = NULL;
     symbolTable->levels = 1;
 }
 
 void SymbolTable_openLevel(SymbolTable* symbolTable) {
-    SymbolTable_Level* level = Level_construct();
+    SymbolTable_Level* level = SymbolTable_levelConstruct();
     level->next = symbolTable->peek;
     symbolTable->peek = level;
     symbolTable->levels++;

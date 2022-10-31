@@ -55,8 +55,26 @@ int params(Symbol* symbol) {
 }
 
 void assignOffset(Symbol* symbol, ThreeAddressCode* threeAddressCode) {
-	setOffset(symbol, threeAddressCode->offset);
-	threeAddressCode->offset += 8;
+	int* offset = (int *) head(threeAddressCode->freeOffsets);
+	if(offset) {
+		setOffset(symbol, *offset);
+		removeFirst(&threeAddressCode->freeOffsets);
+	} else {
+		setOffset(symbol, threeAddressCode->offset);
+		threeAddressCode->offset += 8;
+	}
+}
+
+void freeOffsetIfPossible(Symbol* symbol, ThreeAddressCode* threeAddressCode) {
+	if(isTemporal(*symbol)) {
+		int offset = getOffset(*symbol);
+		add(&threeAddressCode->freeOffsets, &offset, sizeof(int), FALSE);
+	}
+}
+
+void printInt(void* e) {
+	int elem = *((int*) e);
+	printf("%d ", elem);
 }
 
 Symbol* generateIntermediateCodeForBinaryOperation(Code iCode
@@ -69,6 +87,10 @@ Symbol* generateIntermediateCodeForBinaryOperation(Code iCode
 	sndOperand  = generateIntermediateCode(getRSide(node), threeAddressCode);
 	instruction = constructInstruction(iCode, fstOperand, sndOperand, getSymbol(node));
 	addInstruction(threeAddressCode, instruction);
+	
+	freeOffsetIfPossible(fstOperand, threeAddressCode);
+	freeOffsetIfPossible(sndOperand, threeAddressCode);
+	setIsTemporal(getSymbol(node));
 	assignOffset(getSymbol(node), threeAddressCode);
 	
 	return getSymbol(node);
@@ -188,6 +210,7 @@ void generateIntermediateCodeForWHILE(ASTNode* node
 
 void generateIntermediateCodeForMethodDeclaration(ASTNode* node
 				  ,ThreeAddressCode* threeAddressCode) {
+	constructList(&threeAddressCode->freeOffsets);
 	threeAddressCode->offset = 8;
 	int isExtern = getLSide(node) == NULL;
 	if(!isExtern) {
@@ -351,6 +374,7 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 
 void ThreeAddressCode_construct(ThreeAddressCode* threeAddressCode) {
 	constructList(&threeAddressCode->list);
+	constructList(&threeAddressCode->freeOffsets);
 	threeAddressCode->offset = 8;
 	threeAddressCode->numberOfLabel = 0;
 }

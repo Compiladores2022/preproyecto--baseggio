@@ -1,8 +1,9 @@
 #ifndef THREEADDRESSCODE_H
 #define THREEADDRESSCODE_H
-#include "ast.h"
 #include "symbol.h"
 #include "symbolTable.h"
+#include "listOfLists.h"
+#include "ast.h"
 #include "code.h"
 #include "list.h"
 
@@ -15,6 +16,7 @@ typedef struct instruction{
 
 typedef struct threeAddressCode {
     List list;
+    List freeOffsets;
     //ListOfLists freeOffsets;
     int numberOfTemporaries;
     int offset;

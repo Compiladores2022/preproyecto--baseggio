@@ -12,7 +12,10 @@ int isEmpty(List list) {
 }
 
 void* head(List list) {
-  return list.head->data;
+	if(list.head) {
+		return list.head->data;
+	}
+	return NULL;
 }
 
 void* getByIndex(List list, int index) {
