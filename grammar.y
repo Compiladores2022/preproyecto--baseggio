@@ -98,7 +98,7 @@ MethodDeclaration: Method
                    { SymbolTable_openLevel(&symbolTable); 
                      Symbol* symbol = $1;
                      addAll(&symbolTable, symbol->params);
-                     SymbolTable_print(symbolTable); }
+                   }
                    Block  
                    { SymbolTable_closeLevel(&symbolTable);
                      ASTNode* n = node($1);

@@ -1,7 +1,7 @@
 Program {
 	void print(Int x) extern;
 	
-	void foo(Int x, Int x) {
+	void foo(Int x, Int y) {
 		return ;
 	}
 
