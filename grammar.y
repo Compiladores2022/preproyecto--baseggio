@@ -83,7 +83,6 @@ program:{ SymbolTable_construct(&symbolTable); }  PROGRAM '{' lDeclarations Meth
 	typeCheck(root);
 	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
-        showThreeAddressCode(threeAddressCode);
         generateAssembler(threeAddressCode);
 } ;
 

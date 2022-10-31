@@ -11,7 +11,7 @@ Program {
 	
 	void testEQ_2() {
 		Bool b = 0 == 1;
-		assertFalse(!b);
+		assertFalse(b);
 	}
 	
 	void testEQ_3() {
