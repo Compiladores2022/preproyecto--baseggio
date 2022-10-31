@@ -74,13 +74,7 @@ ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, co
 
 program:{ SymbolTable_construct(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
-
-        Symbol* symbol = SymbolTable_lookUp(symbolTable, "main");
-        if(!(symbol && isFunction(*symbol))) {
-            printf("main function not defined\n");
-            exit(EXIT_FAILURE);
-        }
-	typeCheck(root);
+	semanticCheck(root, symbolTable);
 	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
         generateAssembler(threeAddressCode);

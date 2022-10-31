@@ -406,6 +406,6 @@ void printInstruction(void* i) {
 	printf("%s OFFSET: %d\n", dest, getOffset(*(instruction.dest)));
 }
 
-void showThreeAddressCode(ThreeAddressCode threeAddressCode) {
+void ThreeAddressCode_print(ThreeAddressCode threeAddressCode) {
 	print(threeAddressCode.list, printInstruction);
 }

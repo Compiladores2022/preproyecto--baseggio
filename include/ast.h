@@ -1,6 +1,7 @@
 #ifndef AST_H
 #define AST_H
 #include "symbol.h"
+#include "symbolTable.h"
 
 typedef struct astNode{
     Symbol* symbol;
@@ -23,6 +24,9 @@ ASTNode* composeTree(Flag flag, const char* name, ASTNode* lSide, ASTNode* mSide
 
 /* The 'typeCheck' function performs the type check of the AST. */
 Type typeCheck(ASTNode* node);
+
+/* The 'semanticCheck' function performs the semantic analysis of the AST. */
+void semanticCheck(ASTNode* node, SymbolTable symbolTable);
 
 /* The 'evaluate' functions evaluates the AST. */
 int evaluate(ASTNode* node);

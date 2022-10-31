@@ -331,6 +331,16 @@ Type typeCheck(ASTNode* node) {
     return 0;
 }
 
+void semanticCheck(ASTNode* root, SymbolTable symbolTable) {
+	Symbol* symbol = SymbolTable_lookUp(symbolTable, "main");
+	if(!(symbol && isFunction(*symbol))) {
+		printf("main function not defined\n");
+		exit(EXIT_FAILURE);
+	} else {
+		typeCheck(root);
+	}
+}
+
 Symbol* getSymbol(ASTNode* node) {
 	return node->symbol;
 }
