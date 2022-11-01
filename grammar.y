@@ -18,7 +18,7 @@ ThreeAddressCode threeAddressCode;
 
 int yylex();
 void yyerror(const char* s);
-void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol);
+void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol, ThreeAddressCode* threeAddressCode);
 %}
 
 %union { int i; char* s; struct astNode* n; enum type t; struct symbol* sb; }
@@ -71,11 +71,13 @@ void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol);
 %right UMINUS
 %%
 
-program:{ SymbolTable_construct(&symbolTable); }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
+program:{ SymbolTable_construct(&symbolTable);
+       	  ThreeAddressCode_construct(&threeAddressCode);
+        }  PROGRAM '{' lDeclarations MethodDeclarations '}' { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", $4, NULL, $5);
 	semanticCheck(root, symbolTable);
-	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
+	//ThreeAddressCode_print(threeAddressCode);
         generateAssembler(threeAddressCode);
 } ;
 
@@ -88,12 +90,14 @@ MethodDeclarations: { $$ = NULL; }
                   ;
 
 MethodDeclaration: Method 
-                   { SymbolTable_openLevel(&symbolTable); 
+                   { threeAddressCode.offset = 8;
+		     SymbolTable_openLevel(&symbolTable);
                      Symbol* symbol = $1;
-                     addParametersToSymbolTable(&symbolTable, symbol->params);
+                     addParametersToSymbolTable(&symbolTable, getParams(*symbol), &threeAddressCode);
                    }
                    Block  
                    { SymbolTable_closeLevel(&symbolTable);
+		     setOffset($1, threeAddressCode.offset);
                      ASTNode* n = node($1);
                      setLSide(n, $3);
                      $$ = n; }
@@ -176,6 +180,8 @@ Declaration: Type ID '=' E ';' { if(SymbolTable_levels(symbolTable) == 1
 				if(isGlobal(*symbol)) {
 					$$ = composeTree(flag_GLOBAL_VAR_DECL, "=", lSide, NULL, $4);                        	
 				} else {
+					setOffset(symbol, threeAddressCode.offset);
+					threeAddressCode.offset += 8;
 					$$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
 				}
                                }
@@ -218,11 +224,11 @@ V: vINT {  char* name = allocateChar(32);
  ;
 
 Expressions: { $$ = NULL; }
-	         | OneOrMoreExpressions { $$ = $1; }
+	   | OneOrMoreExpressions { $$ = $1; }
            ;
 
 OneOrMoreExpressions: E { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, NULL); }
-		                | E ',' OneOrMoreExpressions { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $3); }
+		    | E ',' OneOrMoreExpressions { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $3); }
                     ;
 
 Type : tINT  { $$ = $1; }
@@ -244,9 +250,11 @@ MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(
 
 %%
 
-void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol) {
+void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol, ThreeAddressCode* threeAddressCode) {
     if(symbol) {
+	setOffset(symbol, threeAddressCode->offset);
+	threeAddressCode->offset += 8;
         SymbolTable_add(symbolTable, symbol);
-        addParametersToSymbolTable(symbolTable, getParams(*symbol));
+        addParametersToSymbolTable(symbolTable, getParams(*symbol), threeAddressCode);
     }
 }

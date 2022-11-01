@@ -38,11 +38,12 @@ List generateIntermediateCodeForParameters(ASTNode* node
     	return list;
 }
 
-void loadParameters(List list, ThreeAddressCode* threeAddressCode) {    
-	while(!isEmpty(list)) {
-		Instruction load = constructInstruction(code_LOAD, NULL, NULL, (Symbol *) head(list));
+void loadParameters(List list, ThreeAddressCode* threeAddressCode) {
+	int i = 0;
+	while(i < length(list)) {
+		Instruction load = constructInstruction(code_LOAD, NULL, NULL, (Symbol*) getByIndex(list, i));
 		addInstruction(threeAddressCode, load);
-		removeFirst(&list);
+		i++;
 	}
 }
 
@@ -213,17 +214,12 @@ void generateIntermediateCodeForWHILE(ASTNode* node
 void generateIntermediateCodeForMethodDeclaration(ASTNode* node
 				  ,ThreeAddressCode* threeAddressCode) {
 	constructList(&threeAddressCode->freeOffsets);
-	threeAddressCode->offset = 8;
+	threeAddressCode->offset = getOffset(*getSymbol(node));
 	int isExtern = getLSide(node) == NULL;
 	if(!isExtern) {
 		Symbol* start_of_function;
 		Symbol* end_of_function;
 		Instruction label;
-		Symbol* symbol = getParams(*getSymbol(node));
-		while(symbol) {
-			assignOffset(symbol, threeAddressCode);
-			symbol = getParams(*symbol);
-		}
 
 		start_of_function = constructPtrToEmptySymbol();
 		setFlag(start_of_function, flag_LABEL);
@@ -238,7 +234,7 @@ void generateIntermediateCodeForMethodDeclaration(ASTNode* node
 		generateIntermediateCode(getLSide(node), threeAddressCode);
 		label = constructInstruction(code_LABEL_END_OF_FUNCTION, getSymbol(node), NULL, end_of_function);
 		addInstruction(threeAddressCode, label);
-		assignOffset(getSymbol(node), threeAddressCode);
+		setOffset(getSymbol(node), threeAddressCode->offset);
 	}
 }
 
@@ -265,7 +261,6 @@ Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCo
 				return getSymbol(node);
 				break;
 			case flag_VALUE_BOOL:
-				//setName(getSymbol(node), (getValue(*getSymbol(node)) == 1? "true" : "false"));
 				return getSymbol(node);
 				break;
 			case flag_IDENTIFIER:
