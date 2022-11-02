@@ -1,0 +1,11 @@
+Program {
+	Int f(Int x1, Int x2, Int x3, Int x4, Int x5, Int x6, Int x7) {
+		return x7;
+	}
+	
+	void print(Int x) extern;
+	
+	void main() {
+		print(f(0, 0, 0, 0, 0, 0, 1));
+	}
+}

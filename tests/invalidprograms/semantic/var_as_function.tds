@@ -1,0 +1,8 @@
+Program {
+	Int x = 0;
+	
+	void main() {
+		x();
+	}
+}
+

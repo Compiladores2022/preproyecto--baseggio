@@ -1,0 +1,10 @@
+Program {
+	Int f(Int x) {
+		return x;
+	}
+	
+	Int main() {
+		f = 0;
+		return 0;
+	}
+}

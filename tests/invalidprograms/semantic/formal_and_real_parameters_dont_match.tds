@@ -1,0 +1,10 @@
+Program {
+	Int f(Int x, Int y) {
+		return x + y - y;
+	}
+
+	void main() {
+		f(True, 1);
+	}
+}
+
