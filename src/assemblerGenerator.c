@@ -59,11 +59,11 @@ void translateMOD(FILE* fp, Instruction instruction) {
 void translateOR(FILE* fp, Instruction instruction, int* numberOfLabel) {
     fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
     fprintf(fp, "\n\tmovq $1, %%r11");
-    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tcmpq %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
     fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.sndOperand)));
     fprintf(fp, "\n\tmovq $1, %%r11");
-    fprintf(fp, "\n\tcmp %%r10, %%r11");
+    fprintf(fp, "\n\tcmpq %%r10, %%r11");
     fprintf(fp, "\n\tje .L%d", *numberOfLabel);
     fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
     fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 1);
@@ -77,14 +77,14 @@ void translateOR(FILE* fp, Instruction instruction, int* numberOfLabel) {
 void translateAND(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq $%d, %%r11", 1);
-	fprintf(fp, "\n\tcmp %%r10, %%r11");
+	fprintf(fp, "\n\tcmpq %%r10, %%r11");
 	fprintf(fp, "\n\tje .L%d", *numberOfLabel);
 	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
 	fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
 	fprintf(fp, "\n\n.L%d:", *numberOfLabel);
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.sndOperand)));
 	fprintf(fp, "\n\tmovq $%d, %%r11", 1);
-	fprintf(fp, "\n\tcmp %%r10, %%r11");
+	fprintf(fp, "\n\tcmpq %%r10, %%r11");
 	fprintf(fp, "\n\tje .L%d", *numberOfLabel + 1);
 	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
 	fprintf(fp, "\n\tjmp .L%d", *numberOfLabel + 2);
@@ -98,7 +98,7 @@ void translateAND(FILE* fp, Instruction instruction, int* numberOfLabel) {
 void translateLT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq %s, %%r11", translateOperand(*(instruction.sndOperand)));
-	fprintf(fp, "\n\tcmp  %%r11, %%r10");
+	fprintf(fp, "\n\tcmpq  %%r11, %%r10");
 	fprintf(fp, "\n\tjl  .L%d", *numberOfLabel);
 	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
 	fprintf(fp, "\n\tjmp  .L%d", *numberOfLabel + 1);
@@ -112,7 +112,7 @@ void translateLT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 void translateGT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq %s, %%r11", translateOperand(*(instruction.sndOperand)));
-	fprintf(fp, "\n\tcmp  %%r11, %%r10");
+	fprintf(fp, "\n\tcmpq  %%r11, %%r10");
 	fprintf(fp, "\n\tjg  .L%d", *numberOfLabel);
 	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
 	fprintf(fp, "\n\tjmp  .L%d", *numberOfLabel + 1);
@@ -126,7 +126,7 @@ void translateGT(FILE* fp, Instruction instruction, int* numberOfLabel) {
 void translateEQ(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq %s, %%r11", translateOperand(*(instruction.sndOperand)));
-	fprintf(fp, "\n\tcmp  %%r11, %%r10");
+	fprintf(fp, "\n\tcmpq %%r11, %%r10");
 	fprintf(fp, "\n\tje  .L%d", *numberOfLabel);
 	fprintf(fp, "\n\tmovq $0, -%d(%%rbp)", getOffset(*(instruction.dest)));
 	fprintf(fp, "\n\tjmp  .L%d", *numberOfLabel + 1);
@@ -140,7 +140,7 @@ void translateEQ(FILE* fp, Instruction instruction, int* numberOfLabel) {
 void translateFALSE_CONDITIONAL(FILE* fp, Instruction instruction, int* numberOfLabel) {
 	fprintf(fp, "\n\tmovq %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tmovq $1, %%r11");
-	fprintf(fp, "\n\tcmp  %%r10, %%r11");
+	fprintf(fp, "\n\tcmpq %%r10, %%r11");
 	fprintf(fp, "\n\tjne  .%s", getName(*(instruction.dest)));
 }
 
@@ -199,6 +199,8 @@ void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
 
 void translateRETURN(FILE* fp, Instruction instruction) {
 	fprintf(fp, "\n\tmovq %s, %%rax", translateOperand(*(instruction.dest)));
+	fprintf(fp, "\n\tleave");
+	fprintf(fp, "\n\tret");
 }
 
 void translateASSIGNMENT(FILE* fp, Instruction instruction) {
@@ -207,8 +209,7 @@ void translateASSIGNMENT(FILE* fp, Instruction instruction) {
 }
 
 void translateNEG(FILE* fp, Instruction instruction, int* numberOfLabel) {
-	fprintf(fp, "\n\tmovq $1, %%r10");
-	fprintf(fp, "\n\tcmp  %s, %%r10", translateOperand(*(instruction.fstOperand)));
+	fprintf(fp, "\n\tcmpq  %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tje  .L%d", *numberOfLabel);
 	fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", getOffset(*(instruction.dest)));
 	fprintf(fp, "\n\tjmp  .L%d", *numberOfLabel + 1);
