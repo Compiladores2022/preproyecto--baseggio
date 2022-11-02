@@ -151,7 +151,7 @@ void checkParams(Symbol* fParams, ASTNode* rParams, char* functionName) {
 		if(fParamType == rParamType) {
 			checkParams(fParams->params, rParams->rSide, functionName);
 		} else {
-		    printf("%s function expected %s but argument is of type %s\n",functionName
+		    printf("function %s expected %s but argument is of type %s\n",functionName
 		    								 ,typeToString(fParamType)
 		    								 ,typeToString(rParamType));
 		    exit(EXIT_FAILURE);

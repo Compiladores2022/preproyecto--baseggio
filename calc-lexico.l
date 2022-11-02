@@ -93,7 +93,7 @@ int main(int argc,char *argv[]){
 	++argv,--argc;
 	if (argc > 0) {
 		yyin = fopen(argv[0],"r");
-		filename = allocateChar(32);
+		filename = allocateChar(64);
 		strcpy(filename, strtok(argv[1], "."));
 	} else {
 		yyin = stdin;

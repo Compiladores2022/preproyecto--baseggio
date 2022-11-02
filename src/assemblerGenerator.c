@@ -343,7 +343,7 @@ void translate(FILE* fp, Instruction instruction, int* numberOfLabel, int* numbe
 }
 
 void generateAssembler(ThreeAddressCode threeAddressCode) {
-	char* target = allocateChar(32);
+	char* target = allocateChar(64);
 	sprintf(target, "./output/%s.s", filename);
 	FILE* fp = fopen(target, "w");
 	if(fp == NULL) {
