@@ -18,6 +18,7 @@ ThreeAddressCode threeAddressCode;
 
 int yylex();
 void yyerror(const char* s);
+void freeOffsetsInCurentLevel(SymbolTable symbolTable, ThreeAddressCode* threeAddressCode);
 void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol, ThreeAddressCode* threeAddressCode);
 %}
 
@@ -90,12 +91,12 @@ MethodDeclarations: { $$ = NULL; }
                   ;
 
 MethodDeclaration: Method 
-                   { threeAddressCode.offset = 8;
+                   { ThreeAddressCode_construct(&threeAddressCode);
 		     SymbolTable_openLevel(&symbolTable);
                      Symbol* symbol = $1;
                      addParametersToSymbolTable(&symbolTable, getParams(*symbol), &threeAddressCode);
                    }
-                   Block  
+                   Block
                    { SymbolTable_closeLevel(&symbolTable);
 		     setOffset($1, threeAddressCode.offset);
                      ASTNode* n = node($1);
@@ -139,10 +140,12 @@ Param: Type ID { Symbol* symbol = constructPtrToSymbol(flag_PARAM, $1, $2, 0);
                  $$ = symbol; } ;
 
 Block: { SymbolTable_openLevel(&symbolTable); } '{' lDeclarations lStatements '}' 
-       { SymbolTable_closeLevel(&symbolTable); $$ = composeTree(flag_SEMICOLON, ";", $3, NULL, $4); } ;
+       { freeOffsetsInCurentLevel(symbolTable, &threeAddressCode);
+         SymbolTable_closeLevel(&symbolTable);
+         $$ = composeTree(flag_SEMICOLON, ";", $3, NULL, $4); } ;
 
 lStatements: { $$ = NULL; }
-	         | lStatements Statement { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
+	   | lStatements Statement { $$ = composeTree(flag_SEMICOLON, ";", $1, NULL, $2); }
            ;
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
@@ -180,8 +183,7 @@ Declaration: Type ID '=' E ';' { if(SymbolTable_levels(symbolTable) == 1
 				if(isGlobal(*symbol)) {
 					$$ = composeTree(flag_GLOBAL_VAR_DECL, "=", lSide, NULL, $4);                        	
 				} else {
-					setOffset(symbol, threeAddressCode.offset);
-					threeAddressCode.offset += 8;
+					assignOffset(symbol, &threeAddressCode);
 					$$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $4);
 				}
                                }
@@ -250,10 +252,22 @@ MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(
 
 %%
 
+void freeOffsetsInCurentLevel(SymbolTable symbolTable, ThreeAddressCode* threeAddressCode) {
+	int i = 0;
+	int length = currentLevelLength(symbolTable);
+	int offset;
+	while(i < length) {
+		offset = getOffset(*SymbolTable_getByIndex(symbolTable, i));
+		//Symbol* symbol = SymbolTable_getByIndex(symbolTable, i);
+		//printf("%s OFFSET: %d\n", getName(*symbol), getOffset(*symbol));
+		add(&threeAddressCode->freeOffsets, &offset, sizeof(int), FALSE);
+		i++;
+	}
+}
+
 void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol, ThreeAddressCode* threeAddressCode) {
     if(symbol) {
-	setOffset(symbol, threeAddressCode->offset);
-	threeAddressCode->offset += 8;
+    	assignOffset(symbol, threeAddressCode);
         SymbolTable_add(symbolTable, symbol);
         addParametersToSymbolTable(symbolTable, getParams(*symbol), threeAddressCode);
     }

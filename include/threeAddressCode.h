@@ -25,6 +25,8 @@ typedef struct threeAddressCode {
 /* The 'generateIntermediateCode' function generates the three address code from the AST. */
 Symbol* generateIntermediateCode(ASTNode* node, ThreeAddressCode* threeAddressCode);
 
+void assignOffset(Symbol* symbol, ThreeAddressCode* threeAddressCode);
+
 /* The 'ThreeAddressCode_construct' function initializes the ThreeAddressCode */
 void ThreeAddressCode_construct(ThreeAddressCode* threeAddressCode);
 

@@ -10,6 +10,14 @@ int SymbolTable_levels(SymbolTable symbolTable) {
 	return symbolTable.levels;
 }
 
+int	currentLevelLength(SymbolTable symbolTable) {
+	if(symbolTable.peek) {
+		return length(symbolTable.peek->list);
+	}
+	
+	return 0;
+}
+
 int compareByName(void* s, void* name) {
 	Symbol* symbol = (Symbol*) s;
 	return strcmp(getName(*symbol), (char*) name) == 0;
@@ -81,6 +89,10 @@ Symbol* SymbolTable_lookUp(SymbolTable symbolTable, char* name) {
 	}
 
 	return NULL;
+}
+
+Symbol* SymbolTable_getByIndex(SymbolTable symbolTable, int index) {
+	return (Symbol*) getByIndex(symbolTable.peek->list, index);
 }
 
 Symbol* checkIdentifierIsDeclared(SymbolTable symbolTable, char* name) {

@@ -16,6 +16,8 @@ typedef struct {
 /* The 'SymbolTable_levels' returns the levels of 'symbolTable' */
 int     SymbolTable_levels(SymbolTable symbolTable);
 
+int	currentLevelLength(SymbolTable symbolTable);
+
 /* The 'SymbolTable_construct' function constructs an empty 'symbolTable'. */
 void    SymbolTable_construct(SymbolTable* symbolTable);
 
@@ -35,6 +37,8 @@ void    SymbolTable_print(SymbolTable symbolTable);
 /* The 'SymbolTable_lookUp' function look for a symbol by its name in the 'symbolTable'. 
  * It returns a reference to the symbol if it is found otherwise returns NULL. */
 Symbol* SymbolTable_lookUp(SymbolTable symbolTable, char* name);
+
+Symbol* SymbolTable_getByIndex(SymbolTable symbolTable, int index);
 
 /* The 'checkIdentifierIsDeclared' function look for a symbol by its name in the 'symbolTable'. 
  * It returns a reference to the symbol if it is found otherwise the program ends with an EXIT_FAILURE. */

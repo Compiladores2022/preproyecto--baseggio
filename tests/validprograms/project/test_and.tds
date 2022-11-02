@@ -50,3 +50,27 @@ Program {
 		testAnd_7();
 	}
 }
+
+/*
+
+gcc -o test test_addition.s lib.c && ./test 
+gcc -o test test_and.s lib.c && ./test 
+gcc -o test test_block.s lib.c && ./test 
+gcc -o test test_division.s lib.c && ./test 
+gcc -o test test_eq.s lib.c && ./test 
+gcc -o test test_function_call.s lib.c && ./test 
+gcc -o test test_globl_var_1.s lib.c && ./test 
+gcc -o test test_globl_var.s lib.c && ./test 
+gcc -o test test_gt.s lib.c &&  ./test 
+gcc -o test test_IF_ELSE.s lib.c && ./test 
+gcc -o test test_IF.s lib.c && ./test 
+gcc -o test test_lt.s lib.c && ./test 
+gcc -o test test_minus.s lib.c && ./test 
+gcc -o test test_mod.s lib.c && ./test 
+gcc -o test test_multiplication.s lib.c && ./test 
+gcc -o test test_neg.s lib.c && ./test 
+gcc -o test test_offset.s lib.c && ./test 
+gcc -o test test_or.s lib.c && ./test 
+gcc -o test test_substraction.s lib.c && ./test 
+
+*/

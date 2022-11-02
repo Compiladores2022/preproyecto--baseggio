@@ -88,8 +88,8 @@ ThreeAddressCode threeAddressCode;
 
 int yylex();
 void yyerror(const char* s);
-void addAll(SymbolTable* symbolTable, Symbol* symbol);
-ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide);
+void freeOffsetsInCurentLevel(SymbolTable symbolTable, ThreeAddressCode* threeAddressCode);
+void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol, ThreeAddressCode* threeAddressCode);
 
 #line 95 "grammar.tab.c"
 
@@ -563,12 +563,12 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    75,    75,    75,    83,    84,    87,    88,    92,    91,
-     101,   105,   114,   125,   126,   129,   130,   135,   138,   138,
-     141,   142,   145,   152,   153,   154,   155,   156,   161,   162,
-     163,   166,   185,   192,   193,   194,   195,   196,   197,   198,
-     199,   200,   201,   202,   203,   204,   207,   208,   211,   215,
-     221,   222,   225,   226,   229,   230,   233
+       0,    75,    75,    75,    85,    86,    89,    90,    94,    93,
+     105,   109,   118,   129,   130,   133,   134,   139,   142,   142,
+     147,   148,   151,   158,   159,   160,   161,   162,   167,   168,
+     169,   172,   192,   199,   200,   201,   202,   203,   204,   205,
+     206,   207,   208,   209,   210,   211,   214,   215,   218,   222,
+     228,   229,   232,   233,   236,   237,   240
 };
 #endif
 
@@ -1223,73 +1223,77 @@ yyreduce:
     {
   case 2: /* $@1: %empty  */
 #line 75 "grammar.y"
-        { SymbolTable_construct(&symbolTable); }
-#line 1228 "grammar.tab.c"
+        { SymbolTable_construct(&symbolTable);
+       	  ThreeAddressCode_construct(&threeAddressCode);
+        }
+#line 1230 "grammar.tab.c"
     break;
 
   case 3: /* program: $@1 PROGRAM '{' lDeclarations MethodDeclarations '}'  */
-#line 75 "grammar.y"
-                                                                                                   { 
+#line 77 "grammar.y"
+                                                            { 
         ASTNode* root = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[-1].n));
 	semanticCheck(root, symbolTable);
-	ThreeAddressCode_construct(&threeAddressCode);
         generateIntermediateCode(root, &threeAddressCode);
+	//ThreeAddressCode_print(threeAddressCode);
         generateAssembler(threeAddressCode);
 }
-#line 1240 "grammar.tab.c"
+#line 1242 "grammar.tab.c"
     break;
 
   case 4: /* lDeclarations: %empty  */
-#line 83 "grammar.y"
+#line 85 "grammar.y"
                { (yyval.n) = NULL; }
-#line 1246 "grammar.tab.c"
+#line 1248 "grammar.tab.c"
     break;
 
   case 5: /* lDeclarations: lDeclarations Declaration  */
-#line 84 "grammar.y"
+#line 86 "grammar.y"
                                          { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
-#line 1252 "grammar.tab.c"
+#line 1254 "grammar.tab.c"
     break;
 
   case 6: /* MethodDeclarations: %empty  */
-#line 87 "grammar.y"
+#line 89 "grammar.y"
                     { (yyval.n) = NULL; }
-#line 1258 "grammar.tab.c"
+#line 1260 "grammar.tab.c"
     break;
 
   case 7: /* MethodDeclarations: MethodDeclaration MethodDeclarations  */
-#line 88 "grammar.y"
+#line 90 "grammar.y"
                                                          { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
-#line 1264 "grammar.tab.c"
+#line 1266 "grammar.tab.c"
     break;
 
   case 8: /* $@2: %empty  */
-#line 92 "grammar.y"
-                   { SymbolTable_openLevel(&symbolTable); 
+#line 94 "grammar.y"
+                   { ThreeAddressCode_construct(&threeAddressCode);
+		     SymbolTable_openLevel(&symbolTable);
                      Symbol* symbol = (yyvsp[0].sb);
-                     addAll(&symbolTable, symbol->params);
+                     addParametersToSymbolTable(&symbolTable, getParams(*symbol), &threeAddressCode);
                    }
-#line 1273 "grammar.tab.c"
+#line 1276 "grammar.tab.c"
     break;
 
   case 9: /* MethodDeclaration: Method $@2 Block  */
-#line 97 "grammar.y"
+#line 100 "grammar.y"
                    { SymbolTable_closeLevel(&symbolTable);
+		     setOffset((yyvsp[-2].sb), threeAddressCode.offset);
                      ASTNode* n = node((yyvsp[-2].sb));
                      setLSide(n, (yyvsp[0].n));
                      (yyval.n) = n; }
-#line 1282 "grammar.tab.c"
+#line 1286 "grammar.tab.c"
     break;
 
   case 10: /* MethodDeclaration: Method EXTERN ';'  */
-#line 101 "grammar.y"
+#line 105 "grammar.y"
                                      { ASTNode* n = node((yyvsp[-2].sb));
 		                       (yyval.n) = n; }
-#line 1289 "grammar.tab.c"
+#line 1293 "grammar.tab.c"
     break;
 
   case 11: /* Method: VOID ID '(' Params ')'  */
-#line 105 "grammar.y"
+#line 109 "grammar.y"
                                { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, TYPE_VOID, (yyvsp[-3].s), 0);
 				 SymbolTable_add(&symbolTable, symbol);
 				 symbol->isFunction = TRUE;
@@ -1299,11 +1303,11 @@ yyreduce:
 				}
 				(yyval.sb) = symbol;
                                }
-#line 1303 "grammar.tab.c"
+#line 1307 "grammar.tab.c"
     break;
 
   case 12: /* Method: Type ID '(' Params ')'  */
-#line 114 "grammar.y"
+#line 118 "grammar.y"
                                { Symbol* symbol = constructPtrToSymbol(flag_METHOD_DECLARATION, (yyvsp[-4].t), (yyvsp[-3].s), 0);
       				 SymbolTable_add(&symbolTable, symbol);
       				 symbol->isFunction = TRUE;
@@ -1313,68 +1317,70 @@ yyreduce:
 				 }
 				 (yyval.sb) = symbol;
       				}
-#line 1317 "grammar.tab.c"
+#line 1321 "grammar.tab.c"
     break;
 
   case 13: /* Params: %empty  */
-#line 125 "grammar.y"
+#line 129 "grammar.y"
                         { (yyval.sb) = NULL; }
-#line 1323 "grammar.tab.c"
+#line 1327 "grammar.tab.c"
     break;
 
   case 14: /* Params: OneOrMoreParams  */
-#line 126 "grammar.y"
+#line 130 "grammar.y"
                         { (yyval.sb) = (yyvsp[0].sb);   }
-#line 1329 "grammar.tab.c"
+#line 1333 "grammar.tab.c"
     break;
 
   case 15: /* OneOrMoreParams: Param  */
-#line 129 "grammar.y"
+#line 133 "grammar.y"
                                             { (yyval.sb) = (yyvsp[0].sb); }
-#line 1335 "grammar.tab.c"
+#line 1339 "grammar.tab.c"
     break;
 
   case 16: /* OneOrMoreParams: Param ',' OneOrMoreParams  */
-#line 130 "grammar.y"
+#line 134 "grammar.y"
                                             { Symbol* symbol = (yyvsp[-2].sb);
-                                              symbol->params = (yyvsp[0].sb);
+                                              setParams(symbol, (yyvsp[0].sb));
                                               (yyval.sb) = symbol; }
-#line 1343 "grammar.tab.c"
+#line 1347 "grammar.tab.c"
     break;
 
   case 17: /* Param: Type ID  */
-#line 135 "grammar.y"
+#line 139 "grammar.y"
                { Symbol* symbol = constructPtrToSymbol(flag_PARAM, (yyvsp[-1].t), (yyvsp[0].s), 0);
                  (yyval.sb) = symbol; }
-#line 1350 "grammar.tab.c"
+#line 1354 "grammar.tab.c"
     break;
 
   case 18: /* $@3: %empty  */
-#line 138 "grammar.y"
+#line 142 "grammar.y"
        { SymbolTable_openLevel(&symbolTable); }
-#line 1356 "grammar.tab.c"
+#line 1360 "grammar.tab.c"
     break;
 
   case 19: /* Block: $@3 '{' lDeclarations lStatements '}'  */
-#line 139 "grammar.y"
-       { SymbolTable_closeLevel(&symbolTable); (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[-1].n)); }
-#line 1362 "grammar.tab.c"
-    break;
-
-  case 20: /* lStatements: %empty  */
-#line 141 "grammar.y"
-             { (yyval.n) = NULL; }
+#line 143 "grammar.y"
+       { freeOffsetsInCurentLevel(symbolTable, &threeAddressCode);
+         SymbolTable_closeLevel(&symbolTable);
+         (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[-1].n)); }
 #line 1368 "grammar.tab.c"
     break;
 
-  case 21: /* lStatements: lStatements Statement  */
-#line 142 "grammar.y"
-                                         { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
+  case 20: /* lStatements: %empty  */
+#line 147 "grammar.y"
+             { (yyval.n) = NULL; }
 #line 1374 "grammar.tab.c"
     break;
 
+  case 21: /* lStatements: lStatements Statement  */
+#line 148 "grammar.y"
+                                   { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
+#line 1380 "grammar.tab.c"
+    break;
+
   case 22: /* Statement: ID '=' E ';'  */
-#line 145 "grammar.y"
+#line 151 "grammar.y"
                         { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
 			  if (isFunction(*symbol)) {
 			  	printf("ERROR: %s is a function.\n", getName(*symbol));
@@ -1382,63 +1388,63 @@ yyreduce:
 			  }
 	                  ASTNode* lSide = node(symbol);
                           (yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n)); }
-#line 1386 "grammar.tab.c"
-    break;
-
-  case 23: /* Statement: E ';'  */
-#line 152 "grammar.y"
-                                               { (yyval.n) = (yyvsp[-1].n); }
 #line 1392 "grammar.tab.c"
     break;
 
-  case 24: /* Statement: IF '(' E ')' THEN Block  */
-#line 153 "grammar.y"
-                                               { (yyval.n) = composeTree(flag_IF, "if-then", (yyvsp[-3].n), NULL, (yyvsp[0].n)); }
+  case 23: /* Statement: E ';'  */
+#line 158 "grammar.y"
+                                               { (yyval.n) = (yyvsp[-1].n); }
 #line 1398 "grammar.tab.c"
     break;
 
-  case 25: /* Statement: IF '(' E ')' THEN Block ELSE Block  */
-#line 154 "grammar.y"
-                                               { (yyval.n) = composeTree(flag_IF_ELSE, "if-then-else", (yyvsp[-5].n), (yyvsp[-2].n), (yyvsp[0].n)); }
+  case 24: /* Statement: IF '(' E ')' THEN Block  */
+#line 159 "grammar.y"
+                                               { (yyval.n) = composeTree(flag_IF, "if-then", (yyvsp[-3].n), NULL, (yyvsp[0].n)); }
 #line 1404 "grammar.tab.c"
     break;
 
-  case 26: /* Statement: WHILE E Block  */
-#line 155 "grammar.y"
-                                               { (yyval.n) = composeTree(flag_WHILE, "while", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
+  case 25: /* Statement: IF '(' E ')' THEN Block ELSE Block  */
+#line 160 "grammar.y"
+                                               { (yyval.n) = composeTree(flag_IF_ELSE, "if-then-else", (yyvsp[-5].n), (yyvsp[-2].n), (yyvsp[0].n)); }
 #line 1410 "grammar.tab.c"
     break;
 
+  case 26: /* Statement: WHILE E Block  */
+#line 161 "grammar.y"
+                                               { (yyval.n) = composeTree(flag_WHILE, "while", (yyvsp[-1].n), NULL, (yyvsp[0].n)); }
+#line 1416 "grammar.tab.c"
+    break;
+
   case 27: /* Statement: RETURN ';'  */
-#line 156 "grammar.y"
+#line 162 "grammar.y"
                                                { 
          					Symbol* symbol = constructPtrToEmptySymbol();
          					setType(symbol, TYPE_VOID);
          					ASTNode* lSide = node(symbol);
          					(yyval.n) = composeTree(flag_RETURN, "return", lSide, NULL, NULL); }
-#line 1420 "grammar.tab.c"
-    break;
-
-  case 28: /* Statement: RETURN E ';'  */
-#line 161 "grammar.y"
-                                               { (yyval.n) = composeTree(flag_RETURN, "return", (yyvsp[-1].n), NULL, NULL); }
 #line 1426 "grammar.tab.c"
     break;
 
-  case 29: /* Statement: ';'  */
-#line 162 "grammar.y"
-                                               { (yyval.n) = composeTree(flag_SEMICOLON, ";", NULL, NULL, NULL); }
+  case 28: /* Statement: RETURN E ';'  */
+#line 167 "grammar.y"
+                                               { (yyval.n) = composeTree(flag_RETURN, "return", (yyvsp[-1].n), NULL, NULL); }
 #line 1432 "grammar.tab.c"
     break;
 
-  case 30: /* Statement: Block  */
-#line 163 "grammar.y"
-                                               { (yyval.n) = (yyvsp[0].n); }
+  case 29: /* Statement: ';'  */
+#line 168 "grammar.y"
+                                               { (yyval.n) = composeTree(flag_SEMICOLON, ";", NULL, NULL, NULL); }
 #line 1438 "grammar.tab.c"
     break;
 
+  case 30: /* Statement: Block  */
+#line 169 "grammar.y"
+                                               { (yyval.n) = (yyvsp[0].n); }
+#line 1444 "grammar.tab.c"
+    break;
+
   case 31: /* Declaration: Type ID '=' E ';'  */
-#line 166 "grammar.y"
+#line 172 "grammar.y"
                                { if(SymbolTable_levels(symbolTable) == 1 
 				&& !expressionIsOnlyFormedByConstants((yyvsp[-1].n))) {
 					printf("error: initializer element is not constant\n");
@@ -1453,14 +1459,15 @@ yyreduce:
 				if(isGlobal(*symbol)) {
 					(yyval.n) = composeTree(flag_GLOBAL_VAR_DECL, "=", lSide, NULL, (yyvsp[-1].n));                        	
 				} else {
+					assignOffset(symbol, &threeAddressCode);
 					(yyval.n) = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, (yyvsp[-1].n));
 				}
                                }
-#line 1460 "grammar.tab.c"
+#line 1467 "grammar.tab.c"
     break;
 
   case 32: /* E: ID  */
-#line 185 "grammar.y"
+#line 192 "grammar.y"
                       { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[0].s)); 
 			if(isFunction(*symbol)) {
 				printf("ERROR: %s is a function.\n", getName(*symbol));
@@ -1468,157 +1475,157 @@ yyreduce:
 			}
                         ASTNode* n = node(symbol);
                         (yyval.n) = n;  }
-#line 1472 "grammar.tab.c"
+#line 1479 "grammar.tab.c"
     break;
 
   case 33: /* E: MethodCall  */
-#line 192 "grammar.y"
+#line 199 "grammar.y"
                       { (yyval.n) = (yyvsp[0].n); }
-#line 1478 "grammar.tab.c"
+#line 1485 "grammar.tab.c"
     break;
 
   case 34: /* E: V  */
-#line 193 "grammar.y"
+#line 200 "grammar.y"
                       { (yyval.n) = (yyvsp[0].n); }
-#line 1484 "grammar.tab.c"
+#line 1491 "grammar.tab.c"
     break;
 
   case 35: /* E: E '+' E  */
-#line 194 "grammar.y"
+#line 201 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_ADDITION,       flag_VALUE_INT,  TYPE_INT,  "+",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1490 "grammar.tab.c"
+#line 1497 "grammar.tab.c"
     break;
 
   case 36: /* E: E '-' E  */
-#line 195 "grammar.y"
+#line 202 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_SUBSTRACTION,   flag_VALUE_INT,  TYPE_INT,  "-",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1496 "grammar.tab.c"
+#line 1503 "grammar.tab.c"
     break;
 
   case 37: /* E: E '*' E  */
-#line 196 "grammar.y"
+#line 203 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_MULTIPLICATION, flag_VALUE_INT,  TYPE_INT,  "*",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1502 "grammar.tab.c"
+#line 1509 "grammar.tab.c"
     break;
 
   case 38: /* E: E '/' E  */
-#line 197 "grammar.y"
+#line 204 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_DIVISION,       flag_VALUE_INT,  TYPE_INT,  "/",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1508 "grammar.tab.c"
+#line 1515 "grammar.tab.c"
     break;
 
   case 39: /* E: E '%' E  */
-#line 198 "grammar.y"
+#line 205 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_MOD,            flag_VALUE_INT,  TYPE_INT,  "%",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1514 "grammar.tab.c"
+#line 1521 "grammar.tab.c"
     break;
 
   case 40: /* E: E '<' E  */
-#line 199 "grammar.y"
+#line 206 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_LT,             flag_VALUE_BOOL, TYPE_BOOL, "<",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1520 "grammar.tab.c"
+#line 1527 "grammar.tab.c"
     break;
 
   case 41: /* E: E '>' E  */
-#line 200 "grammar.y"
+#line 207 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_GT,             flag_VALUE_BOOL, TYPE_BOOL, ">",  (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1526 "grammar.tab.c"
+#line 1533 "grammar.tab.c"
     break;
 
   case 42: /* E: E EQT E  */
-#line 201 "grammar.y"
+#line 208 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_EQT,            flag_VALUE_BOOL, TYPE_BOOL, "==", (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1532 "grammar.tab.c"
+#line 1539 "grammar.tab.c"
     break;
 
   case 43: /* E: E OR E  */
-#line 202 "grammar.y"
+#line 209 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_OR,             flag_VALUE_BOOL, TYPE_BOOL, "||", (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1538 "grammar.tab.c"
+#line 1545 "grammar.tab.c"
     break;
 
   case 44: /* E: E AND E  */
-#line 203 "grammar.y"
+#line 210 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_AND,            flag_VALUE_BOOL, TYPE_BOOL, "&&", (yyvsp[-2].n), (yyvsp[0].n)); }
-#line 1544 "grammar.tab.c"
+#line 1551 "grammar.tab.c"
     break;
 
   case 45: /* E: '-' E  */
-#line 204 "grammar.y"
+#line 211 "grammar.y"
                       { Symbol* zero = constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, "0", 0);
  			ASTNode* lSide = node(zero);
  			(yyval.n) = propagationOfConstants(flag_SUBSTRACTION,   flag_VALUE_INT,  TYPE_INT,  "-",  lSide, (yyvsp[0].n)); }
-#line 1552 "grammar.tab.c"
+#line 1559 "grammar.tab.c"
     break;
 
   case 46: /* E: '!' E  */
-#line 207 "grammar.y"
+#line 214 "grammar.y"
                       { (yyval.n) = propagationOfConstants(flag_NEG,            flag_VALUE_BOOL, TYPE_BOOL, "!",  (yyvsp[0].n), NULL); }
-#line 1558 "grammar.tab.c"
+#line 1565 "grammar.tab.c"
     break;
 
   case 47: /* E: '(' E ')'  */
-#line 208 "grammar.y"
+#line 215 "grammar.y"
                       { (yyval.n) = (yyvsp[-1].n); }
-#line 1564 "grammar.tab.c"
+#line 1571 "grammar.tab.c"
     break;
 
   case 48: /* V: vINT  */
-#line 211 "grammar.y"
+#line 218 "grammar.y"
         {  char* name = allocateChar(32);
            snprintf(name, sizeof(int), "%d", (yyvsp[0].i));
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_INT, TYPE_INT, name, (yyvsp[0].i)));
            (yyval.n) = n; }
-#line 1573 "grammar.tab.c"
+#line 1580 "grammar.tab.c"
     break;
 
   case 49: /* V: vBOOL  */
-#line 215 "grammar.y"
+#line 222 "grammar.y"
          { char* name = allocateChar(32);
            snprintf(name, sizeof(int), "%d", (yyvsp[0].i));
            ASTNode* n = node(constructPtrToSymbol(flag_VALUE_BOOL, TYPE_BOOL, name, (yyvsp[0].i)));
            (yyval.n) = n; }
-#line 1582 "grammar.tab.c"
+#line 1589 "grammar.tab.c"
     break;
 
   case 50: /* Expressions: %empty  */
-#line 221 "grammar.y"
+#line 228 "grammar.y"
              { (yyval.n) = NULL; }
-#line 1588 "grammar.tab.c"
+#line 1595 "grammar.tab.c"
     break;
 
   case 51: /* Expressions: OneOrMoreExpressions  */
-#line 222 "grammar.y"
-                                        { (yyval.n) = (yyvsp[0].n); }
-#line 1594 "grammar.tab.c"
+#line 229 "grammar.y"
+                                  { (yyval.n) = (yyvsp[0].n); }
+#line 1601 "grammar.tab.c"
     break;
 
   case 52: /* OneOrMoreExpressions: E  */
-#line 225 "grammar.y"
+#line 232 "grammar.y"
                         { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[0].n), NULL, NULL); }
-#line 1600 "grammar.tab.c"
+#line 1607 "grammar.tab.c"
     break;
 
   case 53: /* OneOrMoreExpressions: E ',' OneOrMoreExpressions  */
-#line 226 "grammar.y"
-                                                             { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
-#line 1606 "grammar.tab.c"
+#line 233 "grammar.y"
+                                                 { (yyval.n) = composeTree(flag_SEMICOLON, ";", (yyvsp[-2].n), NULL, (yyvsp[0].n)); }
+#line 1613 "grammar.tab.c"
     break;
 
   case 54: /* Type: tINT  */
-#line 229 "grammar.y"
+#line 236 "grammar.y"
              { (yyval.t) = (yyvsp[0].t); }
-#line 1612 "grammar.tab.c"
+#line 1619 "grammar.tab.c"
     break;
 
   case 55: /* Type: tBOOL  */
-#line 230 "grammar.y"
+#line 237 "grammar.y"
              { (yyval.t) = (yyvsp[0].t); }
-#line 1618 "grammar.tab.c"
+#line 1625 "grammar.tab.c"
     break;
 
   case 56: /* MethodCall: ID '(' Expressions ')'  */
-#line 233 "grammar.y"
+#line 240 "grammar.y"
                                    { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, (yyvsp[-3].s));
 	                             int isAFunction = isFunction(*symbol);
 	                             if(isAFunction) {
@@ -1631,11 +1638,11 @@ yyreduce:
                                        	printf("%s is not a function\n", symbol->name);
                                      	exit(EXIT_FAILURE);
                                      } }
-#line 1635 "grammar.tab.c"
+#line 1642 "grammar.tab.c"
     break;
 
 
-#line 1639 "grammar.tab.c"
+#line 1646 "grammar.tab.c"
 
       default: break;
     }
@@ -1828,40 +1835,26 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 246 "grammar.y"
+#line 253 "grammar.y"
 
 
-void addAll(SymbolTable* symbolTable, Symbol* symbol) {
-    if(symbol) {
-        SymbolTable_add(symbolTable, symbol);
-        addAll(symbolTable, symbol->params);
-    }
+void freeOffsetsInCurentLevel(SymbolTable symbolTable, ThreeAddressCode* threeAddressCode) {
+	int i = 0;
+	int length = currentLevelLength(symbolTable);
+	int offset;
+	while(i < length) {
+		offset = getOffset(*SymbolTable_getByIndex(symbolTable, i));
+		//Symbol* symbol = SymbolTable_getByIndex(symbolTable, i);
+		//printf("%s OFFSET: %d\n", getName(*symbol), getOffset(*symbol));
+		add(&threeAddressCode->freeOffsets, &offset, sizeof(int), FALSE);
+		i++;
+	}
 }
 
-ASTNode* propagationOfConstants(Flag operation, Flag constantFlag, Type type, const char* name, ASTNode* lSide, ASTNode* rSide) {
-	int lSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(lSide);
-	int rSideIsOnlyFormedByConstants = expressionIsOnlyFormedByConstants(rSide);
-	if (lSide && lSideIsOnlyFormedByConstants) {
-		typeCheck(lSide);
-		setFlag(getSymbol(lSide), constantFlag);
-		setValue(getSymbol(lSide), evaluate(lSide));
-	}
-	
-	if (rSide && rSideIsOnlyFormedByConstants) {
-		typeCheck(rSide);
-		setFlag(getSymbol(rSide), constantFlag);
-		setValue(getSymbol(rSide), evaluate(rSide));
-	}
-	
-	ASTNode* result = composeTree(operation, name, lSide, NULL, rSide);
-	typeCheck(result);
-	if(lSideIsOnlyFormedByConstants && rSideIsOnlyFormedByConstants) {
-		Symbol* expression = constructPtrToEmptySymbol();
-		setFlag(expression, constantFlag);
-		setType(expression, type);
-		setValue(expression, evaluate(result));
-		result = node(expression);
-	}
-	
-	return result;
+void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol, ThreeAddressCode* threeAddressCode) {
+    if(symbol) {
+    	assignOffset(symbol, threeAddressCode);
+        SymbolTable_add(symbolTable, symbol);
+        addParametersToSymbolTable(symbolTable, getParams(*symbol), threeAddressCode);
+    }
 }

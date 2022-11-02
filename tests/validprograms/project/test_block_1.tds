@@ -1,0 +1,20 @@
+Program {
+	Int main() {
+		Int x = 0;
+		Int y = 0;
+		{
+			Int z = 0;
+		}
+		
+		{
+			Int w = 0;
+		}
+		x = x + y;
+		
+		if (True) then {
+			Int u = 0;
+		}
+		
+		return 0;
+	}
+}
