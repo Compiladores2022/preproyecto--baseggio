@@ -1,0 +1,10 @@
+Program {
+	void f(Int x) {
+
+	}
+
+	void main() {
+		Int x = 1 + f(1);
+	}
+}
+

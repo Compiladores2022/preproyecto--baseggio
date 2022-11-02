@@ -26,9 +26,13 @@ Program
   void main()
   {
 	Int i = 0;
-	while(True) {
+	Int MIN_INT = -2147483648;
+	Int MAX_INT = 2147483647;
+	print(MIN_INT);
+  	print(MAX_INT);
+	/*while(True) {
 		print(i);
-	}
+	}*/
 
       	if (0 < 1) then
         {

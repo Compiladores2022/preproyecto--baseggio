@@ -1,0 +1,18 @@
+Program {
+	Int x = 0;
+
+	void print(Int x) extern;
+
+	void main() {
+		{
+			Int x = 1;
+			{
+				Int x = 2;
+				print(x);
+			}
+			print(x);
+		}
+		print(x);
+	}
+}
+

@@ -1,0 +1,14 @@
+Program {
+	Int f() {
+		return 1 + g(0);
+	}
+
+	Int g(Int x) {
+		return x;
+	}
+
+	Int main() {
+		return 0;
+	}
+}
+

@@ -1,0 +1,7 @@
+Program {
+	Int main() {
+		x = x + 1;
+		return 0;
+	}
+}
+

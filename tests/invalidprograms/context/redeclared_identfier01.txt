@@ -1,3 +1,0 @@
-Int x = 0;
-Int x = 1;
-return x;

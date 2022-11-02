@@ -1,5 +1,0 @@
-Int  nombreVar1 = 5;
-Bool b1 = True;
-
-nombreVar1 = 55;
-retornar nombreVar1 + 1;

@@ -1,4 +1,0 @@
-Int x1 = 0;
-Bool b1 = True;
-
-return x1 * b1;

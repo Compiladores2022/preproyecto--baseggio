@@ -1,0 +1,12 @@
+Program {
+	Int x = 0;
+
+	Int x(Int y, Int z) {
+		return y + z;
+	}
+
+	void main() {
+
+	}
+}
+

@@ -1,3 +1,0 @@
-Int x1  = 0;
-Bool b1 = 1;
-return x1;
