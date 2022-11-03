@@ -211,6 +211,7 @@ void translateASSIGNMENT(FILE* fp, Instruction instruction) {
 }
 
 void translateNEG(FILE* fp, Instruction instruction, int* numberOfLabel) {
+	fprintf(fp, "\n\tmovq $1, %%r10");
 	fprintf(fp, "\n\tcmpq  %s, %%r10", translateOperand(*(instruction.fstOperand)));
 	fprintf(fp, "\n\tje  .L%d", *numberOfLabel);
 	fprintf(fp, "\n\tmovq $1, -%d(%%rbp)", getOffset(*(instruction.dest)));
