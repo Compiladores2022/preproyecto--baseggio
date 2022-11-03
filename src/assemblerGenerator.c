@@ -198,7 +198,9 @@ void translateEND_OF_FUNCTION(FILE* fp, Instruction instruction) {
 }
 
 void translateRETURN(FILE* fp, Instruction instruction) {
-	fprintf(fp, "\n\tmovq %s, %%rax", translateOperand(*(instruction.dest)));
+	if(getType(*(instruction.dest)) != TYPE_VOID) {
+		fprintf(fp, "\n\tmovq %s, %%rax", translateOperand(*(instruction.dest)));
+	}
 	fprintf(fp, "\n\tleave");
 	fprintf(fp, "\n\tret");
 }
