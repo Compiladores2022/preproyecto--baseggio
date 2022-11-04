@@ -9,6 +9,12 @@ Program {
 	
 	void print(Int x) extern;
 	
+	void assertEquals(Int expected, Int value) extern;
+	
+	void assertTrue(Bool expression) extern;
+	
+	void assertFalse(Bool expression) extern;
+	
 	Int main() {
 		Int x1 = f(10) + 5;
 		Int x2 = 5 + f(10);
@@ -22,24 +28,29 @@ Program {
 		Int x0 = f(10) % 5;
 		Int t1 = -f(10); // -10
 		Int t2 = -(f(10) + x1); // -25
-		
-		print(f(10)); // 10
-		print(x1); // 15
-		print(x2); // 15
-		print(x3); // -5
-		print(x4); // 5
-		print(x5); // 50
-		print(x6); // 50
-		print(x7); // 0
-		print(x8); // 2
-		print(x9); // 5
-		print(x0); // 0
-		print(t1); // -10
-		print(t2); // -25
-		print(5 + 5); // 10
-		print(f(5) + f(5)); // 10
-		print(f(0) + f(1) + f(2) + f(3) + f(4) + f(5) + f(6) + f(7) + f(8) + f(9) + f(10)); // 55
-		print(x); // 150
+		assertEquals(10, f(10));
+		assertEquals(15, x1);
+		assertEquals(15, x2);
+		assertEquals(-5, x3);
+		assertEquals(5, x4);
+		assertEquals(50, x5);
+		assertEquals(50, x6);
+		assertEquals(0, x7);
+		assertEquals(2, x8);
+		assertEquals(5, x9);
+		assertEquals(0, x0);
+		assertEquals(-10, t1);
+		assertEquals(-25, t2);
+		assertEquals(10, 5 + 5);
+		assertEquals(10, f(5) + f(5));
+		assertEquals(55, f(0) + f(1) + f(2) + f(3) + f(4) + f(5) + f(6) + f(7) + f(8) + f(9) + f(10));
+		assertEquals(150, x);
+		assertEquals(15, 5 + 5 * 2);
+		assertEquals(-5, 5 - 5 * 2);
+		assertEquals(5, 2 * 5 - 5);
+		assertTrue(True && True || False);
+		assertTrue(True == False || True);
+		assertTrue(!False && True);
 		return 0;
 	}
 }
