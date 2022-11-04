@@ -11,6 +11,6 @@ Los tests para los programas invalidos se dividieron en las siguientes categoria
 - lexical
 - syntactic
 - context
-- type
+- semantic
 
 Cuando no se informa de ningun error es porque el programa es valido.
