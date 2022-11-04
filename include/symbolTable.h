@@ -38,6 +38,9 @@ void    SymbolTable_print(SymbolTable symbolTable);
  * It returns a reference to the symbol if it is found otherwise returns NULL. */
 Symbol* SymbolTable_lookUp(SymbolTable symbolTable, char* name);
 
+/*
+ * The 'SymbolTable_getByIndex' function returns the element at the specified position in this Symbol Table.
+ */
 Symbol* SymbolTable_getByIndex(SymbolTable symbolTable, int index);
 
 /* The 'checkIdentifierIsDeclared' function look for a symbol by its name in the 'symbolTable'. 
