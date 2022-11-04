@@ -1,3 +1,6 @@
+Desde el directorio raiz
+========================
+
 Para compilar:
 >> ./compile_project
 
@@ -14,3 +17,8 @@ Los tests para los programas invalidos se dividieron en las siguientes categoria
 - semantic
 
 Cuando no se informa de ningun error es porque el programa es valido.
+
+Para ejecutar los programas:
+>> cd output/
+>> gcc -o test <nombre del programa> <librerias>
+>> ./test
