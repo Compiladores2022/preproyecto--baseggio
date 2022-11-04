@@ -18,6 +18,8 @@ ThreeAddressCode threeAddressCode;
 
 int yylex();
 void yyerror(const char* s);
+char* expressionToString(ASTNode* node);
+void checkIsNotAFunction(Symbol symbol);
 void freeOffsetsInCurentLevel(SymbolTable symbolTable, ThreeAddressCode* threeAddressCode);
 void addParametersToSymbolTable(SymbolTable* symbolTable, Symbol* symbol, ThreeAddressCode* threeAddressCode);
 %}
@@ -149,10 +151,7 @@ lStatements: { $$ = NULL; }
            ;
 
 Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1);
-			  if (isFunction(*symbol)) {
-			  	printf("ERROR: %s is a function.\n", getName(*symbol));
-			  	exit(EXIT_FAILURE);
-			  }
+			  checkIsNotAFunction(*symbol);
 	                  ASTNode* lSide = node(symbol);
                           $$ = composeTree(flag_ASSIGNMENT, "=", lSide, NULL, $3); }
 	 | E ';'                               { $$ = $1; }
@@ -172,7 +171,7 @@ Statement: ID '=' E ';' { Symbol* symbol = checkIdentifierIsDeclared(symbolTable
 Declaration: Type ID '=' E ';' { if(SymbolTable_levels(symbolTable) == 1 
 				&& !expressionIsOnlyFormedByConstants($4)) {
 					printf("error: initializer element is not constant\n");
-					printf("%s %s = %s\n", typeToString($1), $2, getName(*getSymbol($4)));
+					printf("%s %s = %s\n", typeToString($1), $2, expressionToString($4));
 					exit(EXIT_FAILURE);
 				} 
 				
@@ -190,10 +189,7 @@ Declaration: Type ID '=' E ';' { if(SymbolTable_levels(symbolTable) == 1
            ;
 
 E: ID                 { Symbol* symbol = checkIdentifierIsDeclared(symbolTable, $1); 
-			if(isFunction(*symbol)) {
-				printf("ERROR: %s is a function.\n", getName(*symbol));
-				exit(EXIT_FAILURE);
-			}
+			checkIsNotAFunction(*symbol);
                         ASTNode* n = node(symbol);
                         $$ = n;  }
  | MethodCall         { $$ = $1; }
@@ -251,6 +247,34 @@ MethodCall: ID '(' Expressions ')' { Symbol* symbol = checkIdentifierIsDeclared(
                                      } } ;
 
 %%
+
+char* expressionToString(ASTNode* node) {
+	if(node) {
+		if(isLeave(node)) { return getName(*getSymbol(node)); }
+		Flag flag = getFlag(*getSymbol(node));
+		char* fstOperand = allocateChar(32);
+		char* sndOperand = allocateChar(32);
+		char* result = allocateChar(32);
+		if(isABinaryOperator(flag)) {
+			strcpy(fstOperand, expressionToString(getLSide(node)));
+			strcpy(sndOperand, expressionToString(getRSide(node)));
+			sprintf(result, "%s %s %s", fstOperand, flagToString(flag), sndOperand);
+		} else { 
+			strcpy(fstOperand, expressionToString(getLSide(node)));
+			sprintf(result, "%s %s", flagToString(flag), fstOperand);		
+		}
+		return result;
+	}
+	
+	return NULL;
+}
+
+void checkIsNotAFunction(Symbol symbol) {
+	if(isFunction(symbol)) {
+		printf("ERROR: %s is a function.\n", getName(symbol));
+		exit(EXIT_FAILURE);
+	}
+}
 
 void freeOffsetsInCurentLevel(SymbolTable symbolTable, ThreeAddressCode* threeAddressCode) {
 	int i = 0;
